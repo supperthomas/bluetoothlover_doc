@@ -9,6 +9,7 @@ Welcome to supperthomas_wiki's documentation!
 .. toctree::
    :maxdepth: 2
    :caption: BLE knowledge:
+   :glob:
 
    ble/index
    ble_profile/index
