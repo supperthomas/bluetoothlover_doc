@@ -10,8 +10,8 @@ Welcome to supperthomas_wiki's documentation!
    :maxdepth: 2
    :caption: BLE knowledge:
 
-   test/ble_adv_scan_all.md
-   nordic/nordic_nrf5x.md
+   ble/index
+   nordic/index
 
 
 Indices and tables
