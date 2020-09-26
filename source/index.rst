@@ -11,6 +11,7 @@ Welcome to supperthomas_wiki's documentation!
    :caption: BLE knowledge:
 
    ble/index
+   ble_profile/index
    nordic/index
 
 
