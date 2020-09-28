@@ -16,6 +16,7 @@ Welcome to supperthomas_wiki's documentation!
    nordic/index
    WB55/index
 
+   00_supperthomas/index
    01_helloworldzlg/index
    02_Jackistang/index
    03_xupenghu/index
