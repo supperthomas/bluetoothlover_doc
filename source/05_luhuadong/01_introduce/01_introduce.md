@@ -4,6 +4,6 @@
 
 Name:  Rudy
 
-skill: RT-Thread
+skill: C/C++, Python, RT-Thread, Linux, MQTT, Sensor driver, AT device ...
 
 ## 2. introduce 2
