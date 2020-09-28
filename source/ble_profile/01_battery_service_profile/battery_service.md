@@ -1,4 +1,6 @@
-
+原文件：BAS_SPEC_V10.pdf
+链  接：https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=245138
+翻  译：guohp1128
 
 
 
@@ -167,56 +169,6 @@
 【1】Bluetooth v4.0 Core Specification 
 
 【2】Characteristic and Descriptor descriptions are accessible via the <u>Bluetooth SIG Assigned Numbers</u>. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
