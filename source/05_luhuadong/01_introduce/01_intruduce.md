@@ -2,8 +2,8 @@
 
 ## 1. introduce
 
-Name:
+Name:  Rudy
 
-skill:
+skill: RT-Thread
 
 ## 2. introduce 2
