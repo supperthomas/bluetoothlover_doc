@@ -32,7 +32,9 @@
 
 电堂课程视频地址：
 
-https://m.51diantang.com/pages/column/detail?id=530787c6b9134648bcd56f53cac1be67
+[WB55教学视频]: https://m.51diantang.com/pages/column/detail?id=530787c6b9134648bcd56f53cac1be67
+
+
 
 
 
@@ -45,7 +47,7 @@ https://m.51diantang.com/pages/column/detail?id=530787c6b9134648bcd56f53cac1be67
 | 1. WB55简介   | 0-导读（7:23） 1 STM32WB简介（16:39）3.软件介绍（12:42） |            |
 | 2.硬件介绍    | 2硬件介绍（17:40)  8. 低功耗设计（14:16)                 |            |
 | 3. GATT介绍   | 4.GATT介绍（14:46)  5.如何设计BLE应用（23:33）           |            |
-| 4. cubemx应用 | 6. CUBEMX(一)（23:33） +  整理下载官方的软件开发包和MDK    |            |
+| 4. cubemx应用 | 6. CUBEMX(一)（23:33） +  查找整理5份有用的文章总结一下 |            |
 | 5. cubemx应用 | 7. cubemx(二)（40:01)                                    |            |
 | 6. 直播回顾   | 9. 直播回顾（39:16）                                     |            |
 
