@@ -1,5 +1,7 @@
 原文件：BAS_SPEC_V10.pdf
+
 链  接：https://www.bluetooth.org/docman/handlers/downloaddoc.ashx?doc_id=245138
+
 翻  译：guohp1128
 
 
@@ -8,6 +10,7 @@
 
 # BAS (电池服务规格书)
 文摘:
+
 电池服务呈现出设备内电池的状态。
 
 ##  1 简介
