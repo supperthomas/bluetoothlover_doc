@@ -53,5 +53,6 @@ https://m.51diantang.com/pages/column/detail?id=530787c6b9134648bcd56f53cac1be67
 | 5. cubemx应用 | 7. cubemx(二)（40:01)                                    |            |
 | 6. 直播回顾   | 9. 直播回顾（39:16）                                     |            |
 
-## 
+## 建议
+大家可以把视频当作抖音视频，今日头条视频来看，闲下来了听一听。
 
