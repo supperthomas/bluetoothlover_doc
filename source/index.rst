@@ -15,6 +15,7 @@ Welcome to supperthomas_wiki's documentation!
    ble_profile/index
    nordic/index
    WB55/index
+   WIKI_FAQ/index
 
    00_supperthomas/index
    01_helloworldzlg/index
