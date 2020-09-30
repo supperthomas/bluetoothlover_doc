@@ -31,6 +31,8 @@
 
 
 电堂课程视频地址：
+https://m.51diantang.com/pages/column/detail?id=530787c6b9134648bcd56f53cac1be67
+
 
 [WB55教学视频]: https://m.51diantang.com/pages/column/detail?id=530787c6b9134648bcd56f53cac1be67
 
