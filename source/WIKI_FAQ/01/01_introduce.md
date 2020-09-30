@@ -33,8 +33,18 @@
 **如何验证**
 
 - 找一个linux的环境，比如ubuntu虚拟机
-- 安装Sphinx，命令: ```pip install sphinx sphinx-autobuild sphinx_rtd_theme```
+
+- 安装Sphinx，命令安装对应的包: 
+
+  ```
+  pip install sphinx
+  pip install sphinx-autobuild
+  pip install sphinx_rtd_theme
+  pip install recommonmark
+  ```
+
 - git clone所有文件
+
 - 在有Makefile文件的目录下面敲命令 `make html`
 
 ![image-20200930180956861](./picture/image-20200930180956861.png)
