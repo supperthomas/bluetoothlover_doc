@@ -1,4 +1,4 @@
-WIKI FAQ 篇
+Nordic 篇
 ==============
 .. toctree::
     :maxdepth: 3
