@@ -1,7 +1,10 @@
-Nordic 篇
-==========
+WIKI FAQ 篇
+==============
 .. toctree::
-    :maxdepth: 2
-    :numbered: 2
+    :maxdepth: 3
+    :numbered: 3
+    :glob:
 
-    01_nordic_nrf5x.md
+    01/01_introduce.md
+    02/01_introduce.md
+    FAQ/01_introduce.md

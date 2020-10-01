@@ -2,6 +2,8 @@
 
 ## 1. introduce
 
-hello
+Name:
+
+skill:
 
 ## 2. introduce 2
