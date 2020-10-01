@@ -50,7 +50,7 @@ https://m.51diantang.com/pages/column/detail?id=530787c6b9134648bcd56f53cac1be67
 | 2.硬件介绍    | 2硬件介绍（17:40)  8. 低功耗设计（14:16)                 |    xupenghu        |
 | 3. GATT介绍   | 4.GATT介绍（14:46)  5.如何设计BLE应用（23:33）           |            |
 | 4. cubemx应用 | 6. CUBEMX(一)（23:33） +  查找整理5份有用的文章总结一下 |      luhuadong      |
-| 5. cubemx应用 | 7. cubemx(二)（40:01)                                    |            |
+| 5. cubemx应用 | 7. cubemx(二)（40:01)                                    |     Jackistang       |
 | 6. 直播回顾   | 9. 直播回顾（39:16）                                     |            |
 
 ## 建议
