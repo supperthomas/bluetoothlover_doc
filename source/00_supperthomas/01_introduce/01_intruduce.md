@@ -51,7 +51,5 @@ Name: thomas
 | TELINK TB-02          | [TELINK](https://item.taobao.com/item.htm?spm=a1z09.2.0.0.473b2e8d76ojBJ&id=612917601497&_u=4jg78f8a74) | BLE               | BLE-SOC模块  |
 | 树莓派3b+             | [RASPI](https://detail.tmall.com/item.htm?spm=a230r.1.14.9.4d9442a387vd7H&id=608662013747&cm_id=140105335569ed55e27b&abbucket=11) | BT, WIFI,         | MINIPC       |
 | i.MX6UL               | [NXP](http://www.myir-tech.com/product/mys_6ulx.htm)         | WIFI              | MINIPC       |
-| ESP8266               | [ESP8266](https://www.ai-thinker.com/product/esp8266)        | WIFI              |              |
-
-[]: https://item.taobao.com/item.htm?spm=a1z09.2.0.0.434a2e8dU7Ucwm&amp;id=548905088891&amp;_u=3jg78f0903
+| ESP8266               | [ESP8266](https://www.ai-thinker.com/product/esp8266)        | WIFI              | WIFI模块     |
 
