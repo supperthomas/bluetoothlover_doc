@@ -34,15 +34,50 @@
 
 **如何验证**
 
-- 找一个linux的环境，比如ubuntu虚拟机
+  #### STEP 1
+  
+  找一个linux的环境, 比如ubuntu虚拟机, 需要有python3 git vim pip 环境
+  需要修改软件源的自行百度。
 
-- 安装Sphinx，命令安装对应的包: 
+  ```
+  sudo apt-get install python3
+  sudo apt-get install git
+  sudo apt-get install vim
+  sudo apt-get install python3-pip 
+  ```
+  
+  #### STEP 2
+  pip如果是国内需要改源速度才能快一些
+  
+  新建一个文件touch ~/.pip/pip.conf  写入下面的数据
+  
+  ```
+  [global]
+  index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+  [install]
+  trusted-host=mirrors.aliyun.com
+  ```
+  
+  #### STEP 3
+  还需要将python3作为默认的python, pip3作为默认的python
+ 
+  输入cmd
+  ```
+  sudo update-alternatives --install /usr/bin/python python /usr/bin/python3 150
+  sudo ln -s /usr/bin/pip3 /usr/bin/pip
+  ```
+  
+
+  #### STEP 4
+  
+  安装Sphinx，命令安装对应的包: 
 
   ```
   pip install sphinx
   pip install sphinx-autobuild
   pip install sphinx_rtd_theme
   pip install recommonmark
+  pip install sphinx_markdown_tables
   ```
 
 - git clone所有文件
