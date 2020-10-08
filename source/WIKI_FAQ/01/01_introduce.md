@@ -84,7 +84,7 @@
 
 - 在有Makefile文件的目录下面敲命令 `make html`
 
-![image-20200930180956861](./picture/image-20200930180956861.png)
+![](./picture/image-20200930180956861.png)
 
 - 最后看下编译有没有自己新建文件的相关的error，没有error说明没有问题，有error请检查下error
 - 然后打开根目录下面的`build/html/index.html`   打开之后查看下自己添加的页面是否可以正常显示。
