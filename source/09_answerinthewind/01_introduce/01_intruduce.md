@@ -2,16 +2,16 @@
 
 ## 1. introduce
 
-Name: luhuadong
+Name:  AnswerInTheWind
 
 ### 1.1  编程语言
 
 | language skill | 熟练程度 |      |
 | -------------- | -------- | ---- |
-|   C/C++   |  熟练  |      |
-|   Python  |  熟练  |      |
-|   JavaScript   |  入门  |      |
-|                |          |      |
+| c | 精通 |      |
+| c++ | 入门 |      |
+| c# | 入门 |      |
+| python | 入门 |      |
 
 
 
@@ -19,10 +19,10 @@ Name: luhuadong
 
 | iot skill | 熟练程度 |      |
 | --------- | -------- | ---- |
-|  TCP/IP   |  熟练   |      |
-|  MQTT     |  熟练   |      |
-|  NB-IoT   |  入门   |      |
-|  BLE      |  入门   |      |
+| LoRa | 精通 |      |
+| LoRaWAN | 精通 |      |
+| TCP/IP | 熟悉 |      |
+| MQTT | 熟悉 |      |
 |       |      |      |
 |        |      |      |
 
@@ -32,10 +32,10 @@ Name: luhuadong
 
 | os skill  | 熟练程度 |      |
 | --------- | -------- | ---- |
-|  Linux    |   熟练   |      |
-|  RT-Thread |  熟练    |      |
-|  FreeRTOS |  熟练    |      |
-|  Zephyer  |  入门    |    |
+|  |      |      |
+|   |      |      |
+|   |      |      |
+|    |      |      |
 |           |          |      |
 |           |          |      |
 

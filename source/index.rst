@@ -15,6 +15,7 @@ Welcome to supperthomas_wiki's documentation!
    ble_profile/index
    nordic/index
    WB55/index
+   WIKI_FAQ/index
 
    00_supperthomas/index
    01_helloworldzlg/index
@@ -22,6 +23,7 @@ Welcome to supperthomas_wiki's documentation!
    03_xupenghu/index
    04_dozingfiretruck/index
    05_luhuadong/index
+   09_answerinthewind/index
    06_chenyingchun0312/index
    07_ylz0923/index
    08_guohp1128/index
