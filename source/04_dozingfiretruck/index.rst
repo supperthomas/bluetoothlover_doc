@@ -5,8 +5,8 @@ WB55:dozingfiretruck
     :numbered: 2
 
     01_introduce/01_intruduce.md
-    02_introduce/01_intruduce.md
-    03/01_intruduce.md
-    04/01_intruduce.md
-    05/01_intruduce.md
+    02_introduce/导读.md
+    03/STM32WB简介.md
+    04/软件简介.md
+    05/环境搭建.md
     06/01_intruduce.md
