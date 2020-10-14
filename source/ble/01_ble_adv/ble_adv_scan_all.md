@@ -322,7 +322,7 @@ https://blog.csdn.net/bi_jian/article/details/82927904
 
 这个命令就是扫描的开关了，打开扫描，
 
-![](./picture/scan enable.png)
+![](./picture/scan_enable.png)
 
 两个参数：
 
