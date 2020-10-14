@@ -1,8 +1,6 @@
+# BLE 广播和扫描
 
-
-# BLE 广播-(1)
-
-## 1. 基本知识介绍
+## 1. 广播基本知识介绍
 
 查看本篇文章，大家可以知道以下内容：
 
@@ -13,13 +11,13 @@
 
 BLE的物理层这边简单提一些。
 
-![image-20200809075550817](picture/adv_channel.png)
+![](picture/adv_channel.png)
 
 ble的信道和BR/EDR的信道是完全不一样的。但是范围是相同的，差不多也都是2.4Ghz的频道。可以简单理解为空中有40个信道0~39信道。两个设备在相同的信道里面可以进行相互通信。
 
 而这些信道SIG又重新编号：
 
-![image-20200809080104054](picture/adv_channel2.png)
+![](picture/adv_channel2.png)
 
 这个编号就是把37 38 39。 3个信道抽出来，作为广播信道，其他都是数据信道。这篇文章主要讲广播，所以基本数据信息都是围绕37 38 39这三个信道上面的通信来讲的。
 
@@ -27,7 +25,7 @@ ble的信道和BR/EDR的信道是完全不一样的。但是范围是相同的�
 
 其实看下面一张图就知道了。
 
-![image-20200809080327101](picture/wifi_channel.png)
+![](picture/wifi_channel.png)
 
 ### 1.2 core spec的内容
 
@@ -52,13 +50,13 @@ PHYSICAL TRANSPORT
 
 大家可以用手机下载一个apk应用，nrf connect.apk。苹果手机，可以使用lightblue
 
-![image-20200809080327101](picture/nrf connect.jpg)
+![](picture/nrf_connect.jpg)
 
 ## 2. 广播内容（adv data）
 
 我们先来理解一下最基本的广播ADV_IND
 
-![image-20200809082451637](picture/ADV_IND.png)
+![](picture/ADV_IND.png)
 
 这张图的大概意思是：ADV_IND广播有两部分组成，1. 广播地址（就是广播者的地址，占6个字节）2. 广播数据（0-31个字节）（今天讲的主要内容一共就31个字节，听起来是不是很简单）
 
@@ -66,9 +64,9 @@ PHYSICAL TRANSPORT
 
 这31个字节里面内容，
 
-![image-20200809084151585](picture/adv_data.png)
+![](picture/adv_data.png)
 
-![image-20200809084242675](picture/adv_data2.png)
+![](picture/adv_data2.png)
 
 图中的data就是31个byte。
 
@@ -86,11 +84,11 @@ PHYSICAL TRANSPORT
 
 这个广播数据可以用nrf connect 来获取。
 
-![image-20200809094557087](picture/adv1.png)
+![](picture/adv1.png)
 
 点击RAW，可以看到数据：
 
-![image-20200809094638230](picture/adv2.png)
+![](picture/adv2.png)
 
 ```c
 0x02 0x01 0x1a 
@@ -110,21 +108,21 @@ PHYSICAL TRANSPORT
 
 那哪里有呢？其实细心一点你可以发现：
 
-![image-20200809095128928](picture/adv_type.png)
+![](picture/adv_type.png)
 
 这个网址比较旧了。https://www.bluetooth.com/specifications/assigned-numbers/generic-access-profile/
 
 可以访问这个网址。
 
-![image-20200809095451137](picture/ad_type.png)
+![](picture/ad_type.png)
 
 我们这里看到了0x01代表的是flags。而这个flags里面值代表什么含义呢？
 
 后面提供了索引信息(但是这个索引信息有一些旧了，建议大家不用参考)。
 
-主要参考一份文档 
+主要参考一份文档
 
-[CSS_V9.PDF]: https://www.bluetooth.com/specifications/bluetooth-core-specification/
+https://www.bluetooth.com/specifications/bluetooth-core-specification/
 
 这个文档中有所有AD TYPE的类型描述，下面我就简单讲下上面所提到的3个常用的AD TYPE
 
@@ -132,11 +130,11 @@ PHYSICAL TRANSPORT
 
   这个是标志该设备是哪一种类型的，有LE 和BR/EDR NOT SUPPORT是常见的，其他的不太常用，这个值也不太常需要改变
 
-![image-20200809095906245](picture/FLAGS.png)
+![](picture/FLAGS.png)
 
 - 0x09  complelte local name
 
-  ![image-20200809100457300](picture/ad_type2.png)
+  ![](picture/ad_type2.png)
 
 这个现实的是名称，就是你要给手机显示的名字，后面3个byte ascii就是“ble”
 
@@ -144,15 +142,15 @@ PHYSICAL TRANSPORT
 
 - 0x0a  tx power level
 
-  ![image-20200809100812848](./picture/tx_power.png)
+  <img src="./picture/tx_power.png" style="zoom:80%;" />
 
-![image-20200809100844900](./picture/tx power2.png)
+![](./picture/tx_power2.png)
 
 这里面就很明显了，上面那个值是0xF9 代表的是-7dm（这个是补码显示的）
 
 在app上面也有体现：
 
-![image-20200809101130669](picture/txpower2.png)
+![](picture/txpower2.png)
 
 熟悉了上面的内容，基本就可以知道广播内容是如何显示，以及31个字节是如何写的了，这个相当于是应用层，接下来，会深入介绍协议栈层是如何设置之类的。
 
@@ -164,15 +162,15 @@ PHYSICAL TRANSPORT
 
 ​        先讲一下这个是能命令，有了这个命令就可以开始打广播了
 
-![image-20200809151314184](./picture/adv enable.png)
+![](./picture/adv_enable.png)
 
 这个命令有一个参数，
 
-![image-20200809151339362](./picture/adv enable param.png)
+![](./picture/adv_enable_param.png)
 
 有了这个命令你就可以打广播了，广播内容可能为空也可能是默认值，不管如何，总之有了这一条命令你就可以控制是否开始打广播了。
 
-![image-20200809151646319](./picture/airlog.png)
+![](./picture/airlog.png)
 
 ```
 01 0a 20 01 01
@@ -184,11 +182,11 @@ PHYSICAL TRANSPORT
 
 ​       设置广播数据内容
 
-![image-20200809152243790](./picture/set adv data.png)
+![](./picture/set_adv_data.png)
 
 参数：
 
-![image-20200809152316460](./picture/set adv param .png)
+![](./picture/set_adv_param .png)
 
 这个也很好理解，就是上一章讲到的广播内容（adv data），这个就是设置广播内容的命令。参数就是内容的长度和内容的数据，最大也就31个字节。
 
@@ -198,13 +196,13 @@ PHYSICAL TRANSPORT
 
 命令：
 
-![image-20200809152750407](./picture/adv param.png)
+![](./picture/adv_param.png)
 
 参数：
 
-![image-20200809152830009](./picture/image-20200809152830009.png)
+![](./picture/image-20200809152830009.png)
 
-![image-20200809153236345](./picture/adv param2.png)
+![](./picture/adv__param2.png)
 
 这个实在是太多了，我就不一一讲了，记住这边会有一个很多的参数，后面讲空气包的时候会联系到这边一起讲。
 
@@ -212,7 +210,7 @@ PHYSICAL TRANSPORT
 
 ## 5. 空中传输
 
-![image-20200809163421555](./picture/air log.png)
+![](./picture/air_log.png)
 
 当发送命令adv enable的时候，蓝牙卡片就会在3个通道（37， 38，39）上发送数据，其实就是在3个通道上面发送数据，发送的数据就是这个广播什么类型，以及广播内容（就是上面讲到的adv data）
 
@@ -222,7 +220,7 @@ PHYSICAL TRANSPORT
 
 我们来举个例子看看
 
-![image-20200809203905853](./picture/adv_param.png)
+![](./picture/adv_param.png)
 
 
 
@@ -239,7 +237,7 @@ adv filter policy: scan request from any,connect request from any
 
 看下时间间隔
 
-![image-20200809204826865](./picture/adv_interval.png)
+![](./picture/adv_interval.png)
 
 简单理解一下：
 
@@ -290,29 +288,27 @@ adv filter policy: scan request from any,connect request from any
 
 iBeacon使用了称为厂商数据字段的标准AD Type结构。如下图所示，为iBeacon的广播包，按AD Type结构进行分割如下：
 
-![image-20200809214435745](./picture/ibeacon.png)
+![](./picture/ibeacon.png)
 
-![image-20200809214514505](./picture/ibeacon2.png)
+![](./picture/ibeacon2.png)
 
  厂商数据字段的数据域前2字节为公司识别码。由蓝牙SIG组织分配给各公司，指示后续数据的解码方式。在上图中，0x004C为苹果公司的ID。0x02指明该设备为“proximity  beacon”，该值在iBeacon设备中均为0x02。UUID指明拥有该beacon设备的机构。主次字段用来编码位置信息，通常主字段指明某个建筑，而次字段指明在这栋建筑中的特定位置。例如“伦敦中心商场，运动产品区”。发送功率字段帮助应用进行距离估算。有关iBeacon的详细内容可以参考[Getting started with iBeacon](https://developer.apple.com/ibeacon/Getting-Started-with-iBeacon.pdf)
 
  ### 7.2 Altbeacon
 
-![image-20200809214726387](./picture/altbeacon.png)
+![](./picture/altbeacon.png)
 
 ### 7.3 eddystone
 
   谷歌公司的Eddystone与iBeacon及AltBeacon有所不同。它没用使用所谓的厂商数据字段，而是使用16位服务UUID字段以及服务数据字段。Eddystone还定义了如下图所示的子类型，具体内容可以参考[eddystone](https://github.com/google/eddystone)：
 
-![image-20200809214805335](./picture/eddyston.png)
+![](./picture/eddyston.png)
 
 这边提供一个blog供需要的人参考吧。
 
 https://blog.csdn.net/bi_jian/article/details/82927904
 
 可以这样理解，其实beacon的一些应用不太需要协议栈的一些链路内容，只要可以打广播即可。
-
-# BLE 扫描（2）
 
 ## 8. 主机scan扫描
 
@@ -326,41 +322,41 @@ https://blog.csdn.net/bi_jian/article/details/82927904
 
 这个命令就是扫描的开关了，打开扫描，
 
-![image-20200810211520195](./picture/scan enable.png)
+![](./picture/scan enable.png)
 
 两个参数：
 
 - scan enable
 
-  ![image-20200810211603006](./picture/scan enable2.png)
+  ![](./picture/scan_enable2.png)
 
 - filter_dumplicate
 
   这个参数就是是否过滤重复的信息，默认是打开的，如果不打开，scan到一次就会上报一次，不过滤重复地址。
 
-  ![image-20200810211727398](./picture/filter_dumplicate.png)
+  ![i](./picture/filter_dumplicate.png)
 
 #### 8.1.2 set scan data
 
 这个和上面的adv data内容差不多
 
-![image-20200810211924445](./picture/scan data.png)
+![](./picture/scan_data.png)
 
 #### 8.1.3 set scan param
 
 参数和adv param类似：
 
-![image-20200810212145243](./picture/scan param.png)
+![](./picture/scan_param.png)
 
 #### 8.1.4 EVENT  LE adv report
 
  做扫描，扫描到设备的时候，会上报该条event
 
-![image-20200810213335491](./picture/adv report event.png)
+![](./picture/adv_report_event.png)
 
 这个里面有以下参数：
 
-![image-20200810213555256](./picture/repo param.png)
+![](./picture/repo_param.png)
 
 
 
@@ -370,13 +366,13 @@ https://blog.csdn.net/bi_jian/article/details/82927904
 
 #### 8.2.1 被动扫描（passive scan）
 
-![image-20200810212526908](./picture/passive scan.png)
+![](./picture/passive_scan.png)
 
 被动扫描，这个主要看上面这个流程，对方发广播了，扫描到了，就回报给host。
 
 #### 8.2.2 主动扫描（Active scan）
 
-![image-20200810212942242](./picture/active scan.png)
+![](./picture/active_scan.png)
 
 这个主动扫描，就是开启扫描之后，如果搜到了广播，发送SCAN_REQ请求，之后搜到SCAN_RSP之后再上报信息。
 
@@ -388,7 +384,7 @@ scan在空气中实际上是不太能看到的，因为主机处于被动接收,
 
 
 
-![image-20200810221251125](./picture/SCAN I.png)
+![](./picture/SCAN_I.png)
 
 常用的就是这个interval和window，居然时间可以参考上面的手册。
 
