@@ -5,3 +5,4 @@ BLE STACK篇
     :numbered: 2
 
     01_ble_adv/ble_adv_scan_all.md
+    02_ble_gatt/GATT.md
