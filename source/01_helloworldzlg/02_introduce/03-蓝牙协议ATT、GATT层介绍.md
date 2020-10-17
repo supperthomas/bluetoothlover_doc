@@ -22,7 +22,7 @@ BLE与此类似，一般而言设备提供服务，因此设备是Server，手�
 
   Attribute的格式参见下图：
 
-  ![](./md-picture/03_02.png)
+  ![](./picture/03_02.png)
 
   Attribute包含以下元素：
 
