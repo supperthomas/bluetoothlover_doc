@@ -6,7 +6,7 @@
 
 GATT封装了ATT协议，应用程序调用的都是GATT API，而GATT又调用了ATT API。在讲解ATT和GATT之前，我们先看一下蓝牙核心规范中一个重要概念：Client/Server（客户端/服务端）架构：
 
-![](.\md-picture\03_01.png)
+![](./picture/03_01.png)
 
 如上图所示，BLE采用了Client/Server (C/S) 架构来进行数据交互，C/S架构是一种非常常见的架构，在我们身边随处可见，比如我们经常用到的浏览器和服务器也是一种C/S架构，这其中浏览器是客户端Client，服务器是服务端Server。
 
@@ -22,7 +22,7 @@ BLE与此类似，一般而言设备提供服务，因此设备是Server，手�
 
   Attribute的格式参见下图：
 
-  ![](.\md-picture\03_02.png)
+  ![](./md-picture/03_02.png)
 
   Attribute包含以下元素：
 
@@ -64,7 +64,7 @@ BLE与此类似，一般而言设备提供服务，因此设备是Server，手�
 
   Attribute PDU格式如下：
 
-  ![](.\md-picture\03_03.png) 
+  ![](./picture/03_03.png) 
 
   Attribute OpCode中的Method主要包含以下6种：
 
@@ -79,7 +79,7 @@ BLE与此类似，一般而言设备提供服务，因此设备是Server，手�
 
 ​	Attribute Protocol PDU，当前支持的全部Request如下图：
 
-​	![](.\md-picture\03_04.png)
+​	![](./picture/03_04.png)
 
 ​	**后面我们再具体分析每一种Attribute Protocol PDU的详细数据交互内容。**
 
@@ -89,7 +89,7 @@ BLE与此类似，一般而言设备提供服务，因此设备是Server，手�
 
   1) 连接的网络拓扑
 
-  ![](.\md-picture\03_05.png)
+  ![](./picture/03_05.png)
 
   如上图所示，一个外设只能连接一个中心设备，而一个中心设备可以连接多个外设。ConnectedTopology一旦建立起了连接，通信就是双向的了，对比前面的 GAP 广播的网络拓扑，GAP 通信是单向的。如果你要让两个设备外设能通信，就只能通过中心设备中转。
 
@@ -114,7 +114,7 @@ BLE与此类似，一般而言设备提供服务，因此设备是Server，手�
   GATT指定了数据交互的结构(Structure)；这个结构体定义了一些基本元素，如Service、Characteristic
   这些元素存在于Attribute中。
 
-  ![](.\md-picture\03_07.png)
+  ![](./picture/03_07.png)
 
   如上图所示，GATT中最上层是Profile，Profile由一个或多个服务(Service)组成服务是由Characteristics组成，或是其他服务的引用(Reference)Characteristic包含一个值(Value)，可能包含该Value的相关信息。
 
@@ -145,5 +145,5 @@ BLE与此类似，一般而言设备提供服务，因此设备是Server，手�
 
 STM32WB中GATT程序中发现Service、Characteristic的API如下图：
 
-![](.\md-picture\03_08.png)
+![](./picture/03_08.png)
 
