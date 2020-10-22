@@ -6,7 +6,9 @@
 
 ## 写markdown推荐工具
 
-Typora
+Typora: 写markdown的好工具
+
+ScreenToGif: 截图好工具
 
 ## 写文章的一些建议
 
