@@ -7,3 +7,4 @@ BLE STACK篇
     00_ble_introduce/BLE_introduce.md
     01_ble_adv/ble_adv_scan_all.md
     02_ble_gatt/GATT.md
+    03_ble_smp/SMP.md
