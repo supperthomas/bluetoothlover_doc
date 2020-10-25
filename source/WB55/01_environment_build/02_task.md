@@ -50,10 +50,12 @@
 - ble抓包
 
   负责人： xupenghu
+  
+  
 
-​       指导大家如何快速上手nrf52832抓包以及如何在Android手机上抓btsnoopy包
+        指导大家如何快速上手nrf52832抓包以及如何在Android手机上抓btsnoopy包
 
-​       通过百度和了解下如何抓包和看包，用wireshark抓ble的空气包和android抓hci btsnoopy包，给大家分享
+        通过百度和了解下如何抓包和看包，用wireshark抓ble的空气包和android抓hci btsnoopy包，给大家分享
 
 - nrf51822
 
