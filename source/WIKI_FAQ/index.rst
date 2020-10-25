@@ -8,4 +8,4 @@ WIKI FAQ 篇
     01/01_introduce.md
     02/01_introduce.md
     03/markdown_faq.md
-    
+    04/wiki_rule.md
