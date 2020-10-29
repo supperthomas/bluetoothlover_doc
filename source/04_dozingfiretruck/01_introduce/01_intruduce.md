@@ -39,6 +39,14 @@ Name: Dozingfiretruck
 |           |          |      |
 |           |          |      |
 
+### 手上相关开发板
+
+| 开发板名称            | 开发板相关链接                                               | 备注              | soc类型         |
+| --------------------- | ------------------------------------------------------------ | ----------------- | --------------- |
+| ESP8266               | [ESP8266](https://item.taobao.com/item.htm?spm=a1z10.5-c-s.w4002-18400369818.14.79e76f8es7546X&id=524147544883) | WIFI       | WIFI模块     |
+| Pandora               | [Pandora](https://item.taobao.com/item.htm?spm=a1z10.5-c-s.w4002-18400369818.11.10e57ea5VUQrEN&id=583843059625) | WIFI      | IoT Board |
+
+
 
 
 
