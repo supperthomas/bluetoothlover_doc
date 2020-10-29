@@ -9,4 +9,4 @@ WB55:dozingfiretruck
     03/STM32WB简介.md
     04/软件简介.md
     05/环境搭建.md
-    06/Linux下搭建 RT-Thread 开发环境.md
+    06/Linux.md

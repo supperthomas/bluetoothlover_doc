@@ -52,11 +52,11 @@ git clone https://github.com/RT-Thread/rt-thread.git
 
 下载源码后进入你开发版目录修改rtconfig.py 文件中的 `EXEC_PATH`来配置编译器
 
-![rtconfig.py_old](C:\Users\qq147\Desktop\doc\rtconfig.py_old.png)
+![rtconfig_old](doc/rtconfig_old.png)
 
 修改为
 
-![rtconfig.py_new](C:\Users\qq147\Desktop\doc\rtconfig.py_new.png)
+![rtconfig_new](doc/rtconfig_new.png)
 
 至此准备工作结束。
 
@@ -68,7 +68,7 @@ git clone https://github.com/RT-Thread/rt-thread.git
 scons --menuconfig
 ```
 
-![rt-thread_configuration](C:\Users\qq147\Desktop\doc\rt-thread_configuration.png)
+![rt-thread_configuration](doc/rt-thread_configuration.png)
 
 是不是熟悉的画面回来了？
 
@@ -92,7 +92,7 @@ pkgs --update
 
 如果是第一次安装会失败，如下
 
-![pkgs_error](C:\Users\qq147\Desktop\doc\pkgs_error.png)
+![pkgs_error](doc/pkgs_error.png)
 
 这是因为我们没有安装Python-第三方库requests
 
@@ -114,8 +114,8 @@ pkgs --update
 scons
 ```
 
-## ![scons](C:\Users\qq147\Desktop\doc\scons.png)
+![scons](doc/scons.png)
 
-编译成功
+## 编译成功
 
 **Linux下强烈推荐使用 Vscode 作为代码编辑器（Windows下也推荐，Mac下也推荐，宇宙第一编辑器，哈哈哈）**
