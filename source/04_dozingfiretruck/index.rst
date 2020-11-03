@@ -10,3 +10,4 @@ WB55:dozingfiretruck
     04/软件简介.md
     05/环境搭建.md
     06/Linux.md
+    07/vscode.md
