@@ -48,7 +48,7 @@ C / C ++扩展在Visual Studio Code中增加了对C / C ++的语言支持，包�
 
 搜索Rainbow Brackets进行安装
 
-![Rainbow Brackets](doc/Rainbow Brackets.png)
+![Rainbow Brackets](doc/Rainbow_Brackets.png)
 
 此扩展为圆括号，方括号和弯曲的括号提供彩虹色。
 
