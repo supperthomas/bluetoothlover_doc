@@ -37,7 +37,7 @@ cond(no)->sub1(right)->op
 
 这个时候我们可以看到下面的图
 
-![image-20201105203242051](images/image-20201105203242051.png)
+![](images/image-20201105203242051.png)
 
 **语法规则：**
 
@@ -124,7 +124,7 @@ participant 观察者
 
 样子：
 
-![image-20201105211923847](images/image-20201105211923847.png)
+![](images/image-20201105211923847.png)
 
 再看一个复杂的应用
 
@@ -146,7 +146,7 @@ Note right of C: 没人陪我玩
 
 图片
 
-![image-20201105212103595](images/image-20201105212103595.png)
+![](images/image-20201105212103595.png)
 
 ### mermaid
 
@@ -156,9 +156,11 @@ mermaid相当于新的流程图了，包含了上面两种，可以说比较全�
 
 推荐一个在线编辑的网址，也有很多样例，可以玩玩：
 
-https://mermaid-js.github.io/mermaid-live-editor/
+[mermaid_live_editor](https://mermaid-js.github.io/mermaid-live-editor/)
+
+
 
 参考自：
-https://mermaidjs.github.io/
-https://blog.csdn.net/suoxd123/article/details/84992282
+[https://mermaidjs.github.io/](https://mermaidjs.github.io/)
+[markdown 中流程图详解]https://blog.csdn.net/suoxd123/article/details/84992282
 
