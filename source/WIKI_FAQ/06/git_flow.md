@@ -60,3 +60,19 @@ git branch -D master
 git remote remove upstream
 ```
 
+-----------
+
+## TODO
+
+### github如何贡献代码
+
+### github如何修改代码之后再次提交
+
+### git如何正确使用分支
+
+### git的原理本质
+
+### git如何正确管理自己的仓库和分支
+
+### git通用行为准则
+
