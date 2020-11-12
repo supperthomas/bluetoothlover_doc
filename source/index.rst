@@ -16,6 +16,7 @@ Welcome to supperthomas_wiki's documentation!
    nordic/index
    WB55/index
    WIKI_FAQ/index
+   RTTHREAD/index
 
    00_supperthomas/index
    01_helloworldzlg/index
