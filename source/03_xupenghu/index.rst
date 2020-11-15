@@ -6,3 +6,5 @@ WB55:xupenghu
 
     01_introduce/01_intruduce.md
     02_introduce/STM32WB硬件介绍.md
+    03_nrf_sniffer/nrf_ble_sniffer.md
+    04_btsnoop_hci/android_hci.md
