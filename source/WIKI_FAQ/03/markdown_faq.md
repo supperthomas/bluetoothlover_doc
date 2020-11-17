@@ -70,3 +70,153 @@ ScreenToGif: 截图好工具
 
 结束的时候停止录制，保存为gif格式即可
 
+### 如何让markdown自动显示序号
+
+这边上面有提到标题尽量不要写序号，那看起来可能有些不太自然。所以通过搜索网络，提供一种看起来有标号的方法：
+
+**STEP1:**
+
+打开typora的perference,打开theme 文件夹
+
+![](images/sequence.gif)
+
+**STEP2:** 
+
+创建一个名为base.user.css的文件
+
+**STEP3:**
+
+添加内容如下：
+
+```javascript
+.sidebar-content {
+    counter-reset: h1
+}
+ 
+.outline-h1 {
+    counter-reset: h2
+}
+ 
+.outline-h2 {
+    counter-reset: h3
+}
+ 
+.outline-h3 {
+    counter-reset: h4
+}
+ 
+.outline-h4 {
+    counter-reset: h5
+}
+ 
+.outline-h5 {
+    counter-reset: h6
+}
+ 
+.outline-h1>.outline-item>.outline-label:before {
+    counter-increment: h1;
+    content: " "
+}
+ 
+.outline-h2>.outline-item>.outline-label:before {
+    counter-increment: h2;
+    content: counter(h2) " "
+}
+ 
+.outline-h3>.outline-item>.outline-label:before {
+    counter-increment: h3;
+    content: counter(h2) "." counter(h3) " "
+}
+ 
+.outline-h4>.outline-item>.outline-label:before {
+    counter-increment: h4;
+    content: counter(h2) "." counter(h3) "." counter(h4) " "
+}
+ 
+.outline-h5>.outline-item>.outline-label:before {
+    counter-increment: h5;
+    content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+ 
+.outline-h6>.outline-item>.outline-label:before {
+    counter-increment: h6;
+    content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+
+
+/** initialize css counter */
+#write {
+counter-reset: h1
+}
+h1 {
+counter-reset: h2
+}
+h2 {
+counter-reset: h3
+}
+h3 {
+counter-reset: h4
+}
+h4 {
+counter-reset: h5
+}
+h5 {
+counter-reset: h6
+}
+/** put counter result into headings */
+#write h1:before {
+counter-increment: h1;
+content: " "
+}#write h2:before {
+counter-increment: h2;
+content: counter(h2) " "
+}
+#write h3:before,
+h3.md-focus.md-heading:before /** override the default style for focused headings */ {
+counter-increment: h3;
+content: counter(h2) "." counter(h3) " "
+}
+#write h4:before,
+h4.md-focus.md-heading:before {
+counter-increment: h4;
+content: counter(h2) "." counter(h3) "." counter(h4) " "
+}
+#write h5:before,
+h5.md-focus.md-heading:before {
+counter-increment: h5;
+content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) " "
+}
+#write h6:before,
+h6.md-focus.md-heading:before {
+counter-increment: h6;
+content: counter(h2) "." counter(h3) "." counter(h4) "." counter(h5) "." counter(h6) " "
+}
+/** override the default style for focused headings */
+#write>h3.md-focus:before,
+#write>h4.md-focus:before,
+#write>h5.md-focus:before,
+#write>h6.md-focus:before,
+h3.md-focus:before,
+h4.md-focus:before,
+h5.md-focus:before,
+h6.md-focus:before {
+color: inherit;
+border: inherit;
+border-radius: inherit;
+position: inherit;
+left:initial;
+float: none;
+top:initial;
+font-size: inherit;
+padding-left: inherit;
+padding-right: inherit;
+vertical-align: inherit;
+font-weight: inherit;
+line-height: inherit;
+}
+```
+
+这个时候重启typora就可以看到标题了，并且源代码里面是没有标题的，生成pdf是可以有标题的。
+
+![](images/image-20201117195440890.png)
+
