@@ -10,4 +10,4 @@ WIKI FAQ 篇
     03/markdown_faq.md
     04/wiki_rule.md
     05/markdown_flow.md
-    06/git_flow.md
+    06_git_flow/git_flow.md

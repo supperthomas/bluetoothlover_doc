@@ -64,6 +64,24 @@ git remote remove upstream
 
 ## TODO
 
+### git如何删除远端分支
+
+当遇到github上面远端分支需要删除的时候，我们使用下面命令
+
+1. 找到对应的branch
+
+```
+git branch -a              
+```
+
+2. 删除远端branch
+
+```
+git push origin --delete xxx_dev
+```
+
+
+
 ### github如何贡献代码
 
 ### github如何修改代码之后再次提交
