@@ -11,3 +11,4 @@ WB55:dozingfiretruck
     05/环境搭建.md
     06/Linux.md
     07/vscode.md
+    08/wb55_sample.md
