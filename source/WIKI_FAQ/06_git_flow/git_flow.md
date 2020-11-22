@@ -80,6 +80,26 @@ git branch -a
 git push origin --delete xxx_dev
 ```
 
+## git如何添加submodule
+
+如果引用第三方库的话，可以使用下面命令添加submodule
+
+```
+git submodule add https://xxx.git
+```
+
+
+
+删除第三方库：
+
+```
+git submodule deinit <submodule-name>
+```
+
+
+
+
+
 
 
 ### github如何贡献代码
