@@ -11,3 +11,4 @@ WIKI FAQ 篇
     04/wiki_rule.md
     05/markdown_flow.md
     06_git_flow/git_flow.md
+    07_python_skill/pip_install_china_source.md
