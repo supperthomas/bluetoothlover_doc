@@ -18,11 +18,11 @@ SMP相对比较枯燥，其实就是一个安全，因为蓝牙相对来说，�
 
 在Core spec 5.2中，以下章节是重点内容：
 
-![image-20201125210107946](images/image-20201125210107946.png)
+![](images/image-20201125210107946.png)
 
 GAP中也有部分章节是定义一些行为的：
 
-![image-20201125210236226](images/image-20201125210236226.png)
+![](images/image-20201125210236226.png)
 
 基本主要内容就在这些章节中。
 
@@ -119,7 +119,7 @@ LE的security分为以下内容：
 - 只能输入yes或者No （这个可以选择拒绝）
 - 键盘（这个可以输入数字，也可以输入Yes或者No）
 
-![image-20201125220143960](images/image-20201125220143960.png)
+![](images/image-20201125220143960.png)
 
 输出分为2种：
 
@@ -128,17 +128,17 @@ LE的security分为以下内容：
 
 SIG根据这种组合，组合成以下的表格：
 
-![image-20201125220909169](images/image-20201125220909169.png)
+![](images/image-20201125220909169.png)
 
 这就很明显了，这个表格中的所有值就是IO cabability
 
 实际上btsnoopy中的表现就是下面的表格值：
 
-![image-20201125220950393](images/image-20201125220950393.png)
+![](images/image-20201125220950393.png)
 
 好，我们现在有可以表述本机IO能力的值了，这个其实只是一方的能力值，也就是Pairing request里面的值，我们可以看下btsnoopy里面的值：
 
-![image-20201125221221872](images/image-20201125221221872.png)
+![](images/image-20201125221221872.png)
 
 正好可以对上。
 
@@ -146,11 +146,7 @@ SIG根据这种组合，组合成以下的表格：
 
 两边都亮出了自己的IO能力，那最后依谁的呢？这个其实是协议栈里面实现的，由发起方来控制
 
-SIG也给了一张表：
-
-spec里面有一张表，太详细了，我这边参考了下其他笔记中的内容。
-
-![image-20201125221714418](images/image-20201125221714418.png)
+这个下面会讲到。
 
 ##### Out of Band (OOB)
 
@@ -168,9 +164,9 @@ OOB是蓝牙配对过程中，通过其他方式进行传递密钥的方式，�
 
 这个是最基本的，也是最古老的，代表只是能简简单单工作就行，这种加密实际上并不是特别安全，没有额外的加密保密策略，仅仅是最最基本的策略。
 
-##### Numeric comparison（legacy pairing）
+##### Numeric comparison（Only for LE Secure Connections  ）
 
-这个就是数值比较
+这个就是数值比较，这个是只有在LE secure Connection才会用到
 
 ##### Passkey Entry（legacy pairing）
 
@@ -182,6 +178,10 @@ OOB是蓝牙配对过程中，通过其他方式进行传递密钥的方式，�
 
 这个也是一种加密策略，就是不采用输入密钥的方式，而是采用短距离接触的方式交互key
 
+
+
+
+
 ##### LE legacy pairing Phase 2
 
 这种属于一种加密性比较好的策略
@@ -192,9 +192,84 @@ OOB是蓝牙配对过程中，通过其他方式进行传递密钥的方式，�
 
 选择策略依照下面图表：
 
-![image-20201125231228044](images/image-20201125231228044.png)
+![](images/image-20201125231228044.png)
 
-这张图表示了所有的可以选择策略
+这张图表示了所有的可以选择策略，
 
-#### 
+参考了下别人的笔记：
+
+![](images/image-20201125221714418.png)
+
+我总结了一下大概的意思：
+
+- 两边都没有键盘的话，只能要用just works的方式工作，这种工作不能认证。
+- 一方有显示，另一方有键盘，这种情况，有显示的可以显示值，有键盘的可以输入值进行加密
+- 一方有显示，另一方有键盘或者yesNo，这种情况才能考虑LE secure connection 加密（因为可以采用数值比较的方式）
+- 这里面的unauthenticated的表格，都是代表该加密方式并未经过身份认证，是不安全的。
+
+这个决策都是由发起者来决策的，发起者根据自己的pairing request里面的几个要素，和对端反馈上来的几个要素，进行决策选择配对的方式进行认证还是不认证。
+
+### pairing 包要素
+
+理解了一些基本概念，差不多可以了解一下代码如何完成这些步骤的
+
+![](images/image-20201127005129351.png)
+
+这张图解释了pairing request中的要素
+
+- 第0个byte 是操作码， 0x01代表pairing request
+- 第1个byte是IO能力，代表当前设备的IO能力，由上面[IO Capability](#IO Capability)
+- 第2个byte是OOB data flag， 这个是专门给OOB使用的，可以暂时不用关心，一般是0代表不用OOB
+- 第3个byte 是比较重要的，是AuthRequest TYPE
+- 第4个byte是最大加密的key长度，这个通常不会改变，是16byte
+- 第5个和第6个byte都是代表支持的key分发KEY相关
+
+#### Auth request Type
+
+![](images/image-20201127010129101.png)
+
+##### Bonding_flag(2bits)
+
+该位置1才会考虑后面KEY的分发，通常都是1，因为通常加密都是要开启该bit位的
+
+##### MITM (1bit)
+
+这个位置位代表本机是否需要MITM 保护
+
+##### SC(1bit) Secure Connection
+
+这个bit位比较重要，这个bit位是判断该设备是否支持LE Secure Connection的，如果两边该标志位都置1了，加密的时候必须要用到LE Secure Connection
+
+##### keypress Notification(1bit)
+
+这个标志位不常用，这个只有在双方都置1的时候，每次带有键盘的设备按键都会产生PDU来通知对方
+
+##### CT2
+
+这个是比较新的feature，h7 相关的。这边不介绍
+
+#### 配对决策
+
+上面包的要素中，需要提取以下几点信息
+
+- IO capability
+- OOB flag
+- MITM flag
+- SC flag
+
+```merid
+
+```
+
+
+
+
+
+
+
+### 配对流程
+
+
+
+### key分发
 

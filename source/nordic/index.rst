@@ -10,3 +10,4 @@ Nordic 篇
     FAQ/01_introduce.md
     03/ble_app_blinky.md
     05/ble_uart_app.md
+    06_nordic_i2c/nRF5x_I2C.md
