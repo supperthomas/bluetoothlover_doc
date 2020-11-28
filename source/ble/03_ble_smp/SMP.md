@@ -79,11 +79,11 @@ LE的security分为以下内容：
 
 低功耗里面有很多密钥，各个密钥功能不一样。低功耗里面一共有5中密钥：
 
-- 临时密钥（TK)
-- 短期密钥（STK)
-- 长期密钥（LTK)
-- 身份解析密钥（IRK)
-- 连接签名解析密钥（CSRK)
+- 临时密钥（TK)，这个是用来生成short-term key的
+- 短期密钥（STK)  这个是
+- 长期密钥（LTK) ：可以长期使用
+- 身份解析密钥（IRK)： 根据这个KEY可以判断设备是不是已知的设备
+- 连接签名解析密钥（CSRK)：在链路未加密的情况下，需要对数据进行一定的保护。
 
 这边概念比较多，我暂时不展开。只强调一点，LTK是长期密钥，在设备断开连接再次进行认真的时候，这个是需要LTK进行加密的，所以我们如果要抓加了密的空气包，需要知道两边的LTK是什么，才能准确的抓到对应的包。
 
@@ -166,7 +166,7 @@ OOB是蓝牙配对过程中，通过其他方式进行传递密钥的方式，�
 
 ##### Numeric comparison（Only for LE Secure Connections  ）
 
-这个就是数值比较，这个是只有在LE secure Connection才会用到
+这个就是数值比较，这个是只有在LE secure Connection才会用到，而且通常是两个设备都只有显示能力，显示出自己的数字，由用户来比较。两端设备都有Display能力，其中一方要有keyboard能力。
 
 ##### Passkey Entry（legacy pairing）
 
@@ -257,19 +257,138 @@ OOB是蓝牙配对过程中，通过其他方式进行传递密钥的方式，�
 - MITM flag
 - SC flag
 
-```merid
+```flow
+st=>start: pairing feature 
+cond=>condition: both device support LE SC flag
+legacy=>subroutine: LE Legacy Pairing
+io=>inputoutput: LE Secure Connection
+cond2=>condition: One of two device have oob
+oob=>subroutine: Start Out of Band 
+cond3=>condition: both device have oob flag
+cond4=>condition: At least one device MITM flag
+io_capability=>subroutine: Start Map IO capabilities
+end=>end: choice auth method
 
+st->cond
+cond(yes)->io->cond2
+cond(no)->legacy->cond3
+cond2(yes)->oob
+cond3(yes,right)->oob
+cond2(no,left)->cond4
+cond3(no,left)->cond4
+cond4(yes)->io_capability
+io_capability->end
 ```
 
+决策规则如下：
 
+- 先看LE SC支持标志，都支持则后面一定要加SC流程
 
+- SC下面只要一个设备有OOB标志就走OOB，如果没有SC，两边都要有OOB才能走OOB
 
+- MITM标志位有一个设了就不能走just work，如果都没有只能走just work
 
+- just work也可以走Secure Connection，更安全一些
 
+- 
+
+  
 
 ### 配对流程
+
+配对过程如下图有三个部分：
+
+![](images/image-20201128233730388.png)
+
+第一个阶段一定会有的。根据第一个阶段的判断结果，来选择第二个阶段是用legacy pairing还是secure connection。
+
+第二个阶段之后会根据key来加密链路，根据第一个阶段的key分发策略来判断第三阶段的key如何分发。
+
+如果第一阶段是slave发起的，则slave会发起Security request这笔包。
+
+#### 第二阶段
+
+##### legacy pairing
+
+第一步先选择Temporary Key(TK)
+
+- - JUST WORK: 0
+  - PASSKEY ENTRY: DISPLAY AND INPUT
+  - OUT OF BAND
+
+第二步 有了TK， master和slave会选择生成一个rand number
+
+比如手机和LE设备连接的时候，手机作为master会将TK+随机生成的rand值（Mrand）生成一个confirm value
+
+对端也会生成一个confirm value
+
+第三步，会把各自的random值告诉对方
+
+第四步，计算一个STK
+
+​              STK = S1(TK, Srand， Mrand)
+
+第五步，分发LTK
+
+ 
+
+
+
+
+
+![](images/image-20201129003006679.png)
+
+
+
+##### security Connection
+
+
+
+#### 第三阶段
+
+
+
+### Security Mode
+
+LE security mode 1有以下4个等级
+
+- No security
+- Unauthenticated pairing with encryption
+- Authenticated pairing with encryption
+- Authenticated with LE secure Connections
+
+
+
+LE security mode 2 有以下2个等级，未加密的，用的比较少：
+
+- unquthenticated paireing with data signing
+- authenticated pairing with data signing
+- 
 
 
 
 ### key分发
 
+### 绑定
+
+绑定相当于设备配对之后，需要将KEY存储到FLASH中，用于下次再连接。
+
+### random address
+
+防止追踪，蓝牙地址可以随机，reslove的地址，
+
+### Privacy
+
+通过一个不断变化的地址，来发广播
+
+
+
+### MITM
+
+
+
+## FAQ
+
+### 配对和绑定的区别
+
+配对是生成一个密钥的过程，绑定是说设备要把设备生成的LTK保存下来，下次再连接的时候不需要再次配对

@@ -112,5 +112,7 @@ git submodule deinit <submodule-name>
 
 ### git如何正确管理自己的仓库和分支
 
+原则一： 将比较大的repo仓库统一管理，方便维护
+
 ### git通用行为准则
 

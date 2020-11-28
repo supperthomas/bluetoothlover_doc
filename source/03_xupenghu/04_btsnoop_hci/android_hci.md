@@ -49,3 +49,13 @@ Frontline ComProbe Protocol Analysis System(CPAS)是一款专用蓝牙协议分�
 ![](./image/8.png)
 
 还有一种方式将`*.log`文件改为`*.cfa`文件，然后双击打开，效果是一样的。
+
+## FAQ
+
+### 红米K30 pro抓包注意事项
+
+- 打开通话界面，输入`*#*#5656#*#*`  这个可以打开btsnoopy选项配置
+- 进入开发者者权限
+- “打开蓝牙数据包日志” 选择启用
+- 在目录/storage/emulatd/0/MIUI/debug_log/common/com.android.bluetooth/目录下面可以找到该文件
+
