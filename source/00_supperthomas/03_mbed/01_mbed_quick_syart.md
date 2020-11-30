@@ -33,7 +33,11 @@ mbed cli 分为[mbed cli1](https://os.mbed.com/docs/mbed-os/v6.5/build-tools/mbe
 sudo apt install python3 python3-pip git mercurial
 ```
 
+windows 环境下 mercurial 可以直接在 pyhon 里安装，输入：
 
+```
+python3 -m pip install mercurial
+```
 
 ### 第二步修改pip国内源
 
@@ -50,7 +54,12 @@ index-url = https://pypi.tuna.tsinghua.edu.cn/simple
 trusted-host=mirrors.aliyun.com
 ```
 
+windows 更换国内源如下：直接在 user 目录中创建一个 pip 目录，如：`C:\Users\xx\pip` ，新建文件 `pip.ini`，内容如下：
 
+```
+[global]
+index-url = https://pypi.tuna.tsinghua.edu.cn/simple
+```
 
 ### 第三步安装pip3中的mbed
 
@@ -95,7 +104,17 @@ mbed config -G GCC_ARM_PATH "/opt/gcc-arm-none-eabi-9-2019-q4-major/bin"
 arm-none-eabi-gcc -v
 ```
 
+windwos 环境下需下载 [gcc-arm-none-eabi-9-2019-q4-major-win32.zip](https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-win32.zip?revision=20c5df9c-9870-47e2-b994-2a652fb99075&la=en&hash=347C07EEEB848CC8944F943D8E1EAAB55A6CA0BC) ，由于下载速度很慢，我在企业微信的网盘里放了一份备份，在 "蓝牙相关资料 - IDE相关 - gcc-arm-non-eabi" 里。解压缩该文件，将其 bin 目录对应的路径添加到用户 PATH 环境变量里，
 
+![image-20201130110204865](images/image-20201130110204865.png)
+
+输入
+
+```C
+arm-none-eabi-gcc -v
+```
+
+验证是否安装环境成功。
 
 ### 第五步导入官方代码
 
@@ -148,7 +167,15 @@ git clone https://github.com/ARMmbed/mbed-os.git
 
 修改过mbed-os.lib之后，再次执行`mbed deploy`
 
+在 win10 powershell 里执行 `mbed deploy` 可能会在这里一直卡着不动：
 
+![image-20201130104125050](images/image-20201130104125050.png)
+
+这里后台在执行 git clone 的操作，我这里等了大概 20 分钟，一直在这不动，而且文件夹的大小一直为 1.03GB 不变，应该是哪里出现了 bug，此处多按几下回车，
+
+![image-20201130104452934](images/image-20201130104452934.png)
+
+然后发现报错，需要手动安装 python 环境，进入 `mbed-os` 目录使用 `pip install -r requirements.txt` 。
 
 ### 第六步开始编译代码
 
@@ -228,5 +255,9 @@ mbed compile
 
 
 
+### 第七步下载代码
 
+插上 WB55 ST-Link 的 USB 口，此时会弹出一个挂载的目录，将生成的 bin 文件复制到该目录即可。bin 文件在 `BUILD\NUCLEO_WB55RG\GCC_ARM\mbed-os-example-blinky.bin` 。
+
+之后会发现 LED1 蓝灯以 500ms 闪烁。
 
