@@ -104,7 +104,7 @@ if (error) {
   - Length 字段会自动设置。
 - 调用 `setName()`，
   - 此时是在构建 AD Type 为 0x09 - «Complete Local Name» 的 AD Structure，
-  - 其 AD Data 为 `DEVICE_NAME` ，在文件最开始处有定义 `*const* *static* *char* DEVICE_NAME[] = "BATTERY";` ，
+  - 其 AD Data 为 `DEVICE_NAME` ，在文件最开始处有定义 `const static char DEVICE_NAME[] = "BATTERY";` ，
   - Length 字段会自动设置。
 - 调用 `setServiceData()`，
   - 此时是在构建 AD Type 为 0x16 - «Service Data» 的 AD Structure，
@@ -199,8 +199,20 @@ void update_battery_level()
 
 ## mbedos_ble_advertising 抓包文件分析
 
-TODO
+![](images/image-20201202185438185.png)
+
+可以看见 WB55 周期性的在发送 ADV_SCAN_IND 的包，里面有两个 AD Structure ，其中一个是 Service Data 的类型的包，AD Data 包括 0x180f（Battery Service UUID）和 0x26（电量）。
+
+![](images/image-20201202185756693.png)
+
+当手机端开启扫描模式后，会发现 WB55 发送了 ADV_SCAN_RSP 的包，里面包含了一个 AD Structure，AD Type 为 0xff（Manufacturer Specific）。
+
+WB55 在上电复位的时候也会发送一个广播包，有 3 个 AD Structure ，但那个包我没抓到，就没有写。
 
 ## ble::AdvertisingDataBuilder
+
+TODO
+
+## mbed::Span
 
 TODO
