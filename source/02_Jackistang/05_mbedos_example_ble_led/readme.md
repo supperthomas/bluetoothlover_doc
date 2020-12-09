@@ -6,7 +6,7 @@
 
 根据对 GATT 的理解，一个 GATT Service 包含多个 Characteristic ，Service 和 Characteristic 都有自己的 UUID 来标识，如下图所示：
 
-<img src="images/image-20201203224720869.png" alt="image-20201203224720869" style="zoom:50%;" />
+![](images/image-20201203224720869.png)
 
 ### GattCharacteristic 
 
@@ -155,19 +155,19 @@ mbed-os BLE 协议栈还定义了其他类似的事件接口：
 
 WB55 上电后，手机端 nRF Connect 可以看到 LED 设备发送的广播消息，点击 CONNECT ，如下图：
 
-<img src="images/image-20201204183543883.png" alt="" style="zoom:67%;" />
+![](images/image-20201204183543883.png)
 
 选择 CLIENT，Unknown Service，可以看见这个 Service 的 UUID 为 0xA001，其 value 的属性为可读可写，与我们上面的代码是一样的。点击右边向上的箭头，
 
-<img src="images/image-20201204183625257.png" alt="" style="zoom: 67%;" />
+![](images/image-20201204183625257.png)
 
 会弹出来一个对话框，在这里输入 01，点击发送即给 WB55 发送了一条写命令，值为 0x01，此时会看见 LED2 灯亮。
 
-<img src="images/image-20201204183705537.png" alt="" style="zoom:67%;" />
+![](images/image-20201204183705537.png)
 
 若发送 0x00 ，则 LED 灯灭。
 
-<img src="images/image-20201204183726622.png" alt="" style="zoom:67%;" />
+![](images/image-20201204183726622.png)
 
 ## 抓包分析
 
