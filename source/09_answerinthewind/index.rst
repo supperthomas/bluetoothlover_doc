@@ -6,3 +6,4 @@ WB55:answerinthewind
 
     01_introduce/01_intruduce.md
     02/WB55_6.md
+    03_zephyr/zephyr_env.md
