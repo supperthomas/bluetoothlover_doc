@@ -24,6 +24,10 @@
 
 参加提交社区项目的相关文档。
 
+## 动态加载
+
+https://www.rt-thread.org/document/site/programming-manual/dlmodule/dlmodule/
+
 
 
 
