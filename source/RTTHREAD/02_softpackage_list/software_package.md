@@ -18,7 +18,7 @@
 | [azure-iot-sdk](https://github.com/RT-Thread-packages/azure-iot-sdk) | IOT                 | netutils,MBEDTLS     | **Azure** 是 RT-Thread 移植的用于连接微软 Azure IoT 中心的软件包 |
 | [rtt-bc28-mqtt](https://github.com/luhuadong/rtt-bc28-mqtt)  | MQTT                |                      | bc28_mqtt 是基于移远 BC28 模块 AT 固件的 MQTT 软件包         |
 | [btstack](https://github.com/supperthomas/RTT_PACKAGE_BTSTACK) | BT,                 | AP6212               | BTstack 软件包是RT-Thread 基于 btstack 开源蓝牙协议栈的适配  |
-| [capnp](https://github.com/wuhanstudio/capnp)                |                     |                      | Cap'n 串行化协议，比 protobuf 更高效，更轻量级。比XML高效存储数据 |
+| [capnp](https://github.com/wuhanstudio/capnp)                | protobuf            |                      | Cap'n 串行化协议，比 protobuf 更高效，更轻量级。比XML高效存储数据 |
 | [cJSON](https://github.com/RT-Thread-packages/cJSON)         | JSON                |                      | 超轻量级的 C 语言 json 解析库                                |
 | [cmux](https://github.com/RT-Thread-packages/cmux)           |                     |                      | CMUX 软件包常用于蜂窝模块串口复用功能（PPP + AT 模式），以及串口硬件资源受限的设备 |
 | [coap](https://github.com/RT-Thread-packages/coap)           | IOT                 | COAP                 | CoAP on RT-Thread                                            |
@@ -47,21 +47,21 @@
 | [nopoll](https://github.com/RT-Thread-packages/nopoll)       | OpenSource WebSocke |                      | 一款 C 实现的开源 WebSocket 软件包                           |
 | [onenet](https://github.com/RT-Thread-packages/onenet)       | IOT                 | 移动云               | 连接中国移动 OneNet 云的软件包                               |
 | [onnx-backend](https://github.com/wuhanstudio/onnx-backend)  | AI                  | ******************** | 开源神经网络模型 onnx 后端，支持几乎所有主流机器学习模型     |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
-|                                                              |                     |                      |                                                              |
+| [rt-onnx-parser](https://github.com/wuhanstudio/rt-onnx-parser) | AI                  |                      | 开源神经网络模型 onnx 解析库                                 |
+| [ota_downloader](https://github.com/RT-Thread-packages/ota_downloader) | OTA                 | HTTP                 | 基于 RT-Thread OTA 组件的 固件下载器                         |
+| [paho-mqtt](https://github.com/RT-Thread-packages/paho-mqtt) | MQTT                |                      | Eclipse 实现的基于 MQTT 协议的客户端                         |
+| [pdulib](https://github.com/ShineRoyal/pdulib)               | PDU                 |                      | 一个用于PDU格式的短信文本解析库                              |
+| [ppp_device](https://github.com/RT-Thread-packages/ppp_device) | PPP NBIOT           |                      | lwIP PPP 功能针对蜂窝( 2G/3G/4G )模块移植和实现              |
+| [protobuf-c](https://github.com/wuhanstudio/protobuf-c)      |                     |                      | Google 的 prototol buffer 一种轻便高效的数据存储格式         |
+| [qianxun](https://github.com/RT-Thread-packages/qianxun)     |                     | 千寻                 | qxwz 高精度定位应用本软件包是集成千寻位置差分sdk             |
+| [rt_cjson_tools](https://github.com/maplerian/rt_cjson_tools) | JSON                |                      | 用于 RT-Thread 的 cJSON工具库                                |
+| [SMTP_CLIENT](https://github.com/WKJay/SMTP_CLIENT)          | SMTP                |                      | SMTP邮件发送软件包，简单易用，支持普通25端口及465/587加密端口 |
+| [tcpserver](https://github.com/Guozhanxin/tcpserver)         | tcp                 |                      | 一个支持多客户端的 TCP 服务器                                |
+| [umqtt](https://github.com/RT-Thread-packages/umqtt)         | MQTT                |                      | 一个轻量级、功能强大、可定制、易于使用和可嵌入的RT-Thread mqtt客户端 |
+| [wayz_iotkit](https://github.com/wayz-iot/wayz_iotkit)       | IOT                 | 机智云               | wayz iot 定位软件包                                          |
+| [webclient](https://github.com/RT-Thread-packages/webclient) | HTTPS               |                      | RT-Thread 官方开源的 http/https 协议客户端                   |
+| [webnet](https://github.com/RT-Thread-packages/webnet)       | HTTP                | Web 服务器           | RT-Thread 官方开源的、轻量级、可定制嵌入式 Web 服务器        |
+| [wiznet](https://github.com/RT-Thread-packages/wiznet)       | WIZnet              | W5500                | WIZNet TCP/IP 芯片（例如： W5500/W5100）的 SAL 框架对接实现  |
 |                                                              |                     |                      |                                                              |
 |                                                              |                     |                      |                                                              |
 |                                                              |                     |                      |                                                              |
@@ -85,6 +85,41 @@
 
 
 ## misc
+
+| 包名                                                         | 技术标签 | 依赖平台     | 备注                                                         |
+| ------------------------------------------------------------ | -------- | ------------ | ------------------------------------------------------------ |
+| [canfestival-rtt](https://github.com/gbcwbz/canfestival-rtt) | CAN      | CAN  hwtimer | (开源的 CANopen 协议栈)在 RT-Thread 系统上的移植             |
+| [DigitalCtrl](https://github.com/xuzhuoyi/DigitalCtrl)       | PID      |              | DigitalCtrl 是一个数字控制算法库                             |
+| [FlexibleButton](https://github.com/murphyzhao/FlexibleButton) | GPIO     | Pandora      | 小巧灵活的按键驱动程序                                       |
+| [ MultiButton](https://github.com/liu2guang/MultiButton)     | GPIO     | ANY          | 一个小巧易用的事件驱动按钮驱动模块                           |
+| [TensorflowLiteMicro](https://github.com/QingChuanWS/TensorflowLiteMicro) | AI       | ART-Pi       | 用于rt-thread操作系统的轻量级深度学习端侧推理框架Tensorflow Lite软件包。" |
+| [TinyFrame](https://github.com/XXXXzzzz000/TinyFrame)        | 通信协议 |              | 应用于串口设备（如 UART / RS232)的构建或者解析的库           |
+| [armv7m_dwt](https://github.com/sogwms/armv7m_dwt)           | DWT      | TIMER        | armv7m_dwt 高精度计时与延时                                  |
+| [crclib](https://github.com/qiyongzhong0/crclib)             | CRC      | ANY          | 一个包含8位、16位、32位CRC校验计算的函数库                   |
+| [dstr](https://github.com/RT-Thread-packages/dstr)           | STR      | ANY          | 用 C 编写的动态字符串库                                      |
+| [eLapack](https://github.com/wuhanstudio/eLapack)            | MATLAB   | ANY          | 嵌入式线性代数库，兼容 matlab                                |
+| [fastlz](https://github.com/RT-Thread-packages/fastlz)       | ZIP      | ANY          | 一款极速的压缩                                               |
+| games                                                        | GAME     | ANY          | [c2048](https://github.com/mysterywolf/c2048)    、[俄罗斯方块](https://github.com/volatile-static/rtt_tetris)  、[贪吃蛇](https://github.com/mysterywolf/snake)、 [threes](https://github.com/mysterywolf/threes) |
+| [hello](https://github.com/RT-Thread-packages/hello)         | SAMPLE   |              | RT-Thread 软件包示例                                         |
+| [kendryte-demo](https://github.com/BernardXiong/kendryte-demo) | K210     | Kendryte     | 配合Kendryte SDK而简单移植的demo软件包                       |
+| [ki](https://github.com/mysterywolf/ki)                      | VIM      |              | ki是一个带有语法高亮的终端编辑器，支持C/C++ Python Javascript Go语言语法高亮 |
+| [rt-libann](https://github.com/wuhanstudio/rt-libann)        | AI       | ANY          | 轻量级 ANN 库，可以训练，保存和导入模型                      |
+| [libcsv](https://github.com/liu2guang/libcsv)                | CSV      |              | libcsv是用纯ANSI C89编写的小型、简单、快速的CSV库，支持读写CSV数据 |
+| [lwgps2rtt](https://github.com/orange2348/lwgps2rtt)         | lwgps    | GPS          | 轻量级GPS NEMA协议解析器                                     |
+| [lzma](https://github.com/RiceChen/lzma)                     | ZIP      |              | 高压缩率的压缩库                                             |
+| [miniLZO](https://github.com/RT-Thread-packages/miniLZO)     | ZIP      |              | LZO 是一个实时数据压缩库，而 miniLZO 是 LZO 压缩库的精简版本 |
+| [nnom](https://github.com/majianjia/nnom)                    | AI       |              | NNoM是一个专门为了神经网络在 MCU 上运行的框架                |
+| [optparse](https://github.com/liu2guang/optparse)            | CMD      |              | optparse是一个开源, 可移植的, 可重入的和可嵌入的类getopt命令行参数解析器 |
+| [quicklz](https://github.com/RT-Thread-packages/quicklz)     | ZIP      |              | 世界上速度最快的压缩库                                       |
+| samples                                                      | SAMPLE   |              | [filesystem-sample](https://github.com/RT-Thread-packages/filesystem-sample)、[kernel-sample](https://github.com/RT-Thread-packages/kernel-sample)、[network-sample](https://github.com/RT-Thread-packages/network-sample)  、[peripheral-sample](https://github.com/RT-Thread-packages/peripheral-sample) |
+| [state_machine](https://github.com/redocCheng/state_machine) | STATE    |              | 一个用C语言实现功能丰富但简单的有限状态机（FSM）             |
+| [uKal](https://github.com/wuhanstudio/uKal)                  |          |              | 微型卡尔曼滤波器库                                           |
+| [uLAPack](https://github.com/wuhanstudio/uLAPack)            | MATH     |              | 嵌入式线性代数库                                             |
+| [upacker](https://github.com/aeo123/upacker)                 | 通信协议 |              | 用于端对端通讯数据封包、解包，解决各种粘包、分包问题。极简内存占用。 |
+| [uparam](https://github.com/aeo123/uparam)                   | OTP      | param        | 系统参数读写管理和持久化                                     |
+| [vi](https://github.com/RT-Thread-packages/vi)               | VI       |              | vi 编辑器在 RT-Thread 操作系统上的移植                       |
+| [vt100](https://github.com/wuhanstudio/vt100)                | MSH      |              | 串口终端绘图库，可以在 msh 下画图                            |
+| [zlib](https://github.com/RT-Thread-packages/zlib)           | ZLIB     |              | Zlib通用数据压缩库                                           |
 
 
 
@@ -120,5 +155,22 @@
 
 ## system
 
+
+
 ## tools
 
+
+
+
+
+
+
+## 有趣的软件包
+
+###  game
+
+https://github.com/RT-Thread/packages/tree/master/misc/games
+
+### sample
+
+https://github.com/RT-Thread/packages/tree/master/misc/samples
