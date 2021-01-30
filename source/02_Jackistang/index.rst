@@ -13,3 +13,7 @@ WB55:Jackistang
     06_mbedos/DigitalOut.md
     06_mbedos/InterruptIn.md
     06_mbedos/Callback.md
+    08_zephyr/Virtualbox 安装 Ubuntu 20.04.md
+    08_zephyr/Zephyr 环境搭建.md
+    08_zephyr/Zephyr 环境搭建 - ESP32 篇.md
+    08_zephyr/Zephyr - Bluetooth 环境搭建 - QEMU 篇.md
