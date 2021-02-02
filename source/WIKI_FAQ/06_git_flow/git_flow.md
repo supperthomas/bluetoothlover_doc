@@ -100,6 +100,46 @@ git submodule deinit <submodule-name>
 
 
 
+## github国内如何快速更新代码
+
+本章节主要通过gitee快速方便的更新代码
+
+### 情况一：第一次下载
+
+第一次下载的时候，比如RTTHREAD master上面的源码，
+
+可以先在gitee上面建个仓库
+
+![](images/image-20210202204744516.png)
+
+从这里导入仓库地址  https://github.com/RT-Thread/rt-thread.git
+
+导入之后就可以下载了
+
+### 情况二， PR一次之后如果需要将RTTHREAD更新到最新的
+
+可以按照上面的来更新到最新的branch
+
+### 情况三，本地fork的分支已经在远端更新了，但是本地git pull太慢
+
+这种情况，主要原因是因为github没有同步按钮，先将gitee上面的老的分支先同步一下，
+
+![](images/image-20210202205055719.png)
+
+然后把gitee的branch先fetch下来
+
+```
+git fetch giteestream
+```
+
+这样本地就有新的代码了，
+
+之后再执行git pull
+
+会发现很快就更新完成了。
+
+
+
 
 
 ### github如何贡献代码

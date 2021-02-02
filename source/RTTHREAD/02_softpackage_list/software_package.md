@@ -257,13 +257,37 @@
 
 ## tools
 
+| 包名                                                         | 技术标签    | 依赖平台 | 备注                                                         |
+| ------------------------------------------------------------ | ----------- | -------- | ------------------------------------------------------------ |
+| [Chinese_font_library](https://github.com/lxzzzzzxl/Chinese_font_library) | FONT        | FAL      | rt-thread中文字库软件包                                      |
+| [CmBacktrace](https://github.com/armink-rtt-pkgs/CmBacktrace) | DEBUG       | ARM      | ARM Cortex-M 系列 MCU 错误追踪库                             |
+| [coremark](https://github.com/wuhanstudio/coremark)          | Coremark    |          | EEMBC 的单片机性能测试小工具 [跑分排名](https://www.eembc.org/coremark/scores.php) |
+| [dhrystone](https://github.com/wuhanstudio/dhrystone)        |             |          | Dhrystone 单片机性能测试小工具                               |
+| [EasyFlash](https://github.com/armink-rtt-pkgs/EasyFlash)    |             |          | 轻量级嵌入式 Flash 存储器库KV 数据库                         |
+| [EasyLogger](https://github.com/armink-rtt-pkgs/EasyLogger)  | LOG         |          | 一款超轻量级(ROM<1.6K, RAM<0.3k)、高性能的 C/C++ 日志库      |
+| [MemoryPerf](https://github.com/SummerLife/MemoryPerf)       | performance |          | ARM CPU 内存性能测试。                                       |
+| [SEGGER_SystemView](https://github.com/RT-Thread-packages/SEGGER_SystemView) | RTT         | SEGGER   | SEGGER 的 SystemView 移植                                    |
+| [UrlEncode](https://github.com/jch12138/UrlEncode)           | URL         |          | 一个简单易用的Url编解码工具                                  |
+| [adbd](https://github.com/heyuanjie87/adbd)                  | ADB         |          | 在 RT-Thread 上实现的 Android ADB daemon                     |
+| [bs8116a](https://github.com/illusionlee/bs8116a)            |             | bs8116a  | 合泰的bs8116a-3的触摸按键芯片                                |
+| [cpu_usage](https://github.com/enkiller/cpu_usage)           | CPU         |          | CPUU: CPU 使用率统计小工具。                                 |
+| [gbk2utf8](https://gitee.com/Ghazi_gq/gbk2utf8)              | FONT        |          | GBK与UTF8编码之间的转换                                      |
+| [gps_rmc](https://github.com/maplerian/gps_rmc)              | GPS         |          | 用于解析GPS模块的 $XXRMC 类型数据                            |
+| [kdb](https://github.com/RT-Thread-packages/kdb)             | DEBUG       | ALL      | 内核检测漏洞工具                                             |
+| [logmgr](https://github.com/RT-Thread-packages/logmgr)       | LOG         |          | logmgr: 日志管理系统功能支持                                 |
+| [lunar_calendar](https://github.com/illusionlee/lunar_calendar) | 日历        |          | 将阳历日期转换为阴历的工具。                                 |
+| [lwrb2rtt](https://github.com/Jackistang/lwrb2rtt)           |             |          | 轻量级的 FIFO 环形缓冲区                                     |
+| [rttpkg-mbedtls_bench](https://github.com/xfan1024/rttpkg-mbedtls_bench) | mbedtls     |          | mbedtls 性能测试                                             |
+| [nr_micro_shell](https://github.com/Nrusher/nr_micro_shell)  | SHELL       |          | 轻量的命令行交互工具。                                       |
+| [qrcode](https://github.com/RT-Thread-packages/qrcode)       | QR          |          | 一个用于将字符串生成二维码的软件包                           |
+| [rdb](https://github.com/RT-Thread-packages/rdb)             |             |          | 基于 USB/TCP等可靠通信协议的远程调试桥。                     |
+| [uMCN](https://github.com/JcZou/uMCN)                        | MQTT        | ALL      | uMCN是一个基于发布者/订阅者模式的轻量级且功能强大的跨进程通信库。 |
+| [ulog_easyflash](https://github.com/armink-rtt-pkgs/ulog_easyflash) | LOG         | ALL      | 基于 EasyFlash 的 ulog 插件                                  |
+| [ulog_file](https://github.com/RT-Thread-packages/ulog_file) | LOG         |          | ulog_file: 基于文件系统的 ulog 后端插件。                    |
+| [vconsole](https://github.com/enkiller/vconsole)             | VCONSOLE    | ALL      | 一个虚拟控制台软件包。                                       |
+| [wasm-micro-runtime](https://github.com/bytecodealliance/wasm-micro-runtime) |             |          | WebAssembly微型运行时（WAMR）是占地面积小的独立WebAssembly（WASM） |
 
 
-
-
-
-
-## 有趣的软件包
 
 ###  game
 
@@ -281,4 +305,42 @@ TODO LIST
 
 - licence 确认
 - 软件包是否可以用确认
-- 
+
+
+
+## 软件包分类
+
+### 平台完全无关性
+
+该软件包完全不依赖任何硬件，只要rtthread跑起来就可以跑
+
+### 文件系统相关性软件包
+
+该软件包需要依赖文件系统才可以运行
+
+### 简单GPIO LED 依赖性软件包
+
+该软件包需要依赖GPIO小灯或者BUTTON来运行的软件包
+
+### I2C依赖性软件包
+
+该软件包需要依赖I2C
+
+### SPI 依赖性软件包
+
+该软件包需要依赖SPI
+
+### 完全硬件相关性软件包
+
+该软件包必须要特定硬件支持
+
+
+
+### LOG
+
+
+
+### 文件系统
+
+
+
