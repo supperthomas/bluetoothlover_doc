@@ -191,3 +191,40 @@ tmp.txt
 选择 "设备 - 共享粘贴板 - 双向" 即可。
 
 ![](images/image-20210126155248655.png)
+
+## Ubuntu 常用配置
+
+### 增加鼠标滚轮的速度
+
+Ubuntu 里鼠标滚轮的默认速度太慢了，浏览代码简直不能忍受，因此在网上找了种方法增加 Ubuntu 里滚轮滑动的速度。
+
+安装 imwheel：
+
+```
+sudo apt-get install imwheel
+```
+
+然后编辑文件 `sudo vim ~/.imwheelrc`，添加内容如下：
+
+```
+".*"
+None,      Up,   Button4, 5
+None,      Down, Button5, 5
+Control_L, Up,   Control_L|Button4
+Control_L, Down, Control_L|Button5
+Shift_L,   Up,   Shift_L|Button4
+Shift_L,   Down, Shift_L|Button5
+```
+
+前两行就分别对应滚轮上滚和下滚的速度，设置为 5 比较合适。
+
+启动 imwheel，
+
+```
+killall imwheel
+imwheel
+```
+
+鼠标侧键与 VSCode 绑定。
+
+https://blog.csdn.net/zhanghm1995/article/details/88876092
