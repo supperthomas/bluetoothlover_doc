@@ -28,6 +28,7 @@ Welcome to supperthomas_wiki's documentation!
    06_chenyingchun0312/index
    07_ylz0923/index
    08_guohp1128/index
+   10_jiy/index
 
 Indices and tables
 ==================
