@@ -52,6 +52,7 @@ Name: Jackistang
 | EFR32BG22           | [EFR32BG22](https://www.digikey.cn/zh/products/detail/silicon-labs/SLTB010A/11610913) | BLE       |          |
 | STM32WB55           | [STM32WB55](https://www.stmcu.com.cn/Product/pro_detail/cat_code/STM32WB/family/81/sub_family/252/layout/product) | BLE       |          |
 | Nordic 52832 Dongle | [52832](https://item.taobao.com/item.htm?spm=a230r.1.0.0.7370e18aZs5Udx&id=583310613571&ns=1#detail) | BLE       |          |
+| 树莓派4B+           |                                                              |           |          |
 
 
 
