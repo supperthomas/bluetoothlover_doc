@@ -16,7 +16,7 @@ Zephyr 官方提供了 4 种蓝牙运行的硬件方式：
 3. Native POSIX with an external Controller
 4. Simulated nRF52 with BabbleSim
 
-我们这里搭建的是第二种，运用 QEMU 模拟器来操作外部蓝牙控制器（一般是电脑自带的）。
+我们这里搭建的是第二种，运用 QEMU 模拟器来操作外部蓝牙控制器（一般是电脑自带的）。环境搭建好后第三种模式也能直接使用。
 
 ### 版本确认
 
@@ -112,7 +112,7 @@ sudo systemctl stop bluetooth
 ```
 cd ~/bluez
 sudo tools/btproxy -u -i 0
- -> Listening on /tmp/bt-server-bredr
+ -> Listening on /tmp/bt-server-bredrsudo 
 ```
 
 其中 `-i 0` 表示使用 hci0，可能需要根据实际情况更换，可以 `hciconfig` 查看：
@@ -153,6 +153,23 @@ Beacon started
 ```
 
 使用 `CTRL+a, x` 即可退出 QEMU 。
+
+### native_posix 运行
+
+创建 `/tmp/bt-server-bredrsudo` socket 后，
+
+编译运行代码
+
+```shell
+west build -b native_posix samples/bluetooth/beacon
+sudo ./build/zephyr/zephyr.exe --bt-dev=hci0
+```
+
+## 常见问题
+
+### err: bt_hci_core: HCI driver open failed (-16)
+
+这种情况是我们程序退出异常，导致 HCI 驱动打开后没有正常关闭，目前的解决办法是将虚拟机的 BLE 设备还给物理机，然后再次导入虚拟机。
 
 --------
 

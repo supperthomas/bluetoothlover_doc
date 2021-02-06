@@ -1,0 +1,17 @@
+@startuml
+
+participant "bt_gatt_discover_func_t" as cb
+participant "BLE Stack" as stack
+
+stack -> cb: 回调函数，传入 conn, attr, params
+cb -> cb: 更改发现参数 params
+cb -> stack: return BT_GATT_ITER_CONTINUE\n继续发现过程
+
+stack -> cb: 回调函数，传入 conn, attr, params
+cb -> cb: 更改发现参数 params
+cb -> stack: return BT_GATT_ITER_CONTINUE\n继续发现过程
+
+stack -> cb: 回调函数，传入 conn, attr, params
+cb -> cb: 已找到全部所需属性\n或 attr 为 NULL。
+cb -> stack: return BT_GATT_ITER_STOP\n结束发现过程
+@enduml

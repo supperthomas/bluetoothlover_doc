@@ -17,3 +17,7 @@ WB55:Jackistang
     08_zephyr/Zephyr 环境搭建.md
     08_zephyr/Zephyr 环境搭建 - ESP32 篇.md
     08_zephyr/Zephyr - Bluetooth 环境搭建 - QEMU 篇.md
+    08_zephyr/Zephyr - Shell.md
+    08_zephyr/Zephyr - BLE 初始化.md
+    08_zephyr/Zephyr - BLE 广播.md
+    08_zephyr/Zephyr - BLE 扫描.md

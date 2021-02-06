@@ -14,3 +14,4 @@ WIKI FAQ 篇
     07_python_skill/pip_install_china_source.md
     08_uml/plantUML安装.md
     08_uml/plantUML绘图简介.md
+    09_vscode/vscode_debug.md
