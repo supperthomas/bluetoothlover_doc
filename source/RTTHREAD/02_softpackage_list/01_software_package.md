@@ -111,7 +111,7 @@
 | [nnom](https://github.com/majianjia/nnom)                    | AI       |              | NNoM是一个专门为了神经网络在 MCU 上运行的框架                |
 | [optparse](https://github.com/liu2guang/optparse)            | CMD      |              | optparse是一个开源, 可移植的, 可重入的和可嵌入的类getopt命令行参数解析器 |
 | [quicklz](https://github.com/RT-Thread-packages/quicklz)     | ZIP      |              | 世界上速度最快的压缩库                                       |
-| samples                                                      | SAMPLE   |              | [filesystem-sample](https://github.com/RT-Thread-packages/filesystem-sample)、[kernel-sample](https://github.com/RT-Thread-packages/kernel-sample)、[network-sample](https://github.com/RT-Thread-packages/network-sample)  、[peripheral-sample](https://github.com/RT-Thread-packages/peripheral-sample) |
+| [samples](https://github.com/RT-Thread/packages/tree/master/misc/samples) | SAMPLE   |              | [filesystem-sample](https://github.com/RT-Thread-packages/filesystem-sample)、[kernel-sample](https://github.com/RT-Thread-packages/kernel-sample)、[network-sample](https://github.com/RT-Thread-packages/network-sample)  、[peripheral-sample](https://github.com/RT-Thread-packages/peripheral-sample) |
 | [state_machine](https://github.com/redocCheng/state_machine) | STATE    |              | 一个用C语言实现功能丰富但简单的有限状态机（FSM）             |
 | [uKal](https://github.com/wuhanstudio/uKal)                  |          |              | 微型卡尔曼滤波器库                                           |
 | [uLAPack](https://github.com/wuhanstudio/uLAPack)            | MATH     |              | 嵌入式线性代数库                                             |
@@ -333,6 +333,10 @@ TODO LIST
 ### 完全硬件相关性软件包
 
 该软件包必须要特定硬件支持
+
+### AI 相关的软件包
+
+
 
 
 
