@@ -41,14 +41,11 @@ RTTHREAD支持的最好的是STM32系列，如果你有一款STM32的开发板�
 和本文相关的一些文档下面我先列出来：
 
 - [Keil 模拟器 STM32F103 上手指南](https://www.rt-thread.org/document/site/tutorial/quick-start/stm32f103-simulator/stm32f103-simulator/#_3)
-
 - [RT-Thread Nano 移植原理](https://www.rt-thread.org/document/site/tutorial/nano/nano-port-principle/an0044-nano-port-principle/#startups)
-
 - [移植 RT-Thread Nano 到 RISC-V](https://www.rt-thread.org/document/site/tutorial/nano/nano-port-gcc-riscv/an0042-nano-port-gcc-riscv/#starts)
-
 - [基于 Keil MDK 移植 RT-Thread Nano](https://www.rt-thread.org/document/site/tutorial/nano/nano-port-keil/an0039-nano-port-keil/)
-
 - [RT-Thread 启动流程](https://www.rt-thread.org/document/site/programming-manual/basic/basic/#rt-thread_1)
+- [如何向RTTHREAD提交BSP](https://mp.weixin.qq.com/s/o6j9VJz7q4-higxJeQLXBw)
 
 ## 移植步骤
 

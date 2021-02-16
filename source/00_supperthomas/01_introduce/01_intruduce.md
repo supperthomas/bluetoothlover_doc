@@ -55,3 +55,11 @@ Name: thomas
 | CSR8311               | [CSR8311](https://item.taobao.com/item.htm?spm=2013.1.w4023-22329603903.13.2271710eWq6jj5&id=622837949775) | BR/EDR, BLE       | BLE control模块 |
 | AP6212                | [AP6212](https://item.taobao.com/item.htm?spm=a230r.1.14.20.31e02c31WHnsOw&id=615403825084&ns=1&abbucket=4#detail) | WIFI,BLE          | BT COMBO模块    |
 
+### 手上的传感器模块
+
+| 模块名称                            | 备注                                                         | SOC类型 | 接口类型              |
+| ----------------------------------- | ------------------------------------------------------------ | ------- | --------------------- |
+| STEVAL-MKI197V1：LSM6DSOX六轴传感器 | [LSM6DSOX](https://www.st.com/content/st_com/zh/products/mems-and-sensors/inemo-inertial-modules/lsm6dsox.html) | 传感器  | I²C、SPI 和MIPI I3CSM |
+|                                     |                                                              |         |                       |
+|                                     |                                                              |         |                       |
+
