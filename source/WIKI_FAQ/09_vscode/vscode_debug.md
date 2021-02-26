@@ -193,10 +193,14 @@ sudo visudo
 
 
 
+
+
+
+
 ----
 
 参考：
 
-[How to debug programs with “sudo” in VSCODE](https://stackoverflow.com/questions/40033311/how-to-debug-programs-with-sudo-in-vscode)
+[用VS Code开发STM32（三）——调试](https://zhuanlan.zhihu.com/p/61541590)
 
 [How to Run sudo Commands Without Password](https://linuxhandbook.com/sudo-without-password/)
