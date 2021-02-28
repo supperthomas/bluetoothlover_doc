@@ -9,7 +9,7 @@
 - nrf sdk 16.0.0 离线文档下载 [download](http://developer.nordicsemi.com/nRF5_SDK/nRF5_SDK_v16.x.x/nRF5_SDK_16.0.0_offline_doc.zip)
 
 - mesh v4.0.0 国内在线文档: [国内](http://doc-mesh-sdkapi-v4-0-0.wireless-tech.cn/)
- 
+
 
 ## 2. 国内教学资料
 
@@ -18,9 +18,18 @@
 - RT-THREAD NORDIC开源资料: [github](https://github.com/ZJ-TEK/ZJ-SDK-RT-Thread-NORDIC)
 
 ## 3. BLUETOOTH 官方标准
- 
+
 - core spec: [link](https://www.bluetooth.com/specifications/bluetooth-core-specification/)
 
 - profile spec: [link](https://www.bluetooth.com/specifications/gatt/)
 
 - asigned number: [link](https://www.bluetooth.com/specifications/assigned-numbers/)
+
+## Nordic学习小组学习记录
+
+| 日期     | chengyingchun0312 |      | ylz0923 | guohp1128 | jjy  | xckhmf |
+| -------- | ----------------- | ---- | ------- | --------- | ---- | ------ |
+| 20210206 |                   |      |         |           |      |        |
+|          |                   |      |         |           |      |        |
+|          |                   |      |         |           |      |        |
+

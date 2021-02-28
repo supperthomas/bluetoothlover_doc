@@ -53,10 +53,10 @@ sniffer是Nordic公司专门为nrf52xx系列蓝牙产品为wireshark编写的一
 
 - 运行wireshark
 - 单击帮助->关于wireshark->文件夹
-![](./image/5.png)
+  ![](./image/5.png)
 
-- 双击Global Extcap path 弹出一个文件夹，如下图所示
-![](./image/6.png)
+  
+
 - 把`..\nrf_sniffer_for_bluetooth_le_3.0.0_129d2b3\extcap\`下的所有文件拷贝到这个文件夹内
 
 #### 确认nRF sniffer可以正常运行

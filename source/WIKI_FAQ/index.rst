@@ -12,3 +12,7 @@ WIKI FAQ 篇
     05/markdown_flow.md
     06_git_flow/git_flow.md
     07_python_skill/pip_install_china_source.md
+    08_uml/plantUML安装.md
+    08_uml/plantUML绘图简介.md
+    09_vscode/vscode_debug.md
+    09_vscode/vscode_faq.md
