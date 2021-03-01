@@ -23,7 +23,7 @@
 
 ```c
                                                                     
-xph@XPHPC D:\GitHub\rt-thread\bsp\stm32\stm32wb55-st-nucleo         
+xph@XPHPC D:/GitHub/rt-thread/bsp/stm32/stm32wb55-st-nucleo         
 > scons --dist                                                      
 scons: Reading SConscript files ...                                 
 make distribution....                                               
@@ -44,9 +44,9 @@ done!
 然后用keil打开，编译烧录到nucleo开发板中验证。当开发板LED1蓝灯开始闪烁，同时串口有打印信息输出，则表示基于rtthread的最小工程生成成功。
 
 ```c
- \ | /
+ / | /
 - RT -     Thread Operating System
- / | \     4.0.3 build Jan  7 2021
+ / | /     4.0.3 build Jan  7 2021
  2006 - 2020 Copyright by rt-thread team
 msh >
 
@@ -55,7 +55,7 @@ msh >
 ### st官方固件包删除不相关代码
 我们从最基础的beacon工程开始移植，删除其他不必要的工程文件和文件夹，方便代码分析工具分析和定位。如果工程文件夹太多，诸如vscode source insight这类代码工具就很难做到精确跳转。
 如下图所示，我只保留基于keil mdk的beacon工程，其他的不相干的工程全部删除。
-![](.\image\20210107110931172.png)
+![](./image/20210107110931172.png)
 检查的方法也很简单，在固件包中搜索一下main.c函数，看一下有没有多余的就行了。
 然后打开这个beacon工程，编译一下，没有错误，没有警告，那么准备工作就做好了。
 
@@ -113,21 +113,21 @@ static void ibeacon_thread_entry(void *parameter)
 ```
 
 3. 将STM32_WPAN中间件整体复制过来，然后根据st的sample工程将BLE相关文件都加进去
-![](.\image\20210224190740243.png)
+![](./image/20210224190740243.png)
 
 4. 编译，根据编译错误将缺失的文件加入到工程中去，直到编译完成
 
 #### 关于文件的分组
 1. STM32_WPAN这个文件夹里面存放的是ST关于无线协议的中间件，包括BLE、thread、zigbee等等，所以移植的时候直接整体搬过去就好了，至于里面的东西可以暂不做考虑。
-![](.\image\20210224191057123.png)
+![](./image/20210224191057123.png)
 2. STM32WB特有的低功耗管理组件和列表单独做通用分组
 
-![](.\image\20210224191458404.png)
+![](./image/20210224191458404.png)
 
 
 3. 其他需要用到的文件统一放到ibeacon分组中
 
-![](.\image\20210224191605859.png)
+![](./image/20210224191605859.png)
 
 #### 移植注意事项
  以上工作全部完成后，编译运行后程序运行正常，但是通过nrf connect是无法扫描到beacon的，对比分析后发现两部分地方需要修改。
@@ -171,7 +171,7 @@ void IPCC_C1_RX_IRQHandler(void)
 STM32WB是一颗双核MCU，他们共享了部分flash和RAM，所以不能像传统的单核M4内核那样定义link文件，需要将部分flash和RAM资源留出来给协处理器使用。具体的更改直接参考ST的sample工程中的link文件。
 
 
-![在这里插入图片描述](https://img-blog.csdnimg.cn/20210224192927461.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTQ0MjE1MjA=,size_16,color_FFFFFF,t_70)
+![](https://img-blog.csdnimg.cn/20210224192927461.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3UwMTQ0MjE1MjA=,size_16,color_FFFFFF,t_70)
 
 经过以上两步的修改，编译烧录后就可以正常使用了。
 
