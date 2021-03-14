@@ -5,6 +5,7 @@ RTTHRED: RT-Thread
     :numbered: 2
 
     01_introduce/01_intruduce.md
+    01_introduce/02_RTTHREAD_introduce.md
     02_softpackage_list/01_software_package.md
     02_softpackage_list/02_software_introduce.md
     02_softpackage_list/03_sensor_list.md
