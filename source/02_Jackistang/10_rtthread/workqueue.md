@@ -10,7 +10,7 @@
 
 RT-Thread 其实给我们提供了一个系统工作线程了，但很少有人知道。配置选项路径如下图所示：
 
-![](https://i.loli.net/2021/03/24/ebVfFzjXnWg7vcO.png)
+![](images/ebVfFzjXnWg7vcO.png)
 
 ```
 RT-Thread Components
@@ -23,7 +23,7 @@ RT-Thread Components
 
 这样系统在初始化的时候就创建了系统工作队列了，名字叫作 `sys_work`，在终端输入 `ps` 能够看到该线程。
 
-![](https://i.loli.net/2021/03/24/orYzvgLaxHUmfWT.png)
+![](images/orYzvgLaxHUmfWT.png)
 
 **如何向系统工作线程里添加工作项呢？**
 
@@ -98,7 +98,7 @@ int main(void)
 
 然后执行就能看到下述效果，与工作项绑定的任务被异步执行了，而且工作项 1 延迟了 2 个 tick 才执行。
 
-![image-20210324151403839](https://i.loli.net/2021/03/24/fGNKruxJ6ciaOYV.png)
+![](images/fGNKruxJ6ciaOYV.png)
 
 ## rt_workqueue
 
@@ -184,7 +184,7 @@ int main(void)
 
 然后执行就能看到下述效果，与工作项绑定的任务被异步执行了，而且工作项 1 延迟了 2 个 tick 才执行。
 
-![image-20210324155731128](https://i.loli.net/2021/03/24/NkfXVCPbg9alTiy.png)
+![](images/NkfXVCPbg9alTiy.png)
 
 ## 实现
 
@@ -192,16 +192,16 @@ int main(void)
 
 工作队列里面有一个线程(workthread)，这个线程的任务就是不断地从挂载链表(worklist)里提取工作项执行，若没有则休眠。
 
-![](https://i.loli.net/2021/03/24/jhWngTr6fvbHSNL.gif)
+![](images/jhWngTr6fvbHSNL.gif)
 
 然后提交工作项时，若延迟时间 time 大于 0，则启动该工作项的定时器，定时结束后再加入挂载链表(worklist)。
 
-![](https://i.loli.net/2021/03/24/fc917qeRsFxoDrP.gif)
+![](images/fc917qeRsFxoDrP.gif)
 
 若提交工作项时延迟实际等于 0，则直接将该工作项挂加入到挂载链表(worklist)。
 
-![](https://i.loli.net/2021/03/24/iFz6csv5hJqu9w7.gif)
+![](images/iFz6csv5hJqu9w7.gif)
 
 当然，工作项的定时器超时后，会自动将该工作项加入到挂载链表(worklist)。
 
-![](https://i.loli.net/2021/03/24/Lavtp5kqeAxIsm3.gif)
+![](images/Lavtp5kqeAxIsm3.gif)
