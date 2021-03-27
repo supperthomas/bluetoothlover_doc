@@ -278,7 +278,9 @@ EXEC_PATH   = r'.'
 POST_ACTION = OBJCPY + ' -O ihex $TARGET rtthread.hex\n' + SIZE + ' $TARGET \n'
 ```
 
+## printf
 
+代码里面千万不能有printf，不然调试起来会比较麻烦。
 
 
 
