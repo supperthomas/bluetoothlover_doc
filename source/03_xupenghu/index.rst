@@ -11,5 +11,6 @@ WB55:xupenghu
     05_art-pi_ble_netin/art-pi_net_connect_with_ble.md
     06_stm32wb55_ble_start/stm32wb55_ble_start.md
     07_stm32wb55_ble_ibeacon/stm32wb55_ble_ibeacon.md
-    08_rt-thread_packages/rt-thread_packages.md
+    08_rt-thread_packages/08_rt-thread_packages.md
+    
 
