@@ -1,4 +1,7 @@
-﻿## 前言
+﻿
+ # RT-Thread 软件包制作及发布流程
+ 
+ ## 前言
 RT-Thread是一个嵌入式实时多线程操作系统，系统完全开源，它不仅仅是一个实时内核，还具备丰富的中间层组件，包括如文件系统、图形库等较为完整的中间件组件，具备低功耗、安全、通信协议支持和云端连接能力的软件平台。
 
 我们可以结合rtthread提供的组件和服务，制作软件包，丰富rt-thread的软件生态。让更多的开发者做到开箱即用，不用重复造轮子。
@@ -18,10 +21,10 @@ RT-Thread是一个嵌入式实时多线程操作系统，系统完全开源，�
 其中，软件包里存放的是具体的代码源文件，包信息里面存放的是这个软件包的基本信息，不包括源代码文件。
 
 通过Env的menuconfig在某个BSP或者工程下面配置工程的时候，我们选择online package的时候，就会列举出当前已经基于rt-thread实现的软件包。如下图所示：
-![](.\images\01.png)
+![](./images/01.png)
 那么，这些软件包，在本地是存储在那里的呢？
 打开Env的安装目录，然后定位到 packages->packages 文件夹下
-![](.\images\02.png)
+![](./images/02.png)
 这是一个git仓库，这里面就存放了所有rt-thread已经做好的软件包的*包信息*，我们通过menuconfig选择的软件包其实最终都链接到了这里，所以你在env里面使用
 
 ```c
@@ -41,19 +44,19 @@ env就会从GitHub的仓库更新当前最新的软件包*包信息*到本地。
 前面讲过，一个软件分为包信息和软件包两个部分。首先我们讲一下软件包的制作。
 
 1. 确保这个传感器的驱动已经接入rt-thread的sensor框架，并且代码能够在rt-thread上正常运行。
-![](.\images\03.png)
+![](./images/03.png)
 比如一开始调试这个传感器的时候，我为了调试方便，就将传感器的所有源代码文件都放在了app文件夹内。这一步要做到传感器正常工作且接入了sensor框架。
 
 2. 将这个传感器的源代码文件都放入一个文件夹
-![](.\images\04.png)
+![](./images/04.png)
 3. 增加一个SConscript文件和一个readme文件。SConscript文件内容请查看rt-thread的官方文档。readme就是一个说明文档，告诉其他人你这个软件的信息以及别人如何上手，写的越详细越好，降低使用门槛。
-![](.\images\05.png)
+![](./images/05.png)
 
 #### 包信息的制作
 1. 在我们之前提到的env安装目录的package文件夹内的对应位置新建一个传感器包信息的文件夹。我们之前说过，menuconfig里面的软包信息就是这里的内容的呈现，我们需要在本地调试ok以后才能将软件包推送到GitHub仓库供其他人使用。
-![](.\images\06.png)
+![](./images/06.png)
 2. 在文件夹里面新建两个文件，一个Kconfig文件，一个package.json文件，这两个文件的内容和作用，请查看[rt-thread的官方文档](https://docs.rt-thread.org/#/rt-thread-version/rt-thread-standard/development-guide/package/package?id=%E8%BD%AF%E4%BB%B6%E5%8C%85%E5%BC%80%E5%8F%91%E6%8C%87%E5%8D%97)，我们这里默认你已经知道这两个文件的作用了。
-![](.\images\07.png)
+![](./images/07.png)
 3. sensor目录下的Kconfig文件内增加一条记录，用来索引刚添加的软件包。
 
 ```c
@@ -66,7 +69,7 @@ source "$PKGS_DIR/packages/peripherals/sensors/ina260/Kconfig"
 1. 我们随便找一个支持rt-thread的开发板，创建一个基本的rt-thread工程。然后将上一步做好的软件包仓库放到该工程的package文件夹。
 注：如果你的工程目录里面没有packages文件夹，那你可以在manuconfig里面随便选一个软件包，然后再去掉，再使用`scons --target==mdk5`重新生成工程，这样子工程目录里面就有packages文件夹了，注意：**packages文件夹里的这些文件不要删除，这个是组织工程的必要文件。**
 2. env命令工具行定位到该工程，然后menuconfig进入软件包选择，因为上一步我们已经加入了包信息，所以就可以索引到我们刚添加的软件包了，然后选中它，保存退出。
-![](.\images\08.png)
+![](./images/08.png)
 3. 使用`scons --target==mdk5` 更新工程，然后用keil打开工程，编译下载，如果没有问题则调试🆗，有问题则需要修改我们添加的Sconscript文件里面的内容了，修改方法见[官方文档](https://docs.rt-thread.org/#/development-tools/scons/scons?id=%E4%BD%BF%E7%94%A8-scons-%E7%AE%A1%E7%90%86%E5%B7%A5%E7%A8%8B)。
 
 #### 发布
@@ -74,7 +77,7 @@ source "$PKGS_DIR/packages/peripherals/sensors/ina260/Kconfig"
 
 ##### 发布软件包
 GitHub上新开一个repo，将我们在packages文件夹里的软件包pull到这个新的repo中。
-![](.\images\09.png)
+![](./images/09.png)
 然后发布一个release版本，因为包信息里面需要填写。
 
 #### 发布包信息
