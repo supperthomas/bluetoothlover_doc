@@ -94,3 +94,49 @@ GitHub上新开一个repo，将我们在packages文件夹里的软件包pull到�
 - 调试的时候也不能使用`pkgs --update`命令，这条命令的含义是下载网络软件包到本地，应为我们现在就是在本地调试阶段，网络上根本就没有这个软件包。
 - 使用`scons --target==mdk5/iar` 命令只是构建了这个工程，并没有编译该工程，建议多看看scons 。这个对构建工程很有帮助，尤其是工程比较复杂的时候，用scons构建会方便快捷很多，而且也便于管理。
 
+
+## FAQ
+
+### 如何在menuconfig隐藏一些config
+
+Kconfig中有个特殊的用法，在制作大型软件包的时候会遇到，就是有一些宏定义是不愿意让客户在menuconfig中进行修改的，但是又是相关开源软件包中必须要包含的，而且数目也比较众多的，对Kconfig一些选项有一些依赖的，也就是不希望该配置选项出现在menuconfig中。
+
+下面以Kconfig举例说明：
+
+```c
+config BSP_USING_GPIO
+    bool "Enable GPIO"
+    default y
+```
+
+将上述语句中的`bool`后面的注释去掉。
+
+```c
+config BSP_USING_GPIO
+    bool 
+    default y
+```
+
+这个时候在menuconfig中就不会出现该宏定义，但是宏定义还是会有
+
+### depends on 和select语句的区别
+
+例如，如下配置
+
+```c
+config BSP_USING_UART3
+    bool "UART3 config"
+    default y
+    depends on BSP_USING_UART
+    select RT_USING_SERIAL
+```
+
+这个其中的含义是：BSP_USING_UART3是否需要呈现给客户配置和选中，依赖于BSP_USING_UART这个配置是否打开。 一旦BSP_USING_UART3选中了，RT_USING_SERIAL这个也必须要选中。
+
+depends和select都需要注意的是：depends和select后面的宏定义必须要在其他地方有对应的config或者选项声明，否则不会生效。
+
+可以这样理解他们之间的区别：
+
+- select 相当于这个配置需要的一些组件配置选项
+- depends on 相当于这个配置需要哪些配置打开才会显示，这个通常和if/endif 形式类似。
+
