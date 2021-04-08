@@ -4,14 +4,14 @@
 
 ## AI 相关的软件包
 
-| 包名                                                         | 技术标签 | 依赖平台             | 备注                                                         | 分类 |
-| ------------------------------------------------------------ | -------- | -------------------- | ------------------------------------------------------------ | ---- |
-| [TensorflowLiteMicro](https://github.com/QingChuanWS/TensorflowLiteMicro) | AI       | ART-Pi               | 用于rt-thread操作系统的轻量级深度学习端侧推理框架Tensorflow Lite软件包。" |      |
-| [rt-libann](https://github.com/wuhanstudio/rt-libann)        | AI       | ANY                  | 轻量级 ANN 库，可以训练，保存和导入模型                      |      |
-| [nnom](https://github.com/majianjia/nnom)                    | AI       |                      | NNoM是一个专门为了神经网络在 MCU 上运行的框架                |      |
-| [onnx-backend](https://github.com/wuhanstudio/onnx-backend)  | AI       | ******************** | 开源神经网络模型 onnx 后端，支持几乎所有主流机器学习模型     |      |
-| [rt-onnx-parser](https://github.com/wuhanstudio/rt-onnx-parser) | AI       |                      | 开源神经网络模型 onnx 解析库                                 |      |
-|                                                              |          |                      |                                                              |      |
+| 包名                                                         | 技术标签 | 依赖平台             | 备注                                                         | 分类                 |
+| ------------------------------------------------------------ | -------- | -------------------- | ------------------------------------------------------------ | -------------------- |
+| [TensorflowLiteMicro](https://github.com/QingChuanWS/TensorflowLiteMicro) | AI       | ART-Pi               | 用于rt-thread操作系统的轻量级深度学习端侧推理框架Tensorflow Lite软件包。" | 太大                 |
+| [rt-libann](https://github.com/wuhanstudio/rt-libann)        | AI       | ANY                  | 轻量级 ANN 库，可以训练，保存和导入模型                      | 需要文件系统         |
+| [nnom](https://github.com/majianjia/nnom)                    | AI       |                      | NNoM是一个专门为了神经网络在 MCU 上运行的框架                | 没有sample           |
+| [onnx-backend](https://github.com/wuhanstudio/onnx-backend)  | AI       | ******************** | 开源神经网络模型 onnx 后端，支持几乎所有主流机器学习模型     | 有个简单的可以学一下 |
+| [rt-onnx-parser](https://github.com/wuhanstudio/rt-onnx-parser) | AI       |                      | 开源神经网络模型 onnx 解析库                                 |                      |
+|                                                              |          |                      |                                                              |                      |
 
 ##  log相关的软件包
 
