@@ -207,6 +207,16 @@ git push origin v1.0.0
 
 找到该tag的commit的hash值类似于`4c61f272d8532ce89801be503360afd5bc62d7b3`
 
+拷贝该tag的连接地址：
+
+例如：
+
+```
+https://github.com/supperthomas/RTT_PACKAGE_BTSTACK/archive/refs/tags/v1.0.0.zip
+```
+
+(官方建议用zip连接地址，这样在git提交代码的时候不会相互影响，package包只是源文件)
+
 这个比较重要
 
 ### 修改env软件包中的信息
@@ -219,18 +229,21 @@ git push origin v1.0.0
 
 - package.json
 
-  添加如下版本信息，注意这里的VER_SHA填刚才生成的SHA值即可，URL不用修改直接默认的即可
+  添加如下版本信息，注意这里的VER_SHA不需要填，url选择对应的zip下载链接即可
 
 ```
     {
-      "version": "v1.0.0",
-      "URL": "https://github.com/supperthomas/RTT_PACKAGE_BTSTACK.git",
-      "filename": "btstack-1.0.0.zip",
-      "VER_SHA": "4c61f272d8532ce89801be503360afd5bc62d7b3"
+      "version": "v1.10",
+      "URL": "https://github.com/RT-Thread-packages/micropython/archive/1.10.zip",
+      "filename": "micropython-1.10.zip",
+      "VER_SHA": ""
     },
 ```
 
 ### 提交Kconfig和package.json到github
 
-将修改的Konfig和package.json提交到github
+测试完成之后将修改的Konfig和package.json提交到github
 
+### 后续开发
+
+后续开发直接在branch上面开发即可，等到release版本的时候，将branch merge到master主分支上，再参考上述操作再执行一次
