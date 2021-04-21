@@ -1,5 +1,7 @@
 # 软件包制作小计
 
+之前写了一份制作指南，可以先看这个[rtthread 软件包制作](https://blog.csdn.net/lt6210925/article/details/105176863?spm=1001.2014.3001.5501)
+
 本文记录一些软件包的小笔记，方便后续增加软件包，或者管理软件包
 
 首先找到RTTHREAD官方的关于软件包制作相关的文章，研读一遍，在代码贡献篇的[软件包开发指南](https://www.rt-thread.org/document/site/development-guide/package/package/)。
