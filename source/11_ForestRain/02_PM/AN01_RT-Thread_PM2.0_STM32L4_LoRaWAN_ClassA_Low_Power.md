@@ -3,7 +3,7 @@
 基于RT-Thread PM2.0与STM32L4的LoRaWAN Class A低功耗终端设备设计与应用笔记
 
 # 1 前言
-本文主要描述了基于LSD4RF-TEST2002[STM32L4]平台使用RT-Thread PM2.0组件与lorawan-ed-stack软件包，如何实现LoRaWAN Class A终端设备的低功耗功能。<br />本文主要侧重讲解LoRaWAN-ed-stack的低功耗实现，lorawan-ed-stack软件包的使用可详见 [《lorawan-ed-stack软件包使用说明》](https://github.com/Forest-Rain/lorawan-ed-stack/tree/master/doc)<br />[![](https://camo.githubusercontent.com/a41862cb3ccca3c1f28ab107ee83dd2e6c950d2a7fb204c0e0e62339811f2378/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f79757175652f302f323032302f706e672f3235333538362f313630333736303034343032382d31323631393536612d306339652d343164372d386437392d3735663330366433366139352e706e6723616c69676e3d6c65667426646973706c61793d696e6c696e65266865696768743d353737266d617267696e3d2535426f626a6563742532304f626a656374253544266e616d653d696d6167652e706e67266f726967696e4865696768743d353737266f726967696e57696474683d3836342673697a653d3530333731267374617475733d646f6e65267374796c653d6e6f6e652677696474683d383634#from=paste&height=289&id=h3lm8&margin=%5Bobject%20Object%5D&originHeight=577&originWidth=864&originalType=url&status=done&style=none&width=432)](https://camo.githubusercontent.com/a41862cb3ccca3c1f28ab107ee83dd2e6c950d2a7fb204c0e0e62339811f2378/68747470733a2f2f63646e2e6e6c61726b2e636f6d2f79757175652f302f323032302f706e672f3235333538362f313630333736303034343032382d31323631393536612d306339652d343164372d386437392d3735663330366433366139352e706e6723616c69676e3d6c65667426646973706c61793d696e6c696e65266865696768743d353737266d617267696e3d2535426f626a6563742532304f626a656374253544266e616d653d696d6167652e706e67266f726967696e4865696768743d353737266f726967696e57696474683d3836342673697a653d3530333731267374617475733d646f6e65267374796c653d6e6f6e652677696474683d383634)
+本文主要描述了基于LSD4RF-TEST2002[STM32L4]平台使用RT-Thread PM2.0组件与lorawan-ed-stack软件包，如何实现LoRaWAN Class A终端设备的低功耗功能。<br />本文主要侧重讲解LoRaWAN-ed-stack的低功耗实现，lorawan-ed-stack软件包的使用可详见 [《lorawan-ed-stack软件包使用说明》](https://github.com/Forest-Rain/lorawan-ed-stack/tree/master/doc)<br />[![lorawan-ed-stack软件包](./AN01_images/00.png)
 
    - lorawan-ed-stack软件包使用了lora-radio-driver软件包作为LoRaWAN的phy层，在使用lorawan-ed-stack软件包前，建议先查看[《LoRa-Radio-Driver软件包使用说明》](https://github.com/Forest-Rain/lora-radio-driver/tree/master/doc)
 
@@ -16,7 +16,7 @@ RT-Thread PM2.0组件设计详见rt-thread官方作者非常详细的系列文�
 <a name="29331138ac20a0507b07b7db38bcc2a7"></a>
 ### 1.1.1 所需硬件
 
-- [ART-Pi LoRa开发套件](http://wsn.lierda.com/index.php/Home/product/detail/id/113.html)![ART-Pi 盒子整体图片1.png](AN01_images/01.png)
+- [ART-Pi LoRa开发套件](http://wsn.lierda.com/index.php/Home/product/detail/id/113.html)![ART-Pi 盒子整体图片1.png](./AN01_images/01.png)
    - LoRa模块转接板(LRS101)
       - 贴装 [LSD4RF-2R717N40 (SX1268,470M频段)](http://bbs.lierda.com/forum.php?mod=viewthread&tid=87&extra=page%3D1).
    - RF评估板
@@ -24,7 +24,7 @@ RT-Thread PM2.0组件设计详见rt-thread官方作者非常详细的系列文�
 -  电流测试仪器
    - STM32功耗测试工具 STM32CubeMonitor-Power 与 [ STM32L562E-DK](https://www.st.com/en/evaluation-tools/stm32l562e-dk.html)
 
-![image.png](AN01_images/02.png)
+![image.png](./AN01_images/02.png)
 <a name="ad7eaede33b009b37944d0dd879a30ee"></a>
 
 ### 1.1.2 所需开发工具
@@ -299,11 +299,11 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
 
 1. 在"RT-Thread Settings"使能"低功耗"
 
-或者"RT-Thread Components" -> " Device Drivers" -> "USing Power Management device drivers"使能PM组件。<br />![image.png](AN01_images/03.png)
+或者"RT-Thread Components" -> " Device Drivers" -> "USing Power Management device drivers"使能PM组件。<br />![image.png](./AN01_images/03.png)
 <a name="tyRlW"></a>
 
 ### 2.1.1 设置 IDLE_THREAD_STACK_SIZE
-使用PM组件，要求IDLE_THREAD_STACK_SIZE大于256 Byte<br />![image.png](AN01_images/04.png)<br />
+使用PM组件，要求IDLE_THREAD_STACK_SIZE大于256 Byte<br />![image.png](./AN01_images/04.png)<br />
 
 <a name="7dbfb25a1c0eb6f5594e0b9849fc80a2"></a>
 ## 2.2 使能lorawan-ed-stack软件包
@@ -314,7 +314,7 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
    - 基于ART-Pi与LRS007的LoRaWAN_ED_Stack软件包应用笔记
       - [https://club.rt-thread.org/ask/article/2541.html](https://club.rt-thread.org/ask/article/2541.html)
 
-![image.png](AN01_images/05.png)
+![image.png](./AN01_images/05.png)
 > - Regional参数
 >    - CN470同频 
 >       - 上行=下行(RX1)
@@ -341,44 +341,44 @@ LoRaWAN Class A低功耗应用需要使用低功耗的定时器外设，当前�
 
    - [https://github.com/Forest-Rain/multi-rtimer](https://github.com/Forest-Rain/multi-rtimer)
 
-![image.png](AN01_images/06.png)
+![image.png](./AN01_images/06.png)
 <a name="jSusT"></a>
 
 ## 2.3 STM32CubeMX设置
 <a name="L7J24"></a>
 ### 2.3.1 配置STM32L4的LSE与RTC
-multi_rtimer软件包使用硬件RTC，同时为了获取更高时间精度，以满足Class A设备通信要求，需要使用低频晶振（LSE）。<br />![image.png](AN01_images/07.png)<br />RCC使能LSE<br />
-<br />![image.png](AN01_images/08.png)<br />使能RTC<br />![image.png](AN01_images/09.png)<br />RTC时钟源设置为LSE<br />
+multi_rtimer软件包使用硬件RTC，同时为了获取更高时间精度，以满足Class A设备通信要求，需要使用低频晶振（LSE）。<br />![image.png](./AN01_images/07.png)<br />RCC使能LSE<br />
+<br />![image.png](./AN01_images/08.png)<br />使能RTC<br />![image.png](./AN01_images/09.png)<br />RTC时钟源设置为LSE<br />
 <br />
 
 <a name="S3bsD"></a>
 ### 2.3.2 配置LPTIM1
-STM32L4平台，RT-Thread PM2.0组件使用了LPTIM1来提供Tickless机制。<br />注：当前在drv_lptim.c驱动里面已经默认实现LPTIM1的开启，因此此处也可以忽略该步骤。<br />![image.png](AN01_images/10.png)<br />使能LPTIM1<br />![image.png](AN01_images/11.png)<br />LPTIM1时钟源设置为LSE，也可以设置来自LSI
+STM32L4平台，RT-Thread PM2.0组件使用了LPTIM1来提供Tickless机制。<br />注：当前在drv_lptim.c驱动里面已经默认实现LPTIM1的开启，因此此处也可以忽略该步骤。<br />![image.png](./AN01_images/10.png)<br />使能LPTIM1<br />![image.png](AN01_images/11.png)<br />LPTIM1时钟源设置为LSE，也可以设置来自LSI
 <a name="653cd9386c7cf2182df9bf919ad54b34"></a>
 
 # 4 功耗测试结果
-将[ STM32L562E-DK](https://www.st.com/en/evaluation-tools/stm32l562e-dk.html)的JP7接口连接到测试 [LSD4RF-TEST2002[STM32L4]](http://bbs.lierda.com/forum.php?mod=viewthread&tid=9729&highlight=test2002&_dsign=25cd8f70) 的J2接口,如下图所示<br />![image.png](AN01_images/12.png)<br />搭建LSD4RF-TEST2002[STM32L4]功耗测试台
+将[ STM32L562E-DK](https://www.st.com/en/evaluation-tools/stm32l562e-dk.html)的JP7接口连接到测试 [LSD4RF-TEST2002[STM32L4]](http://bbs.lierda.com/forum.php?mod=viewthread&tid=9729&highlight=test2002&_dsign=25cd8f70) 的J2接口,如下图所示<br />![image.png](./AN01_images/12.png)<br />搭建LSD4RF-TEST2002[STM32L4]功耗测试台
 <a name="4f90dc611266d89dd229ef894d7f04c4"></a>
 
 ## 4.1 OTAA入网功耗测试
 
 1. 设备上电后，随机延时后，开始入网
 
-![image.png](AN01_images/13-0.png)<br />![image.png](AN01_images/13.png)<br />设备OTAA入网<br />
+![image.png](./AN01_images/13-0.png)<br />![image.png](./AN01_images/13.png)<br />设备OTAA入网<br />
 
 <a name="e6606b661533640deb8b05f3cc0f28f6"></a>
 
 ## 4.2 LoRaWAN数据通信功耗测试
 LoRaWAN数据通信，无下行数据情况
 
-![image.png](AN01_images/14.png))
+![image.png](./AN01_images/14.png))
 
 <br />
-<br />![image.png](AN01_images/15.png))<br />周期性Class A数据上报(无下行数据)<br />![image.png](AN01_images/16.png))单次Class A数据通信功耗曲线(无下行数据)<br />
+<br />![image.png](./AN01_images/15.png))<br />周期性Class A数据上报(无下行数据)<br />![image.png](./AN01_images/16.png))单次Class A数据通信功耗曲线(无下行数据)<br />
 
 LoRaWAN数据通信，有下行数据情况
 
-![image.png](AN01_images/17.png))<br />![image.png](AN01_images/18.png))<br />单次Class A数据通信功耗曲线(有下行数据）
+![image.png](./AN01_images/17.png))<br />![image.png](./AN01_images/18.png))<br />单次Class A数据通信功耗曲线(有下行数据）
 <a name="22272bb76042704254d56c620e312fcb"></a>
 
 # 5 参考
