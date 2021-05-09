@@ -22,6 +22,22 @@ edgeimpulse网站
 
 https://docs.edgeimpulse.com/docs
 
+edge-impulse-cli安装
+
+需要安装gcc
+
+安装教程
+
+https://docs.edgeimpulse.com/docs/cli-installation
+
+
+
+```
+apt-get install make
+apt-get install g++
+
+```
+
 
 
 
