@@ -15,4 +15,5 @@ RTTHRED: RT-Thread
     03_bsp_porting/01_rtthread_bsp_porting.md
     03_bsp_porting/02_rtthread_bsp_porting_gpio.md
     03_bsp_porting/03_rtthread_bsp_porting_spi.md
+    03_bsp_porting/04_rtthread_bsp_porting_uart.md
     
