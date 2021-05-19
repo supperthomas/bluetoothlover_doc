@@ -11,7 +11,7 @@
 1. 装有MacOS的电脑或虚拟机
 2. 装有Windows的电脑或虚拟机
 
-需要用到的资源如下**：**
+需要用到的资源如下：
 
 - [ART-Pi SDK](https://github.com/RT-Thread-Studio/sdk-bsp-stm32h750-realthread-artpi)
 - [scons](https://scons.org/pages/download.html)

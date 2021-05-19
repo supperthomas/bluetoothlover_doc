@@ -39,6 +39,14 @@ Name: chenyingchun
 |           |          |
 |           |          |
 
+### 手上相关开发板
+
+| 开发板名称            | 开发板相关链接                                               | 备注              | soc类型         |
+| --------------------- | ------------------------------------------------------------ | ----------------- | --------------- |
+| Nordic52832(pca10040) | [NRF52832](https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52-DK) | BLE               | BT-SOC开发板    |
+| ART-PI(pca10040) | [STM32H750XB](https://github.com/RT-Thread-Studio/sdk-bsp-stm32h750-realthread-artpi) |    STM32            | STM32开发板    |
+
+
 
 
 

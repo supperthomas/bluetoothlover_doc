@@ -11,6 +11,7 @@ RTTHRED: RT-Thread
     02_softpackage_list/03_sensor_list.md
     02_softpackage_list/04_rtthread_auto_update.md
     02_softpackage_list/05_rtthread_bsp_board.md
+    02_softpackage_list/06_rtthread_softpackage_build_guide.md
     03_bsp_porting/01_rtthread_bsp_porting.md
     03_bsp_porting/02_rtthread_bsp_porting_gpio.md
     03_bsp_porting/03_rtthread_bsp_porting_spi.md
