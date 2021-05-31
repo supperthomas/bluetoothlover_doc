@@ -17,6 +17,7 @@ Welcome to supperthomas_wiki's documentation!
    WB55/index
    WIKI_FAQ/index
    RTTHREAD/index
+   DEBUG/index
 
    00_supperthomas/index
    01_helloworldzlg/index
