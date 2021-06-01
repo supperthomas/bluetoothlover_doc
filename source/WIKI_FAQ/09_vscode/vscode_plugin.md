@@ -9,16 +9,25 @@
 
 ## 插件
 
-- git graph  git图形化工具类似于git gui
+### git graph  git图形化工具类似于git gui
 
 ```
 Git Graph extension for Visual Studio Code
 ```
 
-- Git-commit-plugin For Vscode  
+### Git-commit-plugin For Vscode  
 
 git commit 图形化工具
 
-- indent-rainbow 
+### indent-rainbow 
+- 代码格式对齐
+- 代码块着色，使得代码整齐美观
 
-可以对齐if else 让coding更直观一些
+### Bracket Pair Colorizer
+- 括号成对带颜色，非常方便
+
+### Markdown All in One
+- markdown写作利器，可以预览，可以直接转成pdf
+
+### Intel Hex format
+- 能看hex文件和bin文件
