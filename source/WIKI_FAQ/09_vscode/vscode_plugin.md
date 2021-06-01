@@ -10,14 +10,10 @@
 ## 插件
 
 ### git graph  git图形化工具类似于git gui
-
-```
-Git Graph extension for Visual Studio Code
-```
+- Git Graph extension for Visual Studio Code
 
 ### Git-commit-plugin For Vscode  
-
-git commit 图形化工具
+- git commit 图形化工具
 
 ### indent-rainbow 
 - 代码格式对齐
