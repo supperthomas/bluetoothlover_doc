@@ -27,3 +27,6 @@
 
 ### Intel Hex format
 - 能看hex文件和bin文件
+
+### koroFileHeader
+- 用于生成文件头部和函数的注释
