@@ -7,6 +7,20 @@
 - ctrl + shift + p  显示命令
 - ctrl + alt + F 格式化文件
 
+## files.exclude 和 search.exclude
+
+- files.exclude 用于从当前工作区排除一些文件，也就是不在左侧的工作区间显示。
+- search.exclude 用于从搜索路径里排除一些文件，当我们全局搜索某个变量、函数名或字符串时，不会搜索这些文件里的内容。
+
+上述两个配置项我一般都是成对使用，对于不想显示的文件，自然也不想搜索。
+
+官方介绍链接：https://code.visualstudio.com/docs/getstarted/userinterface
+
+files.exclude 和 search.exclude 配置项都是在 .vscode/settings 文件里，下面列出一些常用的点：
+
+- `**` 代码当前工作区目录，`**/.git` 即当前工作区下的 .git 目录。
+- 配置的路径支持[通配符](https://m.linuxidc.com/Linux/2017-08/146463.htm)，`[]` 代表可选，例如 [1234] 代表可选 1,2,3,4，当然也可以写成 [1-4]；`*` 代表可匹配任意个字。例如 `[**/bsp/[a-y]*]` 代表匹配工作目录 bsp 目录下，从 a 到 y 字母开头的目录。
+
 ## 插件
 
 ### git graph  git图形化工具类似于git gui
@@ -38,7 +52,7 @@
   - // 灰色删除线注释
   - todo 橘红色注释
   - * 浅绿色注释
- 
+
 ```
 //  正常注释
 //* 浅绿色
