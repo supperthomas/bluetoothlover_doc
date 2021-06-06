@@ -1,6 +1,4 @@
-
-
-
+# SEGGER RTT 简介
 
 ## 问题一
 
@@ -129,15 +127,15 @@ SWDIO， SWCLK， RESET 和 GND 五个引脚即可， SWO（Serial Wire Output�
 
 
 
-# 函数说明
+## 函数说明
 
-## SEGGER_RTT_Init()  
+### SEGGER_RTT_Init()  
 
 初始化RTT时钟
 
 
 
-## SEGGER_RTT_printf
+### SEGGER_RTT_printf
 
 ```
 /*********************************************************************
@@ -177,15 +175,15 @@ int SEGGER_RTT_printf(unsigned BufferIndex, const char * sFormat, ...) {
 
 BufferIndex 是buffer序号
 
-##  SEGGER_RTT_HasKey
+###  SEGGER_RTT_HasKey
 
 检查是否有输入数据
 
-## SEGGER_RTT_GetKey
+### SEGGER_RTT_GetKey
 
 获取输入的数据值
 
-## SEGGER_RTT_WaitKey
+### SEGGER_RTT_WaitKey
 
 int SEGGER_RTT_WaitKey(void) {
   int r;
@@ -198,7 +196,7 @@ int SEGGER_RTT_WaitKey(void) {
 
 
 
-##  SEGGER_RTT_Read  
+###  SEGGER_RTT_Read  
 
 从buffer里面读数据
 
@@ -212,7 +210,7 @@ BufferSize);
 | pBuffer     | Pointer to a character buffer to store the read characters. |
 | BufferSize  | Number of bytes available in the buffer                     |
 
-## SEGGER_RTT_SetTerminal
+### SEGGER_RTT_SetTerminal
 
 设置虚拟的terminal
 
@@ -358,7 +356,7 @@ int SEGGER_RTT_vprintf(unsigned BufferIndex, const char * sFormat, va_list * pPa
 
 
 
-#  Terminal
+##  Terminal
 
 ```
 static unsigned char _aTerminalId[16] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
@@ -366,7 +364,7 @@ static unsigned char _aTerminalId[16] = { '0', '1', '2', '3', '4', '5', '6', '7'
 
 定义了16个通道
 
-# SEGGER_RTT 结构体
+## SEGGER_RTT 结构体
 
 ```
 typedef struct {
@@ -389,7 +387,7 @@ typedef struct {
 
 
 
-# 地址问题
+## 地址问题
 
 https://www.cnblogs.com/chen0207/p/12641055.html
 
@@ -429,7 +427,7 @@ SEGGER_RTT_PUT_CB_SECTION(SEGGER_RTT_CB_ALIGN(SEGGER_RTT_CB _SEGGER_RTT))__attri
 
 
 
-# 打印颜色问题：
+## 打印颜色问题：
 
 ```
 SEGGER_RTT_printf(0, "%sCounter: %s%d\n",
@@ -500,7 +498,7 @@ SEGGER_RTT_PUT_BUFFER_SECTION(SEGGER_RTT_BUFFER_ALIGN(static char _acDownBuffer[
 
 
 
-# 参考链接
+## 参考链接
 
 - 使用J-Link命令行烧写芯片内部Flash
 
