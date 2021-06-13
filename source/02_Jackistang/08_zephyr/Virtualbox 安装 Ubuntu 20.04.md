@@ -228,3 +228,13 @@ imwheel
 鼠标侧键与 VSCode 绑定。
 
 https://blog.csdn.net/zhanghm1995/article/details/88876092
+
+## VirtualBox 常见错误
+
+### vmware 启动失败 VERR_SSM_LOAD_CONFIG_MISMATCH
+
+打开虚拟机时报错：
+
+![](images/336252-20210115144014778-1583596993.png)
+
+此时虚拟机处于休眠状态，点击清除虚拟机状态。重启就好。
