@@ -525,3 +525,7 @@ https://youtu.be/-B6QjdnMzmY
 - IAR 调试技巧
 
 https://www.iar.com/knowledge/learn/debugging/
+
+- 用VS Code开发STM32（四）——增加SEGGER RTT日志输出支持
+- 
+https://zhuanlan.zhihu.com/p/163771273
