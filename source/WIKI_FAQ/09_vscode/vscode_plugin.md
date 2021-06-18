@@ -61,3 +61,16 @@ files.exclude 和 search.exclude 配置项都是在 .vscode/settings 文件里�
 //// 灰色
 //todo 橘红色
 ```
+
+### highlight-words
+[参考链接](https://blog.csdn.net/palmer_kai/article/details/79548164)
+- 可以达到类似于SourceInsight高亮的效果
+
+#### 安装配置步骤
+- 安装插件
+- 进行快捷键绑定，只需要绑定Highlight Toggle Current，比如F8，注意，可能需要解绑其他的F8快捷键
+- 在setting.json中加入配置选项： "highlightwords.defaultMode": 1
+
+
+
+
