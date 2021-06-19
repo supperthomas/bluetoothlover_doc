@@ -255,6 +255,13 @@ https://github.com/supperthomas/RTT_PACKAGE_BTSTACK/archive/refs/tags/v1.0.0.zip
  - 默认官方的RT-THREAD package中的版本号默认使用最新的稳定的版本，而不是latest版本（方便后续更新）
     
  - 每次Kconfig如果改动比较大的话，一定要保留上一次版本的Kconfig中的内容，防止别人使用的时候，被改掉了
+    类似于
+ 
+ ```
+if !PKG_USING_BTSTACK_V001
+endif
+ ```
+    
     
  - 建议每次将Kconfig和版本号一起打包，放到软件包下面
 
