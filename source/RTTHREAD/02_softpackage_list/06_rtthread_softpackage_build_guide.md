@@ -249,3 +249,12 @@ https://github.com/supperthomas/RTT_PACKAGE_BTSTACK/archive/refs/tags/v1.0.0.zip
 ### 后续开发
 
 后续开发直接在branch上面开发即可，等到release版本的时候，将branch merge到master主分支上，再参考上述操作再执行一次
+
+### 软件包制作建议
+
+ - 默认官方的RT-THREAD package中的版本号默认使用最新的稳定的版本，而不是latest版本（方便后续更新）
+    
+ - 每次Kconfig如果改动比较大的话，一定要保留上一次版本的Kconfig中的内容，防止别人使用的时候，被改掉了
+    
+ - 建议每次将Kconfig和版本号一起打包，放到软件包下面
+
