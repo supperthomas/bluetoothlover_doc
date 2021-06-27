@@ -271,3 +271,5 @@ endif
  - 建议每次将Kconfig和版本号一起打包，放到软件包下面
 
  - 建议新功能在branch上修改
+    
+ - release 版本如果有bug，修改tag，
