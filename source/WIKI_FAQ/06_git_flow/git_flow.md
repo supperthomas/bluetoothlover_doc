@@ -1,5 +1,7 @@
 # GIT 技巧总结
 
+[官方文档](https://training.github.com/downloads/zh_CN/github-git-cheat-sheet/)
+
 ##  如何将自己fork的代码更新到最新的代码
 
 作者[Thomas]
