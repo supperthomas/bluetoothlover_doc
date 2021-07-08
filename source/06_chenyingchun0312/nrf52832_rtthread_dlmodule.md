@@ -1,10 +1,12 @@
+[TOC]
+
 # nRF52832 RT-Thread dmodule适配
 
 ## 硬件准备
 
 准备NRF52832开发板，我这里使用的是青风的NRF52832开发板
 
-![](./images/dlmodule/image-20210626153037768.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626153037768.png)
 
 
 
@@ -39,7 +41,7 @@
 
 备注：青风52832开发板，Device Name为nRF52832-QFAA，内部资源为RAM 64KB, Flash 512KB
 
-![](./images/dlmodule/image-20210616231946677.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210616231946677.png)
 
 
 
@@ -49,7 +51,7 @@ nordic内部flash的管理是通过NVMC（non-volatile memory controller）控�
 
 即page size大小为0x1000, block size大小为0x200， 每个page包含了7个block
 
-![](./images/dlmodule/image-20210616233833766.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210616233833766.png)
 
 
 
@@ -69,13 +71,13 @@ nordic内部flash的管理是通过NVMC（non-volatile memory controller）控�
 
 在```rt-thread\bsp\nrf5x\nrf52832``` 目录中，使用rtthread env工具打开，执行scons，使用arm-gcc来编译程序，出现如下提示
 
-![](./images/dlmodule/image-20210626154418762.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626154418762.png)
 
 
 
 上面的错误原因，提示很明显，需要设置bsp根目录下的rtconfig.py中的EXEC_PATH，设置GCC交叉编译工具链的路径，这里需要修改的内容如下
 
-![](./images/dlmodule/image-20210626154917030.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626154917030.png)
 
 
 
@@ -87,13 +89,13 @@ nordic内部flash的管理是通过NVMC（non-volatile memory controller）控�
 - 所有反斜杠```'\'```都需要转义
 - 将所有反斜杠```'\'```修改成斜杠```'/'```
 
-![](./images/dlmodule/image-20210626155234950.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626155234950.png)
 
 
 
 修改后，再次执行```scons```编译程序，出现如下提示
 
-![](./images/dlmodule/image-20210626162645013.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626162645013.png)
 
 这里，说明一下，由于nrf5x bsp可以正确运行，还需要加载nrfx hal 库，类似于stm32的hal库，nrfx hal 库使用软件包的形式提供，而不是像stm32中的hal库，已经存在于bsp中，因此这里才会报错，这里我们需要下载对应的软件包
 
@@ -105,39 +107,39 @@ nordic内部flash的管理是通过NVMC（non-volatile memory controller）控�
 
 - 选择online packages
 
-  ![](./images/dlmodule/image-20210626163227187.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626163227187.png)
 
 
 
 - 选择外设库和驱动
 
-  ![](./images/dlmodule/image-20210626163243256.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626163243256.png)
 
 - 选择nrfx 库
 
-  ![](./images/dlmodule/image-20210626163348195.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626163348195.png)
 
 
 
 - 选择最新nrfx最新版本
 
-  ![](./images/dlmodule/image-20210626163358689.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626163358689.png)
 
 
 
 - 保存修改
 
-  ![](./images/dlmodule/image-20210626163626369.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626163626369.png)
 
 
 
 - 执行pkgs –update更新nrfx库软件包
 
-  ![](./images/dlmodule/image-20210626163813921.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626163813921.png)
 
 - 软件包，下载好，继续编译，提示如下错误，由于GCC链接脚本适配异常，这里，我们还需要修改链接脚本
 
-  ![](./images/dlmodule/image-20210626164356961.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626164356961.png)
 
 
 
@@ -325,13 +327,13 @@ SECTIONS
 
 - 提供了一些链接符号，给到gcc_startup_nrf52.S启动文件使用，启动文件需要知道这些符号，来初始化bss段，重定向数据端，设置堆栈指针sp等
 
-  ![](./images/dlmodule/image-20210626202841785.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626202841785.png)
 
 
 
-![](./images/dlmodule/image-20210626202939083.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626202939083.png)
 
-![](./images/dlmodule/image-20210626203141280.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626203141280.png)
 
 
 
@@ -339,7 +341,7 @@ SECTIONS
 
 参考stm32的gcc启动文件，好像是并没有栈大小，堆大小的定义
 
-![](./images/dlmodule/image-20210626204216383.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626204216383.png)
 
 
 
@@ -347,19 +349,19 @@ SECTIONS
 
 - 内存布局分析
 
-  ![](./images/dlmodule/image-20210626204842209.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626204842209.png)
 
 
 
 - PROVIDE关键字
 
-  ![](./images/dlmodule/image-20210626205114450.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626205114450.png)
 
 在链接脚本中，使用PROVIDE关键，PROVIDE（符号 = 值）， 在汇编或者C语言中，可以直接引用
 
 比如，链接脚本中，提供的这些符号，在如下启动文件中，使用到了
 
-![](./images/dlmodule/image-20210626205427734.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626205427734.png)
 
 
 
@@ -369,7 +371,7 @@ SECTIONS
 
 再提一个主意事项，我在实际测试过程中，menuconfig加载的默认值和Kconfig中配置的不一致，暂不清楚原因，因此，需要menuconfig时，特别加上一个设置MCU资源的配置，配置如下
 
-![](./images/dlmodule/image-20210626211028728.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626211028728.png)
 
 
 
@@ -377,31 +379,31 @@ SECTIONS
 
 - 编译通过，编译后，在bsp根目录生成了rt-thread.elf, rt-thread.bin,rt-thread.hex三个文件
 
-  ![](./images/dlmodule/image-20210626155720667.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626155720667.png)
 
 
 
 - 在env环境中，执行```code .``` 打开vscode
 
-  ![](./images/dlmodule/image-20210626160058786.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626160058786.png)
 
 
 
 - 在vscode环境中编译代码（和在env环境中执行scons一致），点击菜单栏```终端``` -> ```运行生成任务``` 快捷键 ``` ctrl+shift+b```，快速编译代码，编译完成会有如下提示
 
-  ![](./images/dlmodule/image-20210626211449656.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626211449656.png)
 
 
 
 - 进入Debug环境，发现程序可以停在第一条将要执行的指令上了
 
-  ![](./images/dlmodule/image-20210626161329676.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626161329676.png)
 
 
 
 - 打开串口，全速运行，rtthread最小系统运行成功
 
-  ![](./images/dlmodule/image-20210626212023063.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626212023063.png)
 
 
 
@@ -409,7 +411,7 @@ SECTIONS
 
 通过git管理，查看文件的修改情况如下，仅修改了4个文件
 
-![](./images/dlmodule/image-20210626212339655.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626212339655.png)
 
 
 
@@ -423,37 +425,37 @@ SECTIONS
 
 - 在线软件包
 
-  ![](./images/dlmodule/image-20210626220618964.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626220618964.png)
 
 
 
 - 系统软件包
 
-  ![](./images/dlmodule/image-20210626220652804.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626220652804.png)
 
 
 
 - fal软件包
 
-  ![](./images/dlmodule/image-20210626220716575.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626220716575.png)
 
   
 
 - 使用默认fal配置即可
 
-  ![](./images/dlmodule/image-20210626220747832.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626220747832.png)
 
 
 
 - 保存，并执行```pkgs –update```命令，更新软件包
 
-  ![](./images/dlmodule/image-20210626220927047.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626220927047.png)
 
 
 
 - 使能片上Flash
 
-  ![](./images/dlmodule/image-20210626223322120.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626223322120.png)
 
 
 
@@ -520,11 +522,11 @@ extern const struct fal_flash_dev mcu_onchip_flash;
 
 - 在application.c中加入如下代码
 
-  ![](./images/dlmodule/image-20210626223652374.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626223652374.png)
 
 - 编译，运行代码，可以看到fal初始化成功
 
-  ![](./images/dlmodule/image-20210626223736373.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626223736373.png)
 
 
 
@@ -540,7 +542,7 @@ extern const struct fal_flash_dev mcu_onchip_flash;
 
 DFS 是 RT-Thread 提供的虚拟文件系统组件，全称为 Device File System，即设备虚拟文件系统，文件系统的名称使用类似 UNIX 文件、文件夹的风格，目录结构如下图所示
 
-![](./images/dlmodule/image-20210618212132946.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210618212132946.png)
 
 ### DFS架构
 
@@ -552,7 +554,7 @@ RT-Thread DFS 组件的主要功能特点有：
 
 DFS 的层次架构如下图所示，主要分为 POSIX 接口层、虚拟文件系统层和设备抽象层。
 
-![](./images/dlmodule/image-20210618212330733.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210618212330733.png)
 
 
 
@@ -589,17 +591,17 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 
 - 开启 / 配置 DFS 框架，为应用程序提供统一的 POSIX 文件和目录操作接口
 
-  ![](./images/dlmodule/image-20210626225009745.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626225009745.png)
 
 - 使能 littlefs 软件包，注意选择最新版本
 
-  ![](./images/dlmodule/image-20210626225116707.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626225116707.png)
 
-  ![](./images/dlmodule/image-20210626225157577.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626225157577.png)
 
 - 使能 MTD 设备
 
-  ![](./images/dlmodule/image-20210626225311183.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626225311183.png)
 
 - 使能 fal，上面已经操作过该步骤，并测试正常
 
@@ -615,7 +617,7 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 
 - 编译运行代码，littlefs文件系统挂载成功
 
-  ![](./images/dlmodule/image-20210626230534166.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626230534166.png)
 
 
 
@@ -656,12 +658,12 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 
 - 当要使用动态模块时，需要在固件的配置中打开对应的选项，使用 menuconfig 打开如下配置：
 
-  ![](./images/dlmodule/image-20210626231801792.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626231801792.png)
 
 
 
 - bsp 对应的 rtconfig.py 中设置动态模块编译时需要用到的配置参数，修改点如下
-    ![](./images/dlmodule/image-20210626233107983.png)
+    ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626233107983.png)
 
 - 上面修改内容，说明如下
 
@@ -744,17 +746,17 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 
 - BSP 工程目录下执行 `scons` 正确无误地生成固件
 
-  ![](./images/dlmodule/image-20210626233747143.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626233747143.png)
 
 - 在 BSP 工程目录下执行一下命令```scons --target=ua -s```来生成编译动态模块时需要包括的内核头文件搜索路径及全局宏定义，执行成功，有如下LOG打印
 
-  ![](./images/dlmodule/image-20210626234057287.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626234057287.png)
 
 
 
 - 生成了rtup.py文件
 
-  ![](./images/dlmodule/image-20210626234230023.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626234230023.png)
 
   
 
@@ -790,41 +792,41 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 - RTT_ROOT - 指向到 RT-Thread 代码的根目录；
 - BSP_ROOT - 指向到 BSP 的工程目录；
 
-![](./images/dlmodule/image-20210626235108103.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626235108103.png)
 
 在rtthread-apps目录中，打开env环境，使用命令scons --app=hello编译hello动态模块， 下面报错了，提示找不到rtua.py
 
-![](./images/dlmodule/image-20210626235205391.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210626235205391.png)
 
 出现上面的错误，请查看电脑系统环境变量是否设置了RTT_ROOT了，如果有，请先删除，这里编译动态模块所需要的的RTT_ROOT必须是和编译BSP在一起的RTT
 
-![](./images/dlmodule/image-20210627001200423.png)
+![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627001200423.png)
 
 
 
 - 排除以上错误后，再次编译动态模块，又提示如下错误
 
-  ![](./images/dlmodule/image-20210627001437840.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627001437840.png)
 
 - 上面的错误，是有bsp目录下rtconfig.py中未定义CXX导致，定义后，再次编译
 
-  ![](./images/dlmodule/image-20210627001544143.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627001544143.png)
 
 - 继续编译，又提示错误
 
-  ![](./images/dlmodule/image-20210627001609272.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627001609272.png)
 
 
 
 - 上面的错误，经过定位是rt-thread/tools/building.py中，执行是，交叉编译工具链的位置没有找到，暂时还不清楚哪里配置不对，暂且写死，绕过，后续再继续查找原因
 
-  ![](./images/dlmodule/image-20210627004513306.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627004513306.png)
 
 
 
 - 继续编译成功
 
-  ![](./images/dlmodule/image-20210627004624812.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627004624812.png)
 
 
 
@@ -838,22 +840,25 @@ POSIX 标准意在期望获得源代码级别的软件可移植性。换句话�
 
 - 测试，当执行hello.mo时，出现hardfault
 
-  ![](./images/dlmodule/image-20210627005956196.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627005956196.png)
 
 
 
 - 经过调查，是因为fal分区时，给app应用程序分别的存储空间小于固件编译后的尺寸，因此再加载动态模块时，出现了hardfault，调整fal_cfg.h中的分区，大于固件编译后的尺寸（229032Bytes）
 
-  ![](./images/dlmodule/image-20210627010230310.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627010230310.png)
 
 - fal_cfg.h调整内容如下
 
-  ![](./images/dlmodule/image-20210627010317832.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627010317832.png)
 
 - 成功执行动态模块hello.mo
 
-  ![](./images/dlmodule/image-20210627010503922.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627010503922.png)
 
 - 修改文件列表如下
 
-  ![](./images/dlmodule/image-20210627010654594.png)
+  ![](https://gitee.com/chenyingchun0312/pic_md/raw/master/image-20210627010654594.png)
+
+
+
