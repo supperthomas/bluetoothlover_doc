@@ -291,7 +291,7 @@ https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
 
 - 点击图床设置，选择gitee，进行如下配置
 
-  ![image-20210708232313105](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232313105.png)
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232313105.png)
 
 ![image-20210708232410085](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232410085.png)
 
