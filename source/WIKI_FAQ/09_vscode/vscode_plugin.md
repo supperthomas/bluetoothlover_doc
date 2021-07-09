@@ -74,3 +74,76 @@ files.exclude 和 search.exclude 配置项都是在 .vscode/settings 文件里�
 
 
 
+
+### Doxygen Documentation Generator
+
+[Doxygen Documentation Generator](https://blog.csdn.net/lblmlms/article/details/113662339)
+
+
+
+可以达到如下效果
+
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/test11112.gif)
+
+Doxygen Documentation Generator插件可以方便地生成规范的注释。使用方式：
+
+1. 当在文件头部输入 “/**” 后回车,自动生成模板文件注释。
+
+2. 在函数上面 “/**” 后回车,自动生成模板函数注释。
+
+3. 如果上面两种方式无效果（可能和其他插件冲突），在输入```/***/```后，将光标移动至第二个```*```后，按下enter回车
+
+   
+
+**在settings.json中配置如下（也可以使用默认值，看需要）：**
+
+```
+	// /**回车后最多向下多少行去找函数声明
+ 	"doxdocgen.generic.linesToGet": 4,
+	// 作者名和邮箱
+	"doxdocgen.generic.authorName": "name",
+    "doxdocgen.generic.authorEmail": "xx@foxmail.com",
+    "doxdocgen.generic.authorTag": "@Author : {author} ({email})",
+	// 日期格式
+    "doxdocgen.generic.dateFormat": "YYYY-MM-DD",
+    "doxdocgen.generic.dateTemplate": "@Creat Date : {date}",
+	// 简介格式
+    "doxdocgen.generic.briefTemplate": "@Brief : {text}",
+   
+    // 文件注释的格式
+    "doxdocgen.file.fileTemplate": "@File Name: {name}",
+    "doxdocgen.file.versionTag": "@Version : 1.0",
+    "doxdocgen.file.copyrightTag": [
+        "@copyright Copyright (c) {year} XXXX技术有限公司"
+    ],
+    
+    // 自定义文件注释格式
+    "doxdocgen.file.customTag": [
+        "modification history :",
+        "Date:       Version:      Author:     ",
+        "Changes: ",
+    ],
+    // 文件注释组成及顺序
+    "doxdocgen.file.fileOrder": [
+        "file",		// @file
+        "brief",	// @brief 简介
+        "author",	// 作者
+        "version",	// 版本
+        "date",		// 日期
+        "empty",	// 空行
+        // "copyright",// 版权
+        // "custom"	// 自定义
+    ],
+
+	// 参数注释和返回注释的格式
+	"doxdocgen.generic.paramTemplate": "@param{indent:8}{param}{indent:25}",
+    "doxdocgen.generic.returnTemplate": "@return{indent:8}{type}{indent:25}",
+    // 函数注释组成及顺序
+    "doxdocgen.generic.order": [
+        "brief",
+        "tparam",
+        "param",
+        "return"
+    ],
+```
+
