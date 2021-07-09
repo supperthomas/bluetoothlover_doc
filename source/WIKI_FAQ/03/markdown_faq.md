@@ -257,11 +257,11 @@ https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
 
 
 
-![image-20210708231028130](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231028130.png)
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231028130.png)
 
 安装完成PicGo后，需要搜索gitee 上传插件，这里最好选择gitee-uploader 1.1.2，感觉稳定性更好些
 
-![image-20210708231239298](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231239298.png)
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231239298.png)
 
 
 
@@ -269,7 +269,7 @@ https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
 
 这个创建仓库的方式，不仔细说了，注意点就是，一定得是公开的仓库，比如创建了article-images仓库
 
-![image-20210708231535326](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231535326.png)
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231535326.png)
 
 
 
@@ -277,15 +277,15 @@ https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
 
 - 找到设置项
 
-  ![image-20210708231736721](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231736721.png)
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231736721.png)
 
 - 找到私人令牌
 
-  ![image-20210708231937281](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231937281.png)
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231937281.png)
 
 - 编辑私人令牌，点击提交后，会显示私人令牌，由于只显示一次，请注意保存
 
-  ![image-20210708232003751](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232003751.png)
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232003751.png)
 
 #### PicGo图片上传到Gitee配置
 
@@ -293,7 +293,7 @@ https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
 
   ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232313105.png)
 
-![image-20210708232410085](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232410085.png)
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232410085.png)
 
 
 
@@ -301,7 +301,7 @@ https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
 
 虽然复制一张图片，点击上传，如果有如下提示，则表示成功
 
-![image-20210708233056057](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708233056057.png)
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708233056057.png)
 
 
 
@@ -309,4 +309,12 @@ https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
 
 #### 设置Typora
 
-![image-20210708233249131](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708233249131.png)
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708233249131.png)
+
+
+
+#### 注意事项
+
+- 在使用过程中，如果出现贴图尺寸大于1M，那么无法从gitee中自动下载下来，显示在本地
+
+- 如果出现之前成功上传，但用着用着就上传失败时，可以重启PicGo软件试一下，应该就可以正常上传了
