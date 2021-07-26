@@ -146,4 +146,5 @@ Doxygen Documentation Generator插件可以方便地生成规范的注释。使�
         "return"
     ],
 ```
-
+### Code Spell Checker
+- 检查单词拼写，以及单词纠正
