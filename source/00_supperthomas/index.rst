@@ -7,3 +7,7 @@ MASTER:supperthomas
     01_introduce/01_intruduce.md
     02_introduce/01_intruduce.md
     03_mbed/01_mbed_quick_syart.md
+    04_AI/01_intruduce.md
+    06_embeded_debug/jlink.md
+    07_mcuboot/mcuboot.md
+    
