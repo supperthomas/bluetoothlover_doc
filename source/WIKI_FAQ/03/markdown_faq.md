@@ -220,3 +220,101 @@ line-height: inherit;
 
 ![](images/image-20201117195440890.png)
 
+
+
+### 如何让markdown支持gitee图床
+
+参考一： [Typora如何配置gitee图床？超详细教程！](https://blog.csdn.net/qq_36547531/article/details/114985742)
+
+参考二： [markdown 写文章如何将图片永久保存](https://www.bilibili.com/video/BV1Dz4y127f6?p=1&share_medium=android&share_plat=android&share_source=WEIXIN&share_tag=s_i&timestamp=1625756900&unique_k=lIYFgZ)
+
+说明下：参考一，我这边测试也成功了，但是有时会失败，参考二，测试感觉比较靠谱
+
+
+
+我们在本地，使用typora编写markdown文档时，贴在markdown中的图片，默认都是存放在本地，这其实给我们挺多麻烦的，例如我们想把写的笔记上传到一些网络平台，例如知乎、csdn、公众号，WIKI等。
+
+这些本地路径复制上来，肯定是显示不出来的，这个时候，我们就需要了解一下**图床**了：
+
+```
+图床一般是指储存图片的服务器，有国内和国外之分。国外的图床由于有空间距离等因素决定访问速度很慢影响图片显示速度。
+国内也分为单线空间、多线空间和cdn加速三种。
+```
+
+下面我就给大家演示一下，如何让自己的**typora配置上gitee的图床。**
+
+
+
+#### PicGo安装与配置
+
+PicGo简单点说就是一个图床上传工具，我们主要就是借助这个软件进行上传
+
+这一点非常重要！
+
+下载地址给大家：
+
+https://github.com/Molunerfinn/PicGo/releases/tag/v2.3.0-beta.4
+
+
+
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231028130.png)
+
+安装完成PicGo后，需要搜索gitee 上传插件，这里最好选择gitee-uploader 1.1.2，感觉稳定性更好些
+
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231239298.png)
+
+
+
+#### gitee上创建存放图片的公开仓库
+
+这个创建仓库的方式，不仔细说了，注意点就是，一定得是公开的仓库，比如创建了article-images仓库
+
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231535326.png)
+
+
+
+#### 生成gitee私人令牌
+
+- 找到设置项
+
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231736721.png)
+
+- 找到私人令牌
+
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708231937281.png)
+
+- 编辑私人令牌，点击提交后，会显示私人令牌，由于只显示一次，请注意保存
+
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232003751.png)
+
+#### PicGo图片上传到Gitee配置
+
+- 点击图床设置，选择gitee，进行如下配置
+
+  ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232313105.png)
+
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708232410085.png)
+
+
+
+#### 验证PicGo配置可以正确上传图片
+
+虽然复制一张图片，点击上传，如果有如下提示，则表示成功
+
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708233056057.png)
+
+
+
+
+
+#### 设置Typora
+
+![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora/image-20210708233249131.png)
+
+
+
+#### 注意事项
+
+- 在使用过程中，如果出现贴图尺寸大于1M，那么无法从gitee中自动下载下来，显示在本地
+
+- 如果出现之前成功上传，但用着用着就上传失败时，可以重启PicGo软件试一下，应该就可以正常上传了

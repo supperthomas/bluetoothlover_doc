@@ -1,5 +1,8 @@
 # SEGGER RTT 简介
 
+# Segger RTT
+
+
 ## 问题一
 
 SEGGER_RTT  如何固定地址，
@@ -523,3 +526,7 @@ https://youtu.be/-B6QjdnMzmY
 - IAR 调试技巧
 
 https://www.iar.com/knowledge/learn/debugging/
+
+- 用VS Code开发STM32（四）——增加SEGGER RTT日志输出支持
+- 
+https://zhuanlan.zhihu.com/p/163771273

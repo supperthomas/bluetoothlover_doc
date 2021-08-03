@@ -249,3 +249,27 @@ https://github.com/supperthomas/RTT_PACKAGE_BTSTACK/archive/refs/tags/v1.0.0.zip
 ### 后续开发
 
 后续开发直接在branch上面开发即可，等到release版本的时候，将branch merge到master主分支上，再参考上述操作再执行一次
+
+### 软件包制作建议
+
+ - 默认官方的RT-THREAD package中的版本号默认使用最新的稳定的版本，而不是latest版本（方便后续更新）
+    
+ - 每次Kconfig如果改动比较大的话，一定要加个版本NUM来区分一下
+ 
+ ```
+if PKG_BTSTACK_VER_NUM >= 0x10000
+endif
+    
+    config PKG_BTSTACK_VER_NUM
+        hex
+        default 0x99999    if PKG_USING_BTSTACK_LATEST_VERSION
+        default 0x10000    if PKG_USING_BTSTACK_V100
+        default 0x00001    if PKG_USING_BTSTACK_V001
+ ```
+    
+    
+ - 建议每次将Kconfig和版本号一起打包，放到软件包下面
+
+ - 建议新功能在branch上修改
+    
+ - release 版本如果有bug，修改tag，

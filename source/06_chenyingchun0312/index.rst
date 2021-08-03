@@ -5,4 +5,5 @@ NORDIC:chenyingchun0312
     :numbered: 2
 
     01_introduce/01_intruduce.md
-    elf_introduce
+    elf_introduce.md
+    nrf52832_rtthread_dlmodule.md
