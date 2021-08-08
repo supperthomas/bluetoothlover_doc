@@ -570,15 +570,42 @@ BOOT_SWAP_TYPE_PANIC: 交换遇到不可恢复的错误。
 [MCUboot Walkthrough and Porting Guide](https://interrupt.memfault.com/blog/mcuboot-overview?query=from%20zero%20to%20main)
 
 
-```C
-int main(void) {
-  // ...
-  struct boot_rsp rsp;
-  int rv = boot_go(&rsp);
 
-  if (rv == 0) {
-    // 'rsp' contains the start address of the image
-    your_platform_do_boot(&rsp);
-  }
-```
+[MCUBOOT官方主页](https://mcuboot.com)
+
+[MCUBOOT官方文档](https://www.mcuboot.com/documentation/)
+
+[MCUBOOT 官方设计文档](https://www.mcuboot.com/documentation/design/)
+
+[加密相关](https://www.mcuboot.com/documentation/encrypted-images/)
+
+[imgtool工具命令使用](https://www.mcuboot.com/documentation/imgtool/)
+
+签名设计文档：
+
+https://www.mcuboot.com/documentation/ecdsa/               EC256 签名
+
+https://www.mcuboot.com/documentation/signed-images/
+
+
+
+[MCUBOOTgithub主分支](https://github.com/mcu-tools/mcuboot)
+
+[nrf-connect MCUBOOT相关文档](https://github.com/nrfconnect/sdk-mcuboot.git)
+
+[Nordic MCUBOOT的参考文档](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/mcuboot/wrapper.html)
+
+ZEPHYR操作系统：
+
+https://github.com/zephyrproject-rtos/zephyr
+
+[zephyr mcuboot nrf52840 测试计划](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/mcuboot/testplan-zephyr.html)
+
+[编译mcuboot nrf52840](https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/mcuboot/readme-zephyr.html)
+
+[zephyr笔记 5.3.1 Zephyr 版本 MCUboot 的编译和使用](https://blog.csdn.net/iotisan/article/details/80167804)
+
+[Zephyr应用笔记：mcuboot引导程序简单介绍](https://blog.csdn.net/u010018991/article/details/79483899)
+
+
 
