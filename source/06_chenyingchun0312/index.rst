@@ -7,3 +7,4 @@ NORDIC:chenyingchun0312
     01_introduce/01_intruduce.md
     elf_introduce.md
     nrf52832_rtthread_dlmodule.md
+	stm32l496.md
