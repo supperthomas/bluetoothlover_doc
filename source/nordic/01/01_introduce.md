@@ -10,6 +10,7 @@
 
 - mesh v4.0.0 国内在线文档: [国内](http://doc-mesh-sdkapi-v4-0-0.wireless-tech.cn/)
 
+- MDK-USB-DONGLE [DONGLE](https://wiki.makerdiary.com/nrf52840-mdk-usb-dongle/)
 
 ## 2. 国内教学资料
 
