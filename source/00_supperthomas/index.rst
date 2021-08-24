@@ -10,4 +10,5 @@ MASTER:supperthomas
     04_AI/01_intruduce.md
     06_embeded_debug/jlink.md
     07_mcuboot/mcuboot.md
+    08_MPU/01_MPU.md
     
