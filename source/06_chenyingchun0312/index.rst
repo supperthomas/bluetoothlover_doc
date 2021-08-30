@@ -8,3 +8,4 @@ NORDIC:chenyingchun0312
     elf_introduce.md
     nrf52832_rtthread_dlmodule.md
     stm32l496.md
+    usb.md
