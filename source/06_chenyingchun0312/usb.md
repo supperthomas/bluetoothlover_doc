@@ -10,7 +10,7 @@
 
 ## USB 简介
 
-USB(Universal Serial Bus)是一种支持热插拔的通用串行总线。它使用差分信号来传输数据，在 USB 1.0和 USB 1.1 版本中，只支持 1.5Mb/s 的低速（low-speed）模式和 12Mb/s 的全速（full-speed）模式，在 USB 2.0 中，又加入了480Mb/s 的高速模式，USB 3.0(super speed)，传输速率最大5Gbps。
+USB (Universal Serial Bus) 是一种支持热插拔的通用串行总线。它使用差分信号来传输数据，在USB 1.0和USB 1.1版本中，只支持 1.5Mbps 的低速（low-speed）模式和 12Mbps 的全速（full-speed）模式，在 USB 2.0 中，又加入了480Mbps 的高速（high-speed）模式，USB 3.0(super speed)，传输速率最大5Gbps。
 
 ### USB Host
 
@@ -20,9 +20,9 @@ USB(Universal Serial Bus)是一种支持热插拔的通用串行总线。它使�
 
 USB Device 可以分为 USB Hub 和 USB Function。
 
-1. USB Hub 提供了一种低成本、低复杂度的  USB接口扩展方法。Hub  的上行端口面向 HOST，下行端口面向设备(Hub 或功能设备)。在下行端口上，Hub 提供了设备连接检测和设备移除检测的能力，并给各下行端口供电。Hub 可以单独使能各下行端口。不同端口可以工作在不同的速度等级(高速/全速/低速)。
+1. USB Hub 提供了一种低成本、低复杂度的USB接口扩展方法。Hub的上行端口面向HOST，下行端口面向设备（Hub 或功能设备）。在下行端口上，Hub 提供了设备连接检测和设备移除检测的能力，并给各下行端口供电。Hub 可以单独使能各下行端口。不同端口可以工作在不同的速度等级（高速/全速/低速）。
 
-2. USB Function 能够通过总线传输或接收数据或控制信息的设备，在 USB2.0 标准中，别称为 Class
+2. USB Function 能够通过总线传输或接收数据或控制信息的设备，在 USB2.0 标准中，别称为 Class。
 
 
 
@@ -42,7 +42,7 @@ USB Device 可以分为 USB Hub 和 USB Function。
 
 ### 硬件接口
 
-一般情况下，USB接口有DP,DM 这两个差分传输线，但是其实还有一个ID线，但有些MCU的USB模块即支持做USB设备又支持做USB主机，此时ID线就起作用了，当做USB设备时，ID接高，当做USB主机时，ID接低
+一般情况下，USB接口有DP，DM 两个差分传输线，但是其实还有一个ID线。有些MCU的USB模块既支持做USB设备又支持做USB主机，此时可以通过ID线接高低电平来区分，当做USB设备时，ID接高，当做USB主机时，ID接低。
 
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108291134836.png)
 
@@ -64,7 +64,7 @@ USB Device 可以分为 USB Hub 和 USB Function。
 
 ## 协议核心术语
 
-要想理解USB协议栈，必须对一些术语理解，这样我们在看USB协议栈的时候，才能理解代码的流程含义
+要想理解USB协议栈，必须理解一些术语，这样我们在看USB协议栈的时候，才能理解代码的流程含义。
 
 - USB 传输（transfer）
 - USB 事务 （transaction）
@@ -76,9 +76,9 @@ USB Device 可以分为 USB Hub 和 USB Function。
 
 ## USB 抓包器
 
-要想理解USB协议，我们最好能有一个USB抓包器，结合协议文档，以及抓包器的解析，来理解协议，USB抓包工具分为纯软件的和硬件的两种，纯软件usb抓包工具需要在系统能正确枚举usb设备的前提下才能让内核的钩子函数捕抓到数据，而后者在usb不正常时也能捕捉到链路数据（令牌包等），属于更底层的抓包方式。
+要想理解USB协议，我们最好能有一个USB抓包器，结合协议文档，以及抓包器的解析，来理解协议。USB抓包工具分为纯软件的和硬件的两种。纯软件USB抓包工具需要在系统能正确枚举USB设备的前提下才能让内核的钩子函数捕捉到数据，而后者在USB不正常时也能捕捉到链路数据（令牌包等），属于更底层的抓包方式。
 
-关于软件抓包起，因为我没有实际用过，大家自行百度尝试，比如[开源硬件USB抓包及协议分析工具分享](https://blog.csdn.net/litao31415/article/details/103925094) 我这边使用的硬件抓包器是
+关于软件抓包器，因为我没有实际用过，大家自行百度尝试，比如[开源硬件USB抓包及协议分析工具分享](https://blog.csdn.net/litao31415/article/details/103925094)。如图是我使用的硬件抓包器。
 
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108291242990.png)
 
@@ -86,11 +86,11 @@ USB Device 可以分为 USB Hub 和 USB Function。
 
 ## USB抓包分析
 
-所有的USB设备，在插入时，首先进行USB枚举过程，枚举过程其实就是控制传输过程，控制传输是所有的USB必须有的过程，下面我们以获取设备描述符举例，整体截图如下
+所有的USB设备，在插入时，首先进行USB枚举过程。枚举过程其实就是控制传输过程，控制传输是所有的USB必须有的过程。下面我们以获取设备描述符举例，整体截图如下。
 
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108301400123.png)
 
-- 在一个transfer中，一般会有3个transaction, 一个transaction中，一般会有3个packet
+- 在一个transfer中，一般会有3个transaction，一个transaction中，一般会有3个packet。
 
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108301400012.png)
 
@@ -130,21 +130,17 @@ https://www.usb.org/documents
 
 
 
-
-
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108301400966.png)
-
-
 
 
 
 ## USB 协议栈介绍
 
-一些相对有名的开源USB协议栈有
+一些相对有名的开源USB协议栈有：
 
 - [TeenyUSB](https://github.com/xtoolbox/TeenyUSB)
 
-  TeenyUSB是一个用于STM32芯片的轻量级USB协议栈。这个项目最开始主要目的是为了解决芯片代码空间的不足的问题。用CubeMX生成的代码体积比较大，而选用的芯片资源又十分有限，因此就有了实现一个轻量级USB的想法
+  TeenyUSB是一个用于STM32芯片的轻量级USB协议栈。这个项目最开始主要目的是为了解决芯片代码空间不足的问题。用CubeMX生成的代码体积比较大，而选用的芯片资源又十分有限，因此就有了实现一个轻量级USB的想法。
 
 - [tinyusb](https://github.com/hathach/tinyusb)
 
@@ -156,8 +152,6 @@ https://www.usb.org/documents
 
 - RT-Thread usb stack
 
-  
-
 - 其他。。。
 
   
@@ -166,17 +160,13 @@ https://www.usb.org/documents
 
 ### 简介
 
-RT-Thread usb协议栈支持USB HOST和USB Device，协议栈位置在`components\drivers\usb`
+RT-Thread USB协议栈支持USB HOST和USB Device，协议栈位置在`components\drivers\usb`
 
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108291322849.png)
 
 ### STM32L496 USB CDC适配
 
 [STM32L496 USB CDC适配](https://club.rt-thread.org/ask/article/2959.html)
-
-
-
-
 
 ### 详细介绍
 
@@ -202,13 +192,9 @@ RT-Thread usb协议栈支持USB HOST和USB Device，协议栈位置在`component
 
 
 
-
-
-
-
 #### USB 驱动移植
 
-需要实现的ops
+需要实现的ops如下：
 
 ```
 const static struct udcd_ops _udc_ops =
@@ -216,13 +202,13 @@ const static struct udcd_ops _udc_ops =
     _set_address,		// 设置设备地址
     _set_config,		// 
     _ep_set_stall,		// 给USB HOST回复STALL命令
-    _ep_clear_stall,	// 清楚设备的STALL状态
+    _ep_clear_stall,	// 清除设备的STALL状态
     _ep_enable,			// 使能ep端口
     _ep_disable,
     _ep_read_prepare,	// 读取endpoint数据
     _ep_read,
-    _ep_write,			// 给USB HOST发送数据
-    _ep0_send_status,	// Status stage 发送状态
+    _ep_write,			// 向USB HOST发送数据
+    _ep0_send_status,	// Status stage发送状态
     _suspend,
     _wakeup,
 };
@@ -262,11 +248,11 @@ const static struct udcd_ops _udc_ops =
 
 ###### request_type.Direction (D7)
 
-Direction字段表示请求的方向，D7为1表示的是IN包（DEVICE->HOST，device给host发送数据），D7为0表示OUT包（HOST->DEVICE,即host给device发送数据）
+Direction字段表示请求的方向，D7为1表示的是IN包（DEVICE->HOST，device给host发送数据），D7为0表示OUT包（HOST->DEVICE，即host给device发送数据）。
 
-Direction字段，其实和setup包中的第二个字节，即bRequest字段，有一些重复，比如当bRequest为`USB_REQ_GET_STATUS`时，Direction字段必然需要为1，即IN包，如果不为IN包，只能说明USBHOST组包时出错了（USB传输过程中如果出错，USB硬件CRC校验失败后，不会将接收到的数据向上传递，即应用层根本不会收到setup包数据），当bRequest为`USB_REQ_SET_FEATURE`时，Direction字段必须为0，即OUT包。
+Direction字段，一定程度上受setup包中的第二个字节，即bRequest字段的限制。比如当bRequest为`USB_REQ_GET_STATUS`时，Direction字段必然需要为1，即IN包，如果不为IN包，只能说明USBHOST组包时出错了（USB传输过程中如果出错，USB硬件CRC校验失败后，不会将接收到的数据向上传递，即应用层根本不会收到setup包数据），当bRequest为`USB_REQ_SET_FEATURE`时，Direction字段必须为0，即OUT包。
 
-request_type.Direction字段和bRrequest字段通常可以联合起来，校验USBHOST发送过来的数据包是否合法，但是通常认为USBHOST组包发送错误的概率不大，因此，rt-thread中并没有很多联合校验的功能代码，查看代码，只看到了在获取描述符时，加了这样的校验逻辑，（其实按照协议完整性，很多地方需要加上这一校验逻辑）如下所示
+request_type.Direction字段和bRrequest字段通常可以联合起来，校验USBHOST发送过来的数据包是否合法，但是通常认为USBHOST组包发送错误的概率不大，因此，rt-thread中并没有很多联合校验的功能代码。查看代码，只看到了在获取描述符时，加了这样的校验逻辑，（其实按照协议完整性，很多地方需要加上这一校验逻辑）如下所示
 
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108291404705.png)
 
@@ -286,12 +272,12 @@ Type字段表示请求类型： 标准请求，类请求，厂商请求三种
 
 - Recipient字段，表示HOST该次请求的设定的接受者，可以是： 设备，接口，端点，未定义
 
-- 不同的接受者，setup包中wValue,wIndex等含义也不一样比，如当接受者是端点时，wIndex的低字节表示希望获取哪个端点的信息
+- 不同的接受者，setup包中wValue，wIndex等含义也不一样。比如当接受者是端点时，wIndex的低字节表示希望获取哪个端点的信息
 
-- 不同接收者，对相同的bRequest请求，设备的回复的数据含义是不一样的，表示的指定接受者的当前状态
+- 不同接收者，对相同的bRequest请求，设备的回复的数据含义是不一样的，表示指定接受者的当前状态
 
-- 当接受者是端点时:CLEAR_FEATURE,GET_STATUS,SET_FEATURE这三个请求需要处理（bmRequestType.Recipient为00010）
-- 当接受者是接口时:CLEAR_FEATURE, GET_STATUS,SET_FEATURE这三个请求需要处理（bmRequestType.Recipient为00001）
+- 当接受者是端点时：CLEAR_FEATURE，GET_STATUS，SET_FEATURE这三个请求需要处理（bmRequestType.Recipient为00010）
+- 当接受者是接口时：CLEAR_FEATURE，GET_STATUS，SET_FEATURE这三个请求需要处理（bmRequestType.Recipient为00001）
 
 
 
@@ -305,7 +291,7 @@ Type字段表示请求类型： 标准请求，类请求，厂商请求三种
 
 ##### bRequest
 
-不同的请求类型（request_type.Typez字段 标准请求，设备类请求，厂商请求），bRequest可表示的值也不一样
+不同的请求类型（request_type.Typez字段：标准请求，设备类请求，厂商请求），bRequest可表示的值也不一样
 
 ###### 标准设备请求
 
@@ -315,7 +301,7 @@ Type字段表示请求类型： 标准请求，类请求，厂商请求三种
 
 ###### 设备类请求
 
-- audio mic, audio_speaker 设备
+- audio mic，audio_speaker 设备
 
   ```c
   #define USB_REQ_GET_INTERFACE           0x0A
@@ -350,8 +336,6 @@ Type字段表示请求类型： 标准请求，类请求，厂商请求三种
   #define USBREQ_MASS_STORAGE_RESET       0xff
   ```
 
-  
-
 - 其他，暂不一一列举
 
 
@@ -364,19 +348,17 @@ Type字段表示请求类型： 标准请求，类请求，厂商请求三种
 
 ## EP0 DATA阶段
 
-如果在SETPUP阶段，请求包的方向为IN方向，即DEVICE->HOST，那么接下来的阶段则为DATA IN阶段，最后是OUT STATUS阶段，反之，如果请求包方向为OUT方向，即HOST->DEVICE,那么接下来的阶段则为DATA OUT阶段，最后为IN STATUS阶段
+如果在SETPUP阶段，请求包的方向为IN方向，即DEVICE->HOST，那么接下来的阶段则为DATA IN阶段，最后是OUT STATUS阶段，反之，如果请求包方向为OUT方向，即HOST->DEVICE，那么接下来的阶段则为DATA OUT阶段，最后为IN STATUS阶段。
 
 ### DATA IN 阶段
 
 HOST发送了IN方向请求，DEVICE给HOST回复请求的阶段，称之为DATA IN阶段，一般就是解析了请求后，调用`rt_usbd_ep0_write`给PC回复数据。
 
-
-
 ### DATA OUT 阶段
 
-HOST发送了OUT方向的请求，且OUT的数据内容不存在于SETUP packet中，需要额外使用EP0发送DATA packet，那么就必须有一个DATA OUT阶段，一般调用`rt_usbd_ep0_out_handler`函数进行EP0数据的OUT
+HOST发送了OUT方向的请求，且OUT的数据内容不存在于SETUP packet中，需要额外使用EP0发送DATA packet，那么就必须有一个DATA OUT阶段，一般调用`rt_usbd_ep0_out_handler`函数进行EP0数据的OUT。
 
-注意一下，一般情况下，一个Transfer中有3个Transtraction,但是，如果HOST发送了OUT方向数据请求，且OUT数据的内容，存在于setup的8个字节命令中，那么，第二个阶段的DATA OUT阶段就不存在了，只有IN STATUS阶段，典型的比如set address请求
+注意一下，一般情况下，一个Transfer中有3个Transtraction，但是，如果HOST发送了OUT方向数据请求，且OUT数据的内容存在于setup的8个字节命令中，那么，第二个阶段的DATA OUT阶段就不存在了，只有IN STATUS阶段，典型的比如set address请求。
 
 ![](https://gitee.com/chenyingchun0312/article-images/raw/master/Typora02/202108291404647.png)
 
@@ -400,7 +382,7 @@ HOST发送了OUT方向的请求，且OUT的数据内容不存在于SETUP packet�
 
 ## EPx数据传输
 
-枚举阶段使用的是EP0端口进行枚举的，当枚举完成后，需要进行数据的传输，则需要使用到EP1,EP2等，当收到`USB_MSG_DATA_NOTIFY`消息时，进行数据的输入输出
+枚举阶段使用的是EP0端口进行枚举的，当枚举完成后，需要进行数据的传输，则需要使用到EP1，EP2等，当收到`USB_MSG_DATA_NOTIFY`消息时，进行数据的输入输出。
 
 
 
