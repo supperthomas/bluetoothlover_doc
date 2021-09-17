@@ -17,3 +17,4 @@ WIKI FAQ 篇
     09_vscode/vscode_debug.md
     09_vscode/vscode_faq.md
     09_vscode/vscode_plugin.md
+    10_vscode/vscode_shortkey.md
