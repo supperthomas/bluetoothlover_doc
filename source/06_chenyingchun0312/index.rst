@@ -9,3 +9,4 @@ NORDIC:chenyingchun0312
     nrf52832_rtthread_dlmodule.md
     stm32l496.md
     usb.md
+    I2S_intruduce.md
