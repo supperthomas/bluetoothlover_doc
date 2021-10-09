@@ -148,3 +148,6 @@ Doxygen Documentation Generator插件可以方便地生成规范的注释。使�
 ```
 ### Code Spell Checker
 - 检查单词拼写，以及单词纠正
+
+### Draw.io Integration
+- draw io 画流程图
