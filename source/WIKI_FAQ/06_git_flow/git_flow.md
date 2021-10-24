@@ -212,5 +212,13 @@ drop：我要丢弃该commit（缩写:d）
 
 - 尽量新建一个branch添加功能
 
+- PR之后，自己先检查一遍文件是否正确（尽量不要直接等审核人员检查，因为有些文件，可能只有你自己知道是否正确）
+
+  
+
+  ## 参考教程
+
+   [Git及GitHub教程](https://www.githubs.cn/post/git-tutorial)
+
   
 
