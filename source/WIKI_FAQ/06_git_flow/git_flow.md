@@ -142,11 +142,55 @@ git fetch giteestream
 
 
 
+### git如何合并之前的提交
+
+有时候PR的时候，我们会有很多无用的提交，这些提交如果保留也会增大codesize的，所以尽量PR的时候尽可能少的commit提交。
+
+git rebase命令格式：
+
+```
+git rebase -i [startpoint] [endpoint]
+```
+
+先要合并可以用下面的命令：
+
+```
+//合并当前的head 到某个commit XXXX
+git rebase -i xxxx
+
+//合并最近两次提交
+
+git rebase -i HEAD~2
+```
+
+执行这个命令之后，有个vi编辑器
+
+里面有提示
+
+里面的提示有：
+pick：保留该commit（缩写:p）
+reword：保留该commit，但我需要修改该commit的注释（缩写:r）
+edit：保留该commit, 但我要停下来修改该提交(不仅仅修改注释)（缩写:e）
+squash：将该commit和前一个commit合并（缩写:s）
+fixup：将该commit和前一个commit合并，但我不要保留该提交的注释信息（缩写:f）
+exec：执行shell命令（缩写:x）
+drop：我要丢弃该commit（缩写:d）
+
+
+
+把pick改为squash就是可以把commit合并到签名一个commit
+
+其他的可以根据提示修改。
+
+然后保存就可以了。
+
 
 
 ### github如何贡献代码
 
 ### github如何修改代码之后再次提交
+
+这个只要PR之后，在原来分支上直接提交。PR的时候也会
 
 ### git如何正确使用分支
 
@@ -157,4 +201,16 @@ git fetch giteestream
 原则一： 将比较大的repo仓库统一管理，方便维护
 
 ### git通用行为准则
+
+- 每次提交新的代码之前，最好先下载最新的代码，git pull，之后再提交。
+
+- 完成功能的可以是一个仓库，提交代码的可以是一个仓库（防止错改），代码提交PR之后，就可以删掉原来的仓库了。通常可以两个仓库来回切换
+
+- 代码提交完了或者merge之后，自我验证一下，防止有些文件没有add上去。
+
+- 代码的commit尽量整理修改为有效的commit（删掉一些无用的commit，这些会占codesize），参考上面[如何修改提交](#git如何合并之前的提交)。
+
+- 尽量新建一个branch添加功能
+
+  
 
