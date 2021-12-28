@@ -178,12 +178,13 @@ drop：我要丢弃该commit（缩写:d）
 
 
 
-把pick改为squash就是可以把commit合并到签名一个commit
+**把pick改为squash就是可以把commit合并到签名一个commit**
 
 其他的可以根据提示修改。
 
 然后保存就可以了。
 
+修改commit的时候一定要小心，不要把别人的commit修改了。看清楚那几个commit要合并的。
 
 
 ### github如何贡献代码
