@@ -174,6 +174,10 @@ Once a debug session starts, the **Debug toolbar** will appear on the top of the
 
 汇编显示在调试控制台里面输入命令`disassemble`可以显示
 
+disass
+汇编执行下一个命令
+si
+
 
 
 FAQ
