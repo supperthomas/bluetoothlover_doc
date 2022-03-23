@@ -17,6 +17,7 @@ Welcome to supperthomas_wiki's documentation!
    WB55/index
    WIKI_FAQ/index
    RTTHREAD/index
+   12_ESP32/index
    DEBUG/index
 
    00_supperthomas/index
