@@ -4,7 +4,7 @@
 
 esp-idf是乐鑫公司开发的IDE。这个IDF只能用于乐鑫，官方的参考文档见[link](https://docs.espressif.com/projects/esp-idf/zh_CN/latest/esp32c3/get-started/linux-macos-setup.html)
 
-想要跑乐鑫官方的example，和开发ESP32的代码，大部分需要安装IDF。 官方的教程已经写得非常详细了，照着一步一步来就可以了。不过这篇文章主要讲，如何一键式搭建IDF，这也是我使用总结下来的。我们用到的工具式一款跨平台的工具vscode。
+想要跑乐鑫官方的example，和开发ESP32的代码，大部分需要安装IDF。 官方的教程已经写得非常详细了，照着一步一步来就可以了。不过这篇文章主要讲，如何一键式搭建IDF，这也是我总结下来的。我们用到的工具是一款跨平台的工具vscode。
 
 而且现在很多方法需要访问github，这就需要科学上网，这篇文章不需要大家访问github就可以搭建起来编译和应用平台
 
