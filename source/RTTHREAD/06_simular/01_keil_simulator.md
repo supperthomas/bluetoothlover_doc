@@ -6,7 +6,7 @@
 
 ## 试一下BSP/STM32/stm32l496zg
 
-下载了最新RTTHREAD的master上面的代码，选择simulator功能
+下载了最新RTTHREAD的master https://github.com/RT-Thread/rt-thread/tree/master/bsp/stm32/stm32l496-st-nucleo 上面的代码，选择simulator功能
 
 ![image-20220411205818020](upload\image-20220411205818020.png)
 
@@ -31,7 +31,7 @@ MAP 0x48000000,0x50070000 read write
 
 这个时候我们会发现死在了_Error_Handler这个函数里面。尝试把while循环去掉看看。
 
-再运行一次，发现死在了UART这个函数UART_WaitOnFlagUntilTimeout里面，这个就比较难查了，不过我想了下，可以用我最近开发的软件包让SWO代替UART输出，看看正常的thread是否是好的。
+再运行一次，发现死在了UART这个函数UART_WaitOnFlagUntilTimeout里面，这个就比较难查了，不过我想了下，可以用我最近开发的软件包[segger_rtt](https://github.com/supperthomas/RTTHREAD_SEGGER_TOOL)让SWO代替UART输出，看看正常的thread是否是好的。
 
 ![image-20220411211945265](upload\image-20220411211945265.png)
 
