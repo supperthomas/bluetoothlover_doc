@@ -69,3 +69,9 @@ MAP 0x48000000,0x50070000 read write
 
 - 对于一些硬件外设相关的访问，可能会有异常行为，跑RTOS没问题
 - 不能模拟一些带有SPI flash或者SDRAM等需要有外设的开发板
+
+
+
+公众号
+
+![](https://gitee.com/superThomas/picture/raw/master/images/qrcode_for_gh_fd857fcc56db_430.jpg)
