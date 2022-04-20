@@ -273,3 +273,5 @@ endif
  - 建议新功能在branch上修改
     
  - release 版本如果有bug，修改tag，
+    
+ - 软件包readme里面尽可能保留最后一次运行ok的rtthread版本号。
