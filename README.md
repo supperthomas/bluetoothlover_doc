@@ -19,3 +19,10 @@
 [报名地址](https://www.rt-thread.org/page/communityPlanning.html)
 
 报名注明学习BLE 
+
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/supperthomas/supperthomas_doc.svg)](https://starchart.cc/supperthomas/supperthomas_doc)
+
