@@ -1,7 +1,5 @@
 # SEGGER RTT 简介
 
-# Segger RTT
-
 
 ## 问题一
 

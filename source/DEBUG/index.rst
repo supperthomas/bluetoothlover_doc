@@ -1,4 +1,4 @@
-RTTHRED: EMBEDDED DEBUG
+EMBEDDED DEBUG 篇
 ====================
 .. toctree::
     :maxdepth: 2
