@@ -10,6 +10,7 @@
 
 # supperthomas_doc
 
+[![Documentation Status](https://readthedocs.org/projects/supperthomas-wiki/badge/?version=latest)](https://supperthomas-wiki.readthedocs.io/en/latest/?badge=latest)
 
 如果对本项目感兴趣，并且有BLE相关的开发板。
 
@@ -18,3 +19,10 @@
 [报名地址](https://www.rt-thread.org/page/communityPlanning.html)
 
 报名注明学习BLE 
+
+
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/supperthomas/supperthomas_doc.svg)](https://starchart.cc/supperthomas/supperthomas_doc)
+
