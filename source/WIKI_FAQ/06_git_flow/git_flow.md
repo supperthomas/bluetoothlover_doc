@@ -215,6 +215,13 @@ drop：我要丢弃该commit（缩写:d）
 
 - PR之后，自己先检查一遍文件是否正确（尽量不要直接等审核人员检查，因为有些文件，可能只有你自己知道是否正确）
 
+###  GIT PR之后如何修改作者名称
+
+如果遇到PR之后，签CLA一直签不了，用下面命令
+
+```
+git commit --amend --no-edit --author="User Name <user@exmaple.com>"
+```
   
 
   ## 参考教程
