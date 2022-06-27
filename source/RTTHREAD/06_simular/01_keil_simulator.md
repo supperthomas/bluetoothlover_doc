@@ -8,7 +8,7 @@
 
 下载了最新RTTHREAD的master https://github.com/RT-Thread/rt-thread/tree/master/bsp/stm32/stm32l496-st-nucleo 上面的代码，选择simulator功能
 
-![image-20220411205818020](upload\image-20220411205818020.png)
+![image-20220411205818020](upload/image-20220411205818020.png)
 
 结果发现，跑着跑着，就报了下面的error
 
