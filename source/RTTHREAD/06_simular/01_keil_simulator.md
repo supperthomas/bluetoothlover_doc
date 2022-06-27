@@ -27,13 +27,13 @@ MAP 0x48000000,0x50070000 read write
 
 然后加载进去，同时，**我们要把-MPU去掉，不加载**
 
-![image-20220411211427284](upload\image-20220411211427284.png)
+![image-20220411211427284](upload/image-20220411211427284.png)
 
 这个时候我们会发现死在了_Error_Handler这个函数里面。尝试把while循环去掉看看。
 
 再运行一次，发现死在了UART这个函数UART_WaitOnFlagUntilTimeout里面，这个就比较难查了，不过我想了下，可以用我最近开发的软件包[segger_rtt](https://github.com/supperthomas/RTTHREAD_SEGGER_TOOL)让SWO代替UART输出，看看正常的thread是否是好的。
 
-![image-20220411211945265](upload\image-20220411211945265.png)
+![image-20220411211945265](upload/image-20220411211945265.png)
 
 然后用命令`pkgs --update`来更新软件包，用`scons --target=mdk5`来生成keil工程（记得需要将工程配置选用simulator，因为target命令重新覆盖了keil工程）
 
@@ -41,15 +41,15 @@ MAP 0x48000000,0x50070000 read write
 
 修改如下所示
 
-![image-20220411212601620](upload\image-20220411212601620.png)
+![image-20220411212601620](upload/image-20220411212601620.png)
 
 调试的时候，需要打开SWO监视窗口：
 
-![image-20220411212657150](upload\image-20220411212657150.png)
+![image-20220411212657150](upload/image-20220411212657150.png)
 
-之后点击调试按钮![image-20220411212752639](upload\image-20220411212752639.png)
+之后点击调试按钮![image-20220411212752639](upload/image-20220411212752639.png)
 
-![image-20220411212747119](upload\image-20220411212747119.png)
+![image-20220411212747119](upload/image-20220411212747119.png)
 
 运行，就可以发现有如上的界面，这个时候不需要连接开发板，直接可以跑ps等命令。
 
