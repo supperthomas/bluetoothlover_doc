@@ -507,4 +507,21 @@ static rt_err_t mcu_pin_dettach_irq(struct rt_device *device, rt_int32_t pin)
 
 最后gpio_sample的现象就是按button按钮，对应的LED小灯会切换灯的状态。
 
+=============================
+
+drv_gpio 需要的文件
+
+pin.c
+
+pin.h
+
+RT_USING_HEAP
+
+这个是要和pip.c和
+
+#if defined(RT_USING_HEAP)
+
+```
+    printf("\r\n=====%s===%d==== \r\n ",__func__,__LINE__);
+```
 

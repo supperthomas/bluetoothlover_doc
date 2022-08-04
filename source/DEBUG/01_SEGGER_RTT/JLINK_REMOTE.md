@@ -97,6 +97,10 @@ SWO也是可以进行调试的
 
 这种方法如果有一台服务器连着好几个开发板，提供一个公网IP，然后将JLINK SN号和开发板对应起来，小伙伴们就可以拿来测试自己的程序了。
 
+
+
+![image-20220501201444310](images/image-20220501201444310.png)
+
 ## 参考文档链接：
 
 JLINK 官方文档：
@@ -110,6 +114,18 @@ https://developer.arm.com/documentation/ka003921/latest
 IAR 如何远程调试：
 
 https://wiki.segger.com/IAR_EWARM#Connecting_to_J-Link_via_J-Link_Remote_Server
+
+IAR参考链接：
+
+https://wiki.segger.com/IAR_EWARM
+
+segger wiki参考链接：
+
+https://wiki.segger.com/J-Link_Remote_Server
+
+IAR如何调试：
+
+https://zhuanlan.zhihu.com/p/337103274
 
 ## 公众号
 
