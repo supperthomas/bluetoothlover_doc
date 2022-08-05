@@ -11,4 +11,6 @@ MASTER:supperthomas
     06_embeded_debug/jlink.md
     07_mcuboot/mcuboot.md
     08_MPU/01_MPU.md
+    09_doxygen/doxygen.md
+    10_lvgl/lvgl_app.md
     
