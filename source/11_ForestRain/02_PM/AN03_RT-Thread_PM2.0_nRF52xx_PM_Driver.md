@@ -1,5 +1,8 @@
 # 1 前言
 本文主要描述了nRF52系列适配RT-Thread PM2.0组件。目前基于nrf52840 DK进行初步功能测试。
+
+- [测试代码仓库](https://github.com/Forest-Rain/rt-thread/tree/master/bsp/nrf5x/nrf52840) 
+
 # 2 RT-Thread PM组件简介
 本章节内容摘自RT-Thread官方文档《[电源管理组件](https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-standard/programming-manual/pm/pm?id=%e7%94%b5%e6%ba%90%e7%ae%a1%e7%90%86%e7%bb%84%e4%bb%b6)》
 
