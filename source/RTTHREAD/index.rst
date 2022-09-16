@@ -20,3 +20,4 @@ RTTHRED: RT-Thread
     05_llsync/01_llsync_Environment.md
     05_llsync/02_llsync_struct_code.md
     06_simular/01_keil_simulator.md
+    07_onchip/01_on_chip_file.md
