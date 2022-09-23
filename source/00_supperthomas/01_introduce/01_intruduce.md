@@ -41,6 +41,27 @@ Name: thomas
 
 
 
+### 参与维护软件包
+
+| software                                                     | license        | comment |
+| ------------------------------------------------------------ | -------------- | ------- |
+| [bsal](https://github.com/RT-Thread-packages/bsal)           | Apache-2.0     |         |
+| [btstack](https://github.com/supperthomas/RTT_PACKAGE_BTSTACK.git) | non-commercial |      |
+| [llsync_sdk_adapter](https://github.com/supperthomas/LLSync_sdk_adapter) | Apache-2.0 |         |
+| [nrf5x_sdk](https://github.com/supperthomas/nrf5x_sdk) | unknown    |         |
+| [SEGGER_RTT](https://github.com/supperthomas/RTTHREAD_SEGGER_TOOL.git) | Apache-2.0 |         |
+| [NimBLE](https://github.com/RT-Thread-packages/nimble) | Apache-2.0 |         |
+| [rtthread_software_package_list_show](https://github.com/supperthomas/rtthread_software_package_list_show) | Apache-2.0 | |
+|  |  | |
+|  |  | |
+|  |  | |
+
+
+
+
+
+
+
 ### 手上相关开发板
 
 | 开发板名称            | 开发板相关链接                                               | 备注              | soc类型         |

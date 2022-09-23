@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fatdisk>
+   <disk_size>5120</disk_size>
+   <sector_size>4096</sector_size>
+   <root_dir>rofs</root_dir>
+   <output>rofs.bin</output>
+   <strip>1</strip>
+</fatdisk>
