@@ -18,8 +18,10 @@
 
 [报名地址](https://www.rt-thread.org/page/communityPlanning.html)
 
-报名注明学习BLE 
+报名注明学习BLE ,当然条件是：熟悉RT-THREAD，热爱开源贡献分享，以及对仓库有PR贡献。https://github.com/RT-Thread/rt-thread.git
 
+之前社区版本
+[community](https://github.com/RT-Thread/community-activities)
 
 
 ## Stargazers over time
