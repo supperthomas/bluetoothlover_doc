@@ -34,6 +34,7 @@ Welcome to supperthomas_wiki's documentation!
    11_ForestRain/index
    13_xiangxistu/index
    14_bobwenstudy/index
+   16_ColeStudy/index
 
 Indices and tables
 ==================
