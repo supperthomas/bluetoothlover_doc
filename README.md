@@ -8,7 +8,7 @@
 </p>
 
 
-# supperthomas_doc
+# RT-THREAD 蓝牙爱好者社区
 
 [![Documentation Status](https://readthedocs.org/projects/supperthomas-wiki/badge/?version=latest)](https://supperthomas-wiki.readthedocs.io/en/latest/?badge=latest)
 
