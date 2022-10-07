@@ -23,6 +23,7 @@
 之前社区版本
 [community](https://github.com/RT-Thread/community-activities)
 
+邮箱78900636@qq.com
 
 ## Stargazers over time
 
