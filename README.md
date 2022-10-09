@@ -18,7 +18,7 @@
 
 欢迎积极报名参加RT-THRED社区小组
 
-[报名地址](https://www.rt-thread.org/page/communityPlanning.html)
+[报名地址](https://www.rt-thread.org/communityGroup.html)
 
 报名注明学习BLE ,最好希望能：熟悉RT-THREAD，热爱开源贡献分享，以及对RTTHREAD等开源仓库有PR贡献。https://github.com/RT-Thread/rt-thread.git
 
