@@ -18,12 +18,42 @@
 
 [报名地址](https://www.rt-thread.org/page/communityPlanning.html)
 
-报名注明学习BLE ,当然条件是：熟悉RT-THREAD，热爱开源贡献分享，以及对仓库有PR贡献。https://github.com/RT-Thread/rt-thread.git
+报名注明学习BLE ,最好希望能：熟悉RT-THREAD，热爱开源贡献分享，以及对RTTHREAD等开源仓库有PR贡献。https://github.com/RT-Thread/rt-thread.git
+
 
 之前社区版本
 [community](https://github.com/RT-Thread/community-activities)
 
 邮箱78900636@qq.com
+
+QQ: 78900636
+
+BLUETOOTH小组参与维护内容：
+蓝牙相关BSP:
+- [Nordic bsp](https://github.com/RT-Thread/rt-thread/tree/master/bsp/nrf5x)
+- [STM32WB55](https://github.com/RT-Thread/rt-thread/tree/master/bsp/stm32/stm32wb55-st-nucleo)
+- [ESP32C3](https://github.com/RT-Thread/rt-thread/tree/master/bsp/ESP32_C3)
+- [ART-PI](https://github.com/RT-Thread/rt-thread/tree/master/bsp/stm32/stm32h750-artpi)
+
+蓝牙相关协议栈：
+- [NIMBLE](https://github.com/RT-Thread-packages/nimble)  NIMBLE 开源免费商用蓝牙BLE协议栈
+- [BTSTACK](https://github.com/supperthomas/RTT_PACKAGE_BTSTACK)   开源非商用蓝牙BT/BLE 协议栈
+- [SOFTDEVICE](https://github.com/supperthomas/nrf5x_sdk)  Nordic专用
+- [STM32WB55_SDK](https://github.com/xupenghu/stm32wb55_sdk)   WB55 专用
+- ZEPHYER  DOING
+
+蓝牙相关APP:
+- [BSAL](https://github.com/RT-Thread-packages/bsal)  Bluetooth Stack Abstract Layer 蓝牙协议栈抽象层
+- [HM](https://github.com/Jackistang/HM) 一个蓝牙 HCI 传输层的中间件
+- [LLYSNC](https://github.com/supperthomas/LLSync_sdk_adapter)  腾讯连连小程序
+
+
+其他软件包：
+- [SEGGER_RTT](https://github.com/supperthomas/RTTHREAD_SEGGER_TOOL)  SEGGER_RTT 调试小工具
+- [C设计模式](https://github.com/chenyingchun0312/design_pattern)   嵌入式C设计模式实现。
+
+
+- 
 
 ## Stargazers over time
 
