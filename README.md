@@ -31,6 +31,7 @@
 QQ: 78900636
 
 BLUETOOTH小组参与维护内容：
+
 蓝牙相关BSP:
 - [Nordic bsp](https://github.com/RT-Thread/rt-thread/tree/master/bsp/nrf5x)
 - [STM32WB55](https://github.com/RT-Thread/rt-thread/tree/master/bsp/stm32/stm32wb55-st-nucleo)
