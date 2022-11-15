@@ -41,8 +41,8 @@ jobs:
         shell: bash
         run: |
           make html
-          zip –r readthedoc.zip build/* 
-          ls .
+          zip readthedoc.zip build/* 
+          ls -la
       - name: Create Github release
         id: create_release
         uses: actions/create-release@v1
