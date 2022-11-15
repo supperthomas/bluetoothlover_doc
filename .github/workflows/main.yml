@@ -58,5 +58,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./readthedoc.zip
-          assert_name: readthedoc.zip
-          assert_content_type: application/zip
+          asset_name: readthedoc.zip
+          asset_content_type: application/zip
