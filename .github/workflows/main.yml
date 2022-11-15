@@ -50,7 +50,7 @@ jobs:
           tag_name: ${{ github.run_number}}
           release_name: Release ${{github.run_number}}
       - name: Upload release asset
-        id: create-newe-release
+        id: create-new-release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
