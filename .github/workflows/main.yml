@@ -42,6 +42,7 @@ jobs:
         run: |
           make html
           zip –q –r readthedoc.zip build/* 
+          ls .
       - name: Create Github release
         id: create_release
         uses: actions/create-release@v1
@@ -57,6 +58,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./readthedoc.zip
+          asset_path: .
           asset_name: readthedoc.zip
           asset_content_type: application/zip
