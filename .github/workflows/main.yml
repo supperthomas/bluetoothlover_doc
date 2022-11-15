@@ -30,6 +30,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo python -m pip install --upgrade pip -qq
+          sudo apt-get install zip
           pip install sphinx
           pip install sphinx-autobuild
           pip install sphinx_rtd_theme
@@ -40,6 +41,7 @@ jobs:
         shell: bash
         run: |
           make html
+          zip –q –r readthedoc.zip build/* 
       - name: Create Github release
         uses: actions/create-release@v1
         env:
@@ -54,6 +56,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
         with:
           upload_url: ${{steps.create-new-release.outputs.upload_url}}
-          asset_path: build
-          assert_name: build-v${{github.run_number}}.zip
+          asset_path: .
+          assert_name: readthedoc.zip
           assert_content_type: application/zip
