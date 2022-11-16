@@ -1,4 +1,4 @@
-name: Readthedoc
+name: Release the result
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -6,15 +6,14 @@ on:
   # Runs at 16:00 UTC (BeiJing 00:00) on the 1st of every month
   schedule:
     - cron:  '0 16 1 * *'
-    
-  pull_request:
+  push:
     branches:
       - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: community_readthedoc
+    name: release html
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -40,3 +39,21 @@ jobs:
           make html
           zip -r -q -o readthedoc.zip build/
           ls -la
+      - name: Create Github release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number}}
+          release_name: Release ${{github.run_number}}
+      - name: Upload release asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./readthedoc.zip
+          asset_name: readthedoc.zip
+          asset_content_type: application/zip
