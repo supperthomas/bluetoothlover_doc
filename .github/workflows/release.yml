@@ -1,0 +1,59 @@
+name: Release the result
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  # Runs at 16:00 UTC (BeiJing 00:00) on the 1st of every month
+  schedule:
+    - cron:  '0 16 1 * *'
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: release html
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+
+      - name: Install Tools
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo python -m pip install --upgrade pip -qq
+          sudo apt-get install zip
+          pip install sphinx
+          pip install sphinx-autobuild
+          pip install sphinx_rtd_theme
+          pip install recommonmark
+          pip install sphinx_markdown_tables
+          pip install requests -qq
+      - name: build Compile
+        shell: bash
+        run: |
+          make html
+          zip -r -q -o readthedoc.zip build/
+          ls -la
+      - name: Create Github release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number}}
+          release_name: Release ${{github.run_number}}
+      - name: Upload release asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./readthedoc.zip
+          asset_name: readthedoc.zip
+          asset_content_type: application/zip
