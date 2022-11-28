@@ -17,9 +17,9 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'supperthomas_wiki'
-copyright = '2020, supperthomas'
-author = 'supperthomas'
+project = 'bluetoothlover_wiki'
+copyright = '2020, apache'
+author = 'bluetoothlover'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
