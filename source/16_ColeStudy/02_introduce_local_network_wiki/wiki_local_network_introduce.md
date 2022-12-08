@@ -34,9 +34,9 @@
 2. 选择“Windows管理工具”
 3. 在展开的选项里点击"Internet Infomation Services(IIS)管理器“（如果成功安装了会有这个选项）
 
-如图所示：									![Internet Infomation Services](https://markdown-1315172582.cos.ap-shanghai.myqcloud.com/imgInternet Infomation Services.png)
+如图所示：	
 
-### 构建网站
+​	![Services](https://markdown-1315172582.cos.ap-shanghai.myqcloud.com/imgimgServices.png)
 
 在弹出的"Internet Infomation Services(IIS)管理器“软件页面里进行如下操作：
 
