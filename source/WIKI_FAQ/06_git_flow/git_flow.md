@@ -222,7 +222,14 @@ drop：我要丢弃该commit（缩写:d）
 ```
 git commit --amend --no-edit --author="User Name <user@exmaple.com>"
 ```
-  
+###  GIT PR之后如何将修改后的commit文件恢复回去
+
+找到上一次commit提交的commit-id
+
+```
+git checkout commit-id file
+```
+之后再git commit 提交push
 
   ## 参考教程
 
