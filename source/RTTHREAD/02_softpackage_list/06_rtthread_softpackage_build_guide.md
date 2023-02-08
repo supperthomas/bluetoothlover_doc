@@ -66,7 +66,17 @@ https://www.kernel.org/doc/Documentation/kbuild/kconfig-language.txt
       "filename": "elapack-1.0.0.zip",
       "VER_SHA": "0f6c51f2607f74d2940c18db7fa2b286533c6b4a"
     },
+    
+如果要指定branch可以参考下面的做法  branch release/v8.3
+    {
+      "version": "v8.3-latest",
+      "URL": "https://github.com/lvgl/lvgl.git",
+      "filename": "",
+      "VER_SHA": "release/v8.3"
+    },
 ```
+
+
 
 这里的URL可以默认就是你的软件包的地址不用修改，VER_SHA要和你的tag版本的HASH值对应
 
