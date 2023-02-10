@@ -11,5 +11,5 @@ NORDIC:chenyingchun0312
     stm32l496.md
     usb.md
     i2s.md
-    mmc.md
+    mcc.md
 
