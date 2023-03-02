@@ -66,6 +66,29 @@ git remote remove upstream
 
 ## TODO
 
+### git如何只拉取远端分支
+
+当遇到github上面的代码太多，我只想拉去一个分支的时候，而且只要最上层的commit的时候
+
+1. 找到对应的branch
+
+```
+git clone --depth 1 --single-branch https://github.com/RT-Thread/rt-thread.git rt-thread --branch lts-v4.1.x
+```
+这样拉取的时候最快
+
+当然这个时候我们又想要远端新建的一个分支怎么办呢？
+
+1. 先把远端的分支拉下来
+```
+git fetch origin 本地分支：远程分支
+```
+2. 再切到那个本地分支
+
+```
+git checkout 本地分支
+```
+
 ### git如何删除远端分支
 
 当遇到github上面远端分支需要删除的时候，我们使用下面命令
