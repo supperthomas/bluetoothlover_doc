@@ -3,14 +3,12 @@
 ## 参考资料
 
 [1] https://elinux.org/images/3/3b/NOVAK_CERVENKA.pdf
+
 [2] https://github.com/OpenAMP/open-amp/wiki/AMP-Intro
+
 [3] https://github.com/NXPmicro/rpmsg-lite
+
 [4] https://github.com/torvalds/linux/tree/master/drivers/rpmsg
-————————————————
-版权声明：本文为CSDN博主「SunnyZhou-1024」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
-原文链接：https://blog.csdn.net/ZM_Yang/article/details/107453233
-
-
 
 [5] C:\Keil_v5\ARM\PACK\ARM\AMP\1.1.0
 
