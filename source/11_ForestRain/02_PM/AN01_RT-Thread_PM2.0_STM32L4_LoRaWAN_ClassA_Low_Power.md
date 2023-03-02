@@ -34,7 +34,8 @@ RT-Thread PM2.0组件设计详见rt-thread官方作者非常详细的系列文�
       - [https://www.rt-thread.org/page/studio.html](https://www.rt-thread.org/page/studio.html)
 - JLink或者ST-Link
 <a name="c581e69ea4684dfa712192b28c3c4d85"></a>
-# 2 LoRaWAN Class A终端设备的低功耗设计
+
+## 2 LoRaWAN Class A终端设备的低功耗设计
 RT-Thread PM2.0组件的整体设计思想是PM组件让系统(MCU)尽可能多处于睡眠状态（最低功耗状态），用户业务需要干活的时候，用户主动请求系统【不睡眠】(rt_pm_module_request)，并且在事情处理完成后，主动释放(rt_pm_module_release)，【允许】系统睡眠。<br />基于RT-Thread PM2.0组件，LoRaWAN Class A低功耗设计这里涉及到三个软件包lorawan-ed-stack、lora-radio-driver、multi-rtimer，具体如下所示
 > 注: 如果使用RT-Studio 2.1.0版本创建项目，在其生成的工程模板中，pm.c、pm.h非最新PM2.0版本代码，需要更新为RT-Thread master 的pm.c、pm.h（PM2.0版本）
 
@@ -293,7 +294,7 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef* hspi)
 }
 ```
 <a name="B3iTz"></a>
-# 3 LoRaWAN Class A终端设备的应用示例
+## 3 LoRaWAN Class A终端设备的应用示例
 <a name="Uh6OP"></a>
 ## 2.1 使能PM组件
 
@@ -356,7 +357,7 @@ multi_rtimer软件包使用硬件RTC，同时为了获取更高时间精度，�
 STM32L4平台，RT-Thread PM2.0组件使用了LPTIM1来提供Tickless机制。<br />注：当前在drv_lptim.c驱动里面已经默认实现LPTIM1的开启，因此此处也可以忽略该步骤。<br />![image.png](./AN01_images/10.png)<br />使能LPTIM1<br />![image.png](AN01_images/11.png)<br />LPTIM1时钟源设置为LSE，也可以设置来自LSI
 <a name="653cd9386c7cf2182df9bf919ad54b34"></a>
 
-# 4 功耗测试结果
+## 4 功耗测试结果
 将[ STM32L562E-DK](https://www.st.com/en/evaluation-tools/stm32l562e-dk.html)的JP7接口连接到测试 [LSD4RF-TEST2002[STM32L4]](http://bbs.lierda.com/forum.php?mod=viewthread&tid=9729&highlight=test2002&_dsign=25cd8f70) 的J2接口,如下图所示<br />![image.png](./AN01_images/12.png)<br />搭建LSD4RF-TEST2002[STM32L4]功耗测试台
 <a name="4f90dc611266d89dd229ef894d7f04c4"></a>
 
@@ -381,7 +382,7 @@ LoRaWAN数据通信，有下行数据情况
 ![image.png](./AN01_images/17.png))<br />![image.png](./AN01_images/18.png))<br />单次Class A数据通信功耗曲线(有下行数据）
 <a name="22272bb76042704254d56c620e312fcb"></a>
 
-# 5 参考
+## 5 参考
 
 - RT-Thread操作系统
    - [https://github.com/RT-Thread/rt-thread](https://github.com/RT-Thread/rt-thread)
