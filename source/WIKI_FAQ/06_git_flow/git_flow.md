@@ -254,6 +254,21 @@ git checkout commit-id file
 ```
 之后再git commit 提交push
 
+### GIT flow 工作流
+
+整个代码库中一共有五种分支
+
+Master 分支，可发布
+
+Release 分支，发布的准备工作
+
+Developer 分支。是开发分支
+
+Feature 分支，功能分支，开发完成，向develop合并，自删
+
+Hotfix 分支，Bug-fix，完成后删除
+
+
   ## 参考教程
 
    [Git及GitHub教程](https://www.githubs.cn/post/git-tutorial)
