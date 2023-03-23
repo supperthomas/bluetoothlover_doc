@@ -209,6 +209,21 @@ drop：我要丢弃该commit（缩写:d）
 
 修改commit的时候一定要小心，不要把别人的commit修改了。看清楚那几个commit要合并的。
 
+### 如何修改倒数第二个的commit。
+
+先用rebase找到commit
+`git rebase -i HEAD~2` 
+
+找到需要修改的commit，将前缀改为edit
+
+然后git add 提交修改
+
+`git add . -u`  
+
+`git commit --amend` 提交修改，
+
+然后执行`git rebase --continue` 保存rebase
+
 
 ### github如何贡献代码
 
