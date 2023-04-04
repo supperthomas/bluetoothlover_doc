@@ -3,6 +3,7 @@
 ## Introduce
 
 Name: jiy
+Blog: [hyhkjiy.github.io](https://hyhkjiy.github.io)
 
 ### 编程语言
 
@@ -19,7 +20,7 @@ Name: jiy
 | web开发 | 熟练     |
 | ble     | 熟练     |
 | 爬虫    | 了解     |
-| PCB     | 入门     |
+| PCB     |  熟悉     |
 
 ### 手上相关开发板
 
