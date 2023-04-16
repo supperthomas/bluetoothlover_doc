@@ -43,7 +43,7 @@ BLUETOOTH小组参与维护内容：
 - [BTSTACK](https://github.com/supperthomas/RTT_PACKAGE_BTSTACK)   开源非商用蓝牙BT/BLE 协议栈
 - [SOFTDEVICE](https://github.com/supperthomas/nrf5x_sdk)  Nordic专用
 - [STM32WB55_SDK](https://github.com/xupenghu/stm32wb55_sdk)   WB55 专用
-- ZEPHYER  DOING
+- [ZEPHYER](https://github.com/bobwenstudy/RTT_PACKAGE_zephyr_polling)
 
 蓝牙相关APP:
 - [BSAL](https://github.com/RT-Thread-packages/bsal)  Bluetooth Stack Abstract Layer 蓝牙协议栈抽象层
