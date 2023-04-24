@@ -38,7 +38,7 @@ https://squareline.io/demos
 
 #### NXP gui builder
 
-https://www.nxp.com/design/software/development-software/gui-guider:GUI-GUIDER
+https://www.nxp.com/design/software/development-software/gui-guider:GUI-GUIDER 
 
 NXP官方提供了一款NXP的GUI BUILDER 工具，免费的。对NXP的平台支持的很好，目前支持到8.2.0 版本。最新的8.3.0版本不支持。其他平台也可以使用这个工具来学习LVGL。很方便.
 这个需要预先安装JAVA JRE 环境 命令行里面java可执行即可。
