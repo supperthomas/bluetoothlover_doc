@@ -13,4 +13,5 @@ MASTER:supperthomas
     08_MPU/01_MPU.md
     09_doxygen/doxygen.md
     10_lvgl/lvgl_app.md
-    
+    11_cppcheck/cppcheck.md    
+    12_gitflow/gitflow.md    
