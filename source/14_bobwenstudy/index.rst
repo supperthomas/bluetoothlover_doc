@@ -9,4 +9,5 @@ NORDIC:bobwenstudy
     03_bluetooth/index.rst
     04_markdown/index.rst
     05_compile/index.rst
+    06_bsp/index.rst
 
