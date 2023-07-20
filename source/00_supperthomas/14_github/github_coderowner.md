@@ -30,7 +30,7 @@ https://github.com/RT-Thread/rt-thread/blob/master/.github/CODEOWNERS
 - doc目录`docs/`
 - .github目录`.github/`
 
-## CODEOWNNER 内容
+## CODEOWNER 内容
 
 内容其实很简单，下面给个最简单的例子
 
