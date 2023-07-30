@@ -196,6 +196,8 @@ west build -p always -b nucleo_l496zg samples/hello_world
 
 这里的`-p always`  ，在你想要切换另外的exapmle的时候，如果不加这个，编译不了，必须删除`build`目录才行。如果加了这个直接强制重新生成example。
 
+这里的`-b` 后面跟的参数是文件夹的名字 参考：https://github.com/zephyrproject-rtos/zephyr/tree/main/boards/arm
+
 ### 烧入
 
 ```
@@ -203,3 +205,24 @@ west flash
 ```
 
 烧入之后的调试，可以尝试用`ozone` 来学习，非常方便。
+
+##  第二次进入build 
+
+如果重启之后，想要再进入之前相同环境，只要执行下面命令即可
+
+```
+source ~/zephyrproject/.venv/bin/activate
+```
+
+
+
+## 如果没有开发板
+
+如果你手上没有开发板，可以试下用qemu来跑：
+
+https://docs.zephyrproject.org/latest/boards/arm/qemu_cortex_m3/doc/index.html
+
+```
+west build -b qemu_cortex_m3 samples/synchronization
+west build -t run
+```
