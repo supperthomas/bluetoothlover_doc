@@ -164,7 +164,7 @@ wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zeph
 wget -O - https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/sha256.sum | shasum --check --ignore-missing
 ```
 
-这个命令也要`github.com` ， 这个可以自己在网页上下载。
+这个命令也要`github.com` ， 这个可以自己在网页上下载。这个用`https://ghproxy.com/` 这个网站上下载，非常快。
 
 ### 解压
 
