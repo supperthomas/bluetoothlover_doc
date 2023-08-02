@@ -76,6 +76,12 @@ python3 -m venv ~/zephyrproject/.venv
 source ~/zephyrproject/.venv/bin/activate
 ```
 
+如果不希望创建虚拟环境，直接改现有环境可以进入下面的tab页进行安装
+
+![image-20230802063533535](images/image-20230802063533535.png)
+
+
+
 ### 安装west
 
 ```
