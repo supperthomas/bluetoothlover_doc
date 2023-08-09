@@ -209,14 +209,13 @@ Kconfig header saved to '/home/thomas/zephyrproject/zephyr/build/zephyr/include/
 -- Configuring done
 -- Generating done
 -- Build files have been written to: /home/thomas/zephyrproject/zephyr/build
-
-
 ```
 
 我们来看看这些都是哪些地方打出来的：
 
 ```
--- Application: /home/thomas/zephyrproject/zephyr/samples/hello_world [cmake/modules/zephyr_default.cmake]
+-- Application: /home/thomas/zephyrproject/zephyr/samples/hello_world 
+[cmake/modules/zephyr_default.cmake]
 -- CMake version: 3.22.1
 [cmake/modules/zephyr_default.cmake]
 -- Found Python3: /usr/bin/python3.10 (found suitable exact version "3.10.6") found components: Interpreter 
@@ -266,7 +265,9 @@ Kconfig header saved to '/home/thomas/zephyrproject/zephyr/build/zephyr/include/
 
 这里面其实做了很多事情，比如设备树是在这里生成的，Kconfig是在这里生成的，还有toolchain等其他都是在这里生成的，所以这里其实命令比较多。重要信息也很多。
 
-到这里可以看到基本cmake的事情基本都做完了，
+到这里可以看到基本cmake的事情基本都做完了，这里需要分析的东西也很多。
+
+
 
 ### PRE-BUILD
 
@@ -285,9 +286,9 @@ Running CMake: /usr/bin/cmake --build /home/thomas/zephyrproject/zephyr/build --
 [4/154] cd /home/thomas/zephyrproject/zephyr/build/zephyr && /usr/bin/python3.10 /home/thomas/zephyrproject/zephyr/scripts/build/parse_syscalls.py --scan /home/thomas/zephyrproject/zephyr/include --scan /home/thomas/zephyrproject/zephyr/drivers --scan /home/thomas/zephyrproject/zephyr/subsys/net --json-file /home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/syscalls.json --tag-struct-file /home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/struct_tags.json --file-list /home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/syscalls_file_list.txt
 ==========zephyr/scripts/build/parse_syscalls.py================
 [5/154] cd /home/thomas/zephyrproject/zephyr/build/zephyr && /usr/bin/python3.10 /home/thomas/zephyrproject/zephyr/scripts/build/gen_syscalls.py --json-file /home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/syscalls.json --base-output include/generated/syscalls --syscall-dispatch include/generated/syscall_dispatch.c --syscall-list /home/thomas/zephyrproject/zephyr/build/zephyr/include/generated/syscall_list.h  --split-type k_timeout_t --split-type k_ticks_t
-==========zephyr/scripts/build/gen_syscalls.py ================
+==========zephyr/scripts/build/gen_syscalls.py ======syscall_dispatch.c==syscalls.json========
 [6/154] cd /home/thomas/zephyrproject/zephyr/build/zephyr && /usr/bin/python3.10 /home/thomas/zephyrproject/zephyr/scripts/build/gen_kobject_list.py --kobj-types-output /home/thomas/zephyrproject/zephyr/build/zephyr/include/generated/kobj-types-enum.h --kobj-otype-output /home/thomas/zephyrproject/zephyr/build/zephyr/include/generated/otype-to-str.h --kobj-size-output /home/thomas/zephyrproject/zephyr/build/zephyr/include/generated/otype-to-size.h --include-subsystem-list /home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/struct_tags.json
-==========zephyr/scripts/build/gen_kobject_list.py ================
+==========zephyr/scripts/build/gen_kobject_list.py =====kobj-types-enum.h===========
 [7/154] cd /home/thomas/zephyrproject/zephyr/build/zephyr && /usr/bin/python3.10 /home/thomas/zephyrproject/zephyr/scripts/build/gen_kobject_list.py --validation-output /home/thomas/zephyrproject/zephyr/build/zephyr/include/generated/driver-validation.h --include-subsystem-list /home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/struct_tags.json
 ==========zephyr/scripts/build/gen_kobject_list.py ================
 [8/154] ccache /home/thomas/zephyr-sdk-0.16.1/arm-zephyr-eabi/bin/arm-zephyr-eabi-gcc -DCORE_CM4 -DHSE_VALUE=8000000 -DKERNEL -DSTM32L496xx -DUSE_FULL_LL_DRIVER -DUSE_HAL_DRIVER -D__PROGRAM_START -D__ZEPHYR__=1 -I/home/thomas/zephyrproject/zephyr/kernel/include -I/home/thomas/zephyrproject/zephyr/arch/arm/include -I/home/thomas/zephyrproject/zephyr/include -I/home/thomas/zephyrproject/zephyr/build/zephyr/include/generated -I/home/thomas/zephyrproject/zephyr/soc/arm/st_stm32/stm32l4 -I/home/thomas/zephyrproject/zephyr/drivers -I/home/thomas/zephyrproject/zephyr/soc/arm/st_stm32/common -I/home/thomas/zephyrproject/modules/hal/cmsis/CMSIS/Core/Include -I/home/thomas/zephyrproject/modules/hal/stm32/stm32cube/stm32l4xx/soc -I/home/thomas/zephyrproject/modules/hal/stm32/stm32cube/stm32l4xx/drivers/include -I/home/thomas/zephyrproject/modules/hal/stm32/stm32cube/stm32l4xx/drivers/include/Legacy -I/home/thomas/zephyrproject/modules/hal/stm32/stm32cube/common_ll/include -isystem /home/thomas/zephyrproject/zephyr/lib/libc/minimal/include -isystem /home/thomas/zephyr-sdk-0.16.1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include -isystem /home/thomas/zephyr-sdk-0.16.1/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.2.0/include-fixed -fno-strict-aliasing -Os -imacros /home/thomas/zephyrproject/zephyr/build/zephyr/include/generated/autoconf.h -ffreestanding -fno-common -g -gdwarf-4 -fdiagnostics-color=always -mcpu=cortex-m4 -mthumb -mabi=aapcs -mfp16-format=ieee --sysroot=/home/thomas/zephyr-sdk-0.16.1/arm-zephyr-eabi/arm-zephyr-eabi -imacros /home/thomas/zephyrproject/zephyr/include/zephyr/toolchain/zephyr_stdint.h -Wall -Wformat -Wformat-security -Wno-format-zero-length -Wno-pointer-sign -Wpointer-arith -Wexpansion-to-defined -Wno-unused-but-set-variable -Werror=implicit-int -fno-pic -fno-pie -fno-asynchronous-unwind-tables -fno-reorder-functions --param=min-pagesize=0 -fno-defer-pop -fmacro-prefix-map=/home/thomas/zephyrproject/zephyr/samples/hello_world=CMAKE_SOURCE_DIR -fmacro-prefix-map=/home/thomas/zephyrproject/zephyr=ZEPHYR_BASE -fmacro-prefix-map=/home/thomas/zephyrproject=WEST_TOPDIR -ffunction-sections -fdata-sections -std=c99 -nostdinc -MD -MT zephyr/CMakeFiles/offsets.dir/arch/arm/core/offsets/offsets.c.obj -MF zephyr/CMakeFiles/offsets.dir/arch/arm/core/offsets/offsets.c.obj.d -o zephyr/CMakeFiles/offsets.dir/arch/arm/core/offsets/offsets.c.obj -c /home/thomas/zephyrproject/zephyr/arch/arm/core/offsets/offsets.c
@@ -330,7 +331,25 @@ offset.h里面的东西：
 
 #### 那offsets.h在干嘛呢？
 
-我们看下`___cpu_t_current_OFFSET` 这些变量
+主要调这个脚本`gen_offset_header.py`
+
+```
+scripts/build/gen_offset_header.py
+This script scans a specified object file and generates a header file that defined macros for the offsets of various found structure members (particularly symbols ending with _OFFSET or _SIZEOF), primarily intended for use in assembly code.
+```
+
+主要处理以`_OFFSET`或者`_SIZEOF` 结尾的一些标号, 主要用在汇编里面要使用。
+
+我们先看下`arch/arm/core/offsets/offsets_aarch32.c` 中的下面的变量
+
+```
+GEN_OFFSET_SYM(_basic_sf_t, pc);
+GEN_OFFSET_SYM(_basic_sf_t, xpsr);
+```
+
+这个会转换成`offset.c.obj` 里面的标号`___basic_sf_t_pc_OFFSET`
+
+我们看下`___basic_sf_t_pc_OFFSET` 这些变量
 
 以及offsets.h中的注释，可以知道，这些偏移量都服务于一些汇编文件，具体可以打开`./arch/arm/core/aarch32/swap_helper.S` 文件查看下
 
@@ -343,7 +362,7 @@ offset.h里面的东西：
 
 有点类似于，一些架构pc偏移等CPU相关的offset是不一样的，所以这里存放的是这些offset。
 
-
+总结一下就是：一些_OFFSET 会转换成symbol 变成offsets.h头文件里面的值，为什么这么做呢？感觉是为了服务汇编代码的。
 
 #### syscall 产生
 
@@ -357,10 +376,6 @@ offset.h里面的东西：
 这里的输入是各种路径下的.h 文件， `/home/thomas/zephyrproject/zephyr/include`  `/home/thomas/zephyrproject/zephyr/drivers`
 
 然后生成jason文件`/home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/syscalls.json ` , tag 文件`/home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/struct_tags.json`  文件列表`/home/thomas/zephyrproject/zephyr/build/zephyr/misc/generated/syscalls_file_list.txt`
-
-
-
-
 
 图中`gen_syscall_header.py` 是在第5步 ，这里的`scripts`目录下面已经没有`gen_syscall_header.py`了，已经移动到`build/gen_syscalls.py`
 
@@ -379,9 +394,11 @@ offset.h里面的东西：
 
 #### 那syscall在做什么呢？
 
-所有.h里面用`__syscall` 声明的函数， 例如`zephyr/include/zephyr/drivers/uart.h`
+这个syscall有点像linux的味道了，而且非常像，系统调用。
 
-真正的函数实现`z_impl_uart_irq_tx_disable`
+所有.h里面用`__syscall` 声明的函数， 例如`zephyr/include/zephyr/drivers/uart.h` 中有个`uart_irq_tx_disable` 前面用`__syscall` 来修饰
+
+真正的函数实现是`z_impl_uart_irq_tx_disable` 
 
 ```
 /**
@@ -404,7 +421,7 @@ static inline void z_impl_uart_irq_tx_disable(const struct device *dev)
 }
 ```
 
-在`syscalls.json`中变成下面的结构
+中途通过`parse_syscalls.py`生成在`syscalls.json`中变成下面的结构
 
 ```
     [
