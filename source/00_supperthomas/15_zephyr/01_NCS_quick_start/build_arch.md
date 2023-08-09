@@ -20,6 +20,8 @@
 
 https://docs.zephyrproject.org/latest/build/cmake/index.html#
 
+https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/build/cmake/index.html
+
 构建系统分为以下两部分
 
 - 编译配置部分
@@ -304,8 +306,6 @@ static inline void z_impl_uart_irq_tx_disable(const struct device *dev)
 
 ```
 	[K_SYSCALL_UART_IRQ_TX_DISABLE] = z_mrsh_uart_irq_tx_disable,
-	
-	
 __weak ALIAS_OF(handler_no_syscall)
 uintptr_t z_mrsh_uart_irq_tx_disable(uintptr_t arg1, uintptr_t arg2, uintptr_t arg3,
          uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
@@ -367,14 +367,6 @@ case K_OBJ_EVENT: ret = sizeof(struct k_event); break;
 #endif
 ```
 
-
-
-
-
-
-
-
-
 接着在下面的`gen_syscalls.py` 步骤中，转换成`syscall_list.h`中的下面的代码
 
 ```
@@ -389,7 +381,7 @@ uintptr_t z_mrsh_uart_irq_tx_disable(uintptr_t arg1, uintptr_t arg2, uintptr_t a
          uintptr_t arg4, uintptr_t arg5, uintptr_t arg6, void *ssf);
 ```
 
-在`build/zephyr/include/generated/syscalls`里面生成了uart.h ，看上去是加了个trace等功能。
+`gen_syscalls.py` 同时生成在`build/zephyr/include/generated/syscalls`里面生成了uart.h ，类似于将uart.h转换了一下。
 
 ```
 extern void z_impl_uart_irq_tx_disable(const struct device * dev);
@@ -416,7 +408,7 @@ static inline void uart_irq_tx_disable(const struct device * dev)
 
 这里可以看到在代码中如果调函数`uart_irq_tx_disable` 就会用编译器通过`build/zephyr/include/generated/syscalls/uart.h` 中的`inline`函数来转化成调`z_impl_uart_irq_tx_disable` 函数，这个函数真正实现是在`zephyr/include/zephyr/drivers/uart.h`
 
-这里的syscall非常像linux的那套机制。
+这里的syscall非常像linux的那套机制。而前面调`uart_irq_tx_disable ` 就是采用syscall机制。
 
 #####  总结
 
@@ -424,7 +416,7 @@ syscall主要生成两个中间文件`syscalls.jason` 和`struct_tags.json`
 
 `syscalls.jason` 主要负责生成系统调用的API。例如`__syscall void uart_irq_tx_disable(const struct device *dev);`
 
-`struct_tags.jason`  主要负责生成系统调用的一些结构体的API `__subsystem struct uart_driver_api {...}
+`struct_tags.jason`  主要负责生成系统调用的一些结构体的API `__subsystem struct uart_driver_api {...}`
 
 
 
@@ -531,23 +523,254 @@ offset主要用于生成一些汇编要用的一些宏，在汇编中会用到�
 
 
 
-## 中间编译二进制
+## 中间二进制
 
-这一部分比较复杂，可以下次再讲
+什么是中间二进制呢？
 
-大概就是中间编译的时候，会生成各种.a的二进制，用于最后的合并。
+我理解是：中间编译.c过程中，需要通过python脚本对一些.c进行处理的，而且这些.c大部分是中间生成的，要通过脚本生成并且处理。
+
+以及一些生成.a的过程。
+
+![image-20230809161141843](images/image-20230809161141843.png)
+
+```
+-Wl,--whole-archive
+app/libapp.a  
+zephyr/libzephyr.a  
+zephyr/arch/common/libarch__common.a  
+zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a  zephyr/arch/arch/arm/core/aarch32/cortex_m/libarch__arm__core__aarch32__cortex_m.a  zephyr/arch/arch/arm/core/aarch32/cortex_m/cmse/libarch__arm__core__aarch32__cortex_m__cmse.a  zephyr/arch/arch/arm/core/aarch32/mpu/libarch__arm__core__aarch32__mpu.a  
+zephyr/lib/libc/minimal/liblib__libc__minimal.a  
+zephyr/soc/arm/common/cortex_m/libsoc__arm__common__cortex_m.a  
+zephyr/drivers/clock_control/libdrivers__clock_control.a  
+zephyr/drivers/console/libdrivers__console.a  
+zephyr/drivers/gpio/libdrivers__gpio.a  
+zephyr/drivers/serial/libdrivers__serial.a  
+zephyr/drivers/timer/libdrivers__timer.a  
+zephyr/drivers/pinctrl/libdrivers__pinctrl.a  
+modules/nrf/lib/fatal_error/lib..__nrf__lib__fatal_error.a  
+modules/nrf/drivers/hw_cc310/lib..__nrf__drivers__hw_cc310.a  
+modules/hal_nordic/nrfx/libmodules__hal_nordic__nrfx.a  
+-Wl,--no-whole-archive  
+zephyr/kernel/libkernel.a  
+zephyr/CMakeFiles/offsets.dir/./arch/arm/core/offsets/offsets.c.obj  
+-L"d:/nrodic_ncs/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.1.0/thumb/v8-m.main/nofp" 
+-LD:/05_nordic/hello_world/build/zephyr  
+-lgcc  -Wl,--print-memory-usage  
+zephyr/arch/common/libisr_tables.a
+```
+
+这边它讲了不固定大小和固定大小
+
+并且举了个例子，
+
+我们先看下面的例子`dev_handlers.c`是固定大小，是devicetree使用的，`isr_tables.c`是固定大小。
+
+从下面的代码中我们也可以看出来，下面的图有些感觉反过来了。
+
+![image-20230809163106749](images/image-20230809163106749.png)
+
+### dev_handlers.c
+
+这个文件是因为要使用`devicetree`
+
+这个文件是由`gen_handlers.py` 这个文件生成的。
+
+```
+[157/166] cmd.exe /C "cd /D D:\05_nordic\hello_world\build\zephyr && D:\Nrodic_NCS\toolchains\v2.3.0\opt\bin\python.exe D:/Nrodic_NCS/v2.3.0/zephyr/scripts/build/gen_handles.py --output-source dev_handles.c --output-graphviz dev_graph.dot --num-dynamic-devices 0 --kernel D:/05_nordic/hello_world/build/zephyr/zephyr_pre0.elf --zephyr-base D:/Nrodic_NCS/v2.3.0/zephyr --start-symbol __device_start"
+```
+
+生成之后的文件`build\zephyr\dev_handers.c`
+
+```
+#include <zephyr/device.h>
+#include <zephyr/toolchain.h>
+
+/* 1 : /soc/peripheral@50000000/clock@5000:
+ */
+const Z_DECL_ALIGN(device_handle_t) __attribute__((__section__(".__device_handles_pass2")))
+__devicehdl_dts_ord_80[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, DEVICE_HANDLE_ENDS };
+
+/* 2 : /soc/peripheral@50000000/gpio@842800:
+ */
+const Z_DECL_ALIGN(device_handle_t) __attribute__((__section__(".__device_handles_pass2")))
+__devicehdl_dts_ord_9[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, DEVICE_HANDLE_ENDS };
+
+/* 3 : /soc/peripheral@50000000/gpio@842500:
+ */
+const Z_DECL_ALIGN(device_handle_t) __attribute__((__section__(".__device_handles_pass2")))
+__devicehdl_dts_ord_8[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, DEVICE_HANDLE_ENDS };
+
+/* 4 : /soc/peripheral@50000000/uart@8000:
+ */
+const Z_DECL_ALIGN(device_handle_t) __attribute__((__section__(".__device_handles_pass2")))
+__devicehdl_dts_ord_120[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, DEVICE_HANDLE_ENDS };
+
+```
+
+这个有点像devicetree那边需要用到的handle的地址。
+
+### isr_tables.c
+
+中断生成命令
+
+```
+[162/166] cmd.exe /C "cd /D D:\05_nordic\hello_world\build\zephyr 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-objcopy.exe --input-target=elf32-littlearm --output-target=binary --only-section=.intList D:/05_nordic/hello_world/build/zephyr/zephyr_pre1.elf isrList.bin 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\bin\python.exe D:/Nrodic_NCS/v2.3.0/zephyr/scripts/build/gen_isr_tables.py --output-source isr_tables.c --kernel D:/05_nordic/hello_world/build/zephyr/zephyr_pre1.elf --intlist isrList.bin --sw-isr-table --vector-table"
+```
 
 
+
+`gen_isr_tables.py` 脚本生成`build\zephyr\isr_tables.c`
+
+我们看看`isr_tables.c`里面由啥, 下面的代码省略掉一些，主要是中断向量表
+
+```
+/* AUTO-GENERATED by gen_isr_tables.py, do not edit! */
+
+#include <zephyr/toolchain.h>
+#include <zephyr/linker/sections.h>
+#include <zephyr/sw_isr_table.h>
+#include <zephyr/arch/cpu.h>
+
+typedef void (* ISR)(const void *);
+uintptr_t __irq_vector_table _irq_vector_table[69] = {
+	((uintptr_t)&_isr_wrapper),
+};
+struct _isr_table_entry __sw_isr_table _sw_isr_table[69] = {
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x2d21, (ISR)0x4d53},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x5410, (ISR)0x4c7b},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x3301, (ISR)0x4d53},
+};
+
+```
+
+这两个.c都是一个数组，一个数组大小不固定，一个数组大小固定。
+
+还有个分区对其`gen_app_partitions.py` 这个这次编译没有遇到，我们暂时不深入介绍。
+
+## 中间二进制后期处理
+
+`gen_handles.py `  通过zephyr_pre0.elf 生成dev_handles.c， dev_handles.c生成dev_handles.c.obj
+
+```
+[159/166] D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-gcc.exe -DKERNEL -DNRF5340_XXAA_APPLICATION -DNRF_SKIP_FICR_NS_COPY_TO_RAM -DUSE_PARTITION_MANAGER=0 -D__PROGRAM_START -D__ZEPHYR__=1 -ID:/Nrodic_NCS/v2.3.0/zephyr/include -Izephyr/include/generated -ID:/Nrodic_NCS/v2.3.0/zephyr/soc/arm/nordic_nrf/nrf53 -ID:/Nrodic_NCS/v2.3.0/zephyr/soc/arm/nordic_nrf/common/. -ID:/Nrodic_NCS/v2.3.0/nrf/include -ID:/Nrodic_NCS/v2.3.0/nrf/tests/include -ID:/Nrodic_NCS/v2.3.0/modules/hal/cmsis/CMSIS/Core/Include -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx/drivers/include -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx/mdk -ID:/Nrodic_NCS/v2.3.0/zephyr/modules/hal_nordic/nrfx/. -isystem D:/Nrodic_NCS/v2.3.0/zephyr/lib/libc/minimal/include -isystem d:/nrodic_ncs/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.1.0/include -isystem d:/nrodic_ncs/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.1.0/include-fixed -isystem D:/Nrodic_NCS/v2.3.0/nrfxlib/crypto/nrf_cc312_platform/include -fno-strict-aliasing -Os -imacros D:/05_nordic/hello_world/build/zephyr/include/generated/autoconf.h -ffreestanding -fno-common -g -gdwarf-4 -fdiagnostics-color=always -mcpu=cortex-m33 -mthumb -mabi=aapcs -mfp16-format=ieee --sysroot=D:/Nrodic_NCS/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/arm-zephyr-eabi -imacros D:/Nrodic_NCS/v2.3.0/zephyr/include/zephyr/toolchain/zephyr_stdint.h -Wall -Wformat -Wformat-security -Wno-format-zero-length -Wno-main -Wno-pointer-sign -Wpointer-arith -Wexpansion-to-defined -Wno-unused-but-set-variable -Werror=implicit-int -fno-pic -fno-pie -fno-asynchronous-unwind-tables -fno-reorder-functions --param=min-pagesize=0 -fno-defer-pop -fmacro-prefix-map=D:/05_nordic/hello_world=CMAKE_SOURCE_DIR -fmacro-prefix-map=D:/Nrodic_NCS/v2.3.0/zephyr=ZEPHYR_BASE -fmacro-prefix-map=D:/Nrodic_NCS/v2.3.0=WEST_TOPDIR -ffunction-sections -fdata-sections -std=c99 -nostdinc -MD -MT zephyr/CMakeFiles/zephyr_pre1.dir/dev_handles.c.obj -MF zephyr\CMakeFiles\zephyr_pre1.dir\dev_handles.c.obj.d -o zephyr/CMakeFiles/zephyr_pre1.dir/dev_handles.c.obj -c zephyr/dev_handles.c
+```
+
+
+
+`gen_isr_tables.py`  生成isr_tables.c 然后用gcc生成isr_tables.c.obj
+
+```
+[165/166] D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-gcc.exe -DKERNEL -DNRF5340_XXAA_APPLICATION -DNRF_SKIP_FICR_NS_COPY_TO_RAM -DUSE_PARTITION_MANAGER=0 -D__PROGRAM_START -D__ZEPHYR__=1 -ID:/Nrodic_NCS/v2.3.0/zephyr/include -Izephyr/include/generated -ID:/Nrodic_NCS/v2.3.0/zephyr/soc/arm/nordic_nrf/nrf53 -ID:/Nrodic_NCS/v2.3.0/zephyr/soc/arm/nordic_nrf/common/. -ID:/Nrodic_NCS/v2.3.0/nrf/include -ID:/Nrodic_NCS/v2.3.0/nrf/tests/include -ID:/Nrodic_NCS/v2.3.0/modules/hal/cmsis/CMSIS/Core/Include -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx/drivers/include -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx/mdk -ID:/Nrodic_NCS/v2.3.0/zephyr/modules/hal_nordic/nrfx/. -isystem D:/Nrodic_NCS/v2.3.0/zephyr/lib/libc/minimal/include -isystem d:/nrodic_ncs/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.1.0/include -isystem d:/nrodic_ncs/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.1.0/include-fixed -isystem D:/Nrodic_NCS/v2.3.0/nrfxlib/crypto/nrf_cc312_platform/include -fno-strict-aliasing -Os -imacros D:/05_nordic/hello_world/build/zephyr/include/generated/autoconf.h -ffreestanding -fno-common -g -gdwarf-4 -fdiagnostics-color=always -mcpu=cortex-m33 -mthumb -mabi=aapcs -mfp16-format=ieee --sysroot=D:/Nrodic_NCS/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/arm-zephyr-eabi -imacros D:/Nrodic_NCS/v2.3.0/zephyr/include/zephyr/toolchain/zephyr_stdint.h -Wall -Wformat -Wformat-security -Wno-format-zero-length -Wno-main -Wno-pointer-sign -Wpointer-arith -Wexpansion-to-defined -Wno-unused-but-set-variable -Werror=implicit-int -fno-pic -fno-pie -fno-asynchronous-unwind-tables -fno-reorder-functions --param=min-pagesize=0 -fno-defer-pop -fmacro-prefix-map=D:/05_nordic/hello_world=CMAKE_SOURCE_DIR -fmacro-prefix-map=D:/Nrodic_NCS/v2.3.0/zephyr=ZEPHYR_BASE -fmacro-prefix-map=D:/Nrodic_NCS/v2.3.0=WEST_TOPDIR -ffunction-sections -fdata-sections -std=c99 -nostdinc -MD -MT zephyr/CMakeFiles/zephyr_final.dir/isr_tables.c.obj -MF zephyr\CMakeFiles\zephyr_final.dir\isr_tables.c.obj.d -o zephyr/CMakeFiles/zephyr_final.dir/isr_tables.c.obj -c zephyr/isr_tables.c
+
+```
+
+下面讲了个hash相关的，感觉和gperf有关系，这个以后有机会介绍。但是这个相关的没有看到
+
+![image-20230809165321416](images/image-20230809165321416.png)
 
 ## 最终二进制文件
 
-这一部分比较复杂，可以下次再讲，
+```
+[157/166] Generating dev_handles.c
+[158/166] Building C object zephyr/CMakeFiles/zephyr_pre1.dir/misc/empty_file.c.obj
+[159/166] Building C object zephyr/CMakeFiles/zephyr_pre1.dir/dev_handles.c.obj
+[160/166] Linking C executable zephyr\zephyr_pre1.elf
 
-这部分就是最后一部分二进制文件
+[161/166] Generating linker.cmd
+[162/166] Generating isr_tables.c, isrList.bin
+[163/166] Building C object zephyr/CMakeFiles/zephyr_final.dir/misc/empty_file.c.obj
+[164/166] Building C object zephyr/CMakeFiles/zephyr_final.dir/dev_handles.c.obj
+[165/166] Building C object zephyr/CMakeFiles/zephyr_final.dir/isr_tables.c.obj
+[166/166] Linking C executable zephyr\zephyr.elf
+```
+
+这部分就是最后一部分二进制文件，这里讲的就是最后一条命令。
+
+```
+[166/166] Linking C executable zephyr\zephyr.elf
+```
+
+最后一条命令用`gcc` 生成`zephyr\zephyr.elf`  link文件是`zephyr/linker.cmd`  外加一些.a 等模块， 我们展开看看
+
+```
+[166/166] cmd.exe /C "cd . && D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-gcc.exe  -gdwarf-4 zephyr/CMakeFiles/zephyr_final.dir/misc/empty_file.c.obj zephyr/CMakeFiles/zephyr_final.dir/dev_handles.c.obj zephyr/CMakeFiles/zephyr_final.dir/isr_tables.c.obj -o zephyr\zephyr.elf  -Wl,-T  zephyr/linker.cmd  -Wl,-Map=D:/05_nordic/hello_world/build/zephyr/zephyr_final.map  -Wl,--whole-archive  app/libapp.a  zephyr/libzephyr.a  zephyr/arch/common/libarch__common.a  zephyr/arch/arch/arm/core/aarch32/libarch__arm__core__aarch32.a  zephyr/arch/arch/arm/core/aarch32/cortex_m/libarch__arm__core__aarch32__cortex_m.a  zephyr/arch/arch/arm/core/aarch32/cortex_m/cmse/libarch__arm__core__aarch32__cortex_m__cmse.a  zephyr/arch/arch/arm/core/aarch32/mpu/libarch__arm__core__aarch32__mpu.a  zephyr/lib/libc/minimal/liblib__libc__minimal.a  zephyr/soc/arm/common/cortex_m/libsoc__arm__common__cortex_m.a  zephyr/drivers/clock_control/libdrivers__clock_control.a  zephyr/drivers/console/libdrivers__console.a  zephyr/drivers/gpio/libdrivers__gpio.a  zephyr/drivers/serial/libdrivers__serial.a  zephyr/drivers/timer/libdrivers__timer.a  zephyr/drivers/pinctrl/libdrivers__pinctrl.a  modules/nrf/lib/fatal_error/lib..__nrf__lib__fatal_error.a  modules/nrf/drivers/hw_cc310/lib..__nrf__drivers__hw_cc310.a  modules/hal_nordic/nrfx/libmodules__hal_nordic__nrfx.a  -Wl,--no-whole-archive  zephyr/kernel/libkernel.a  zephyr/CMakeFiles/offsets.dir/./arch/arm/core/offsets/offsets.c.obj  -L"d:/nrodic_ncs/toolchains/v2.3.0/opt/zephyr-sdk/arm-zephyr-eabi/bin/../lib/gcc/arm-zephyr-eabi/12.1.0/thumb/v8-m.main/nofp"  -LD:/05_nordic/hello_world/build/zephyr  -lgcc  -Wl,--print-memory-usage  zephyr/arch/common/libisr_tables.a  -no-pie  -mcpu=cortex-m33  -mthumb  -mabi=aapcs  -mfp16-format=ieee  -Wl,--gc-sections  -Wl,--build-id=none  -Wl,--sort-common=descending  -Wl,--sort-section=alignment  -Wl,-u,_OffsetAbsSyms  -Wl,-u,_ConfigAbsSyms  -nostdlib  -static  -Wl,-X  -Wl,-N  -Wl,--orphan-handling=warn  D:/Nrodic_NCS/v2.3.0/nrfxlib/crypto/nrf_cc312_platform/lib/cortex-m33/soft-float/no-interrupts/libnrf_cc312_platform_0.9.16.a 
+
+&& cmd.exe /C "cd /D D:\05_nordic\hello_world\build\zephyr 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\bin\cmake.exe -E copy zephyr_final.map zephyr.map 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-objcopy.exe --gap-fill 0xff --output-target=ihex --remove-section=.comment --remove-section=COMMON --remove-section=.eh_frame zephyr.elf zephyr.hex 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-objcopy.exe --gap-fill 0xff --output-target=binary --remove-section=.comment --remove-section=COMMON --remove-section=.eh_frame zephyr.elf zephyr.bin 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-objdump.exe -d -S zephyr.elf > zephyr.lst 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-readelf.exe -e zephyr.elf > zephyr.stat""
+
+```
+
+![image-20230809135445701](images/image-20230809135445701.png)
+
+这里生成`dev_handles.obj` 和`isr_tables.obj` 以及`linker.cmd`
+
+`linker.cmd` 是我们常用的ld文件。
+
+原始使用的ld文件是`include\zephyr\arch\arm\aarch32\cortex_m\scripts\linker.ld`
+
+```
+[161/166] cmd.exe /C "cd /D D:\05_nordic\hello_world\build\zephyr && D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-gcc.exe -x assembler-with-cpp -undef -MD -MF linker.cmd.dep -MT linker.cmd -D_LINKER -D_ASMLANGUAGE -imacros D:/05_nordic/hello_world/build/zephyr/include/generated/autoconf.h -ID:/Nrodic_NCS/v2.3.0/zephyr/include -ID:/05_nordic/hello_world/build/zephyr/include/generated -ID:/Nrodic_NCS/v2.3.0/zephyr/soc/arm/nordic_nrf/nrf53 -ID:/Nrodic_NCS/v2.3.0/zephyr/lib/libc/minimal/include -ID:/Nrodic_NCS/v2.3.0/zephyr/soc/arm/nordic_nrf/common/. -ID:/Nrodic_NCS/v2.3.0/nrf/include -ID:/Nrodic_NCS/v2.3.0/nrf/tests/include -ID:/Nrodic_NCS/v2.3.0/modules/hal/cmsis/CMSIS/Core/Include -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx/drivers/include -ID:/Nrodic_NCS/v2.3.0/modules/hal/nordic/nrfx/mdk -ID:/Nrodic_NCS/v2.3.0/zephyr/modules/hal_nordic/nrfx/. -D__GCC_LINKER_CMD__ -DUSE_PARTITION_MANAGER=0 -DLINKER_ZEPHYR_FINAL -E D:/Nrodic_NCS/v2.3.0/zephyr/soc/arm/nordic_nrf/nrf53/linker.ld -P -o linker.cmd && D:\Nrodic_NCS\toolchains\v2.3.0\opt\bin\cmake.exe -E cmake_transform_depfile Ninja gccdepfile D:/05_nordic/hello_world D:/Nrodic_NCS/v2.3.0/zephyr D:/05_nordic/hello_world/build D:/05_nordic/hello_world/build/zephyr D:/05_nordic/hello_world/build/zephyr/linker.cmd.dep D:/05_nordic/hello_world/build/CMakeFiles/d/d3db1b87c3855342efba494985bdcbc904fb7b63ecde7a32b125a5d1f7c33820.d"
+```
+
+
+
+```
+The binary from the previous stage is incomplete, with empty and/or placeholder sections that must be filled in by, essentially, reflection.
+前面阶段生成的二进制并不完整，有空的或者展位的段需要填充或者反射
+
+The link from the previous stage is repeated, this time with the missing pieces populated.
+前面生成的link文件再次生成，这次填充缺失的部分。
+```
 
 
 
 
+
+##  最终二进制后期处理
+
+后期处理主要生成一些烧入需要的文件比如hex 和bin文件，
+
+```
+Finally, if necessary, the completed kernel is converted from ELF to the format expected by the loader and/or flash tool required by the target. This is accomplished in a straightforward manner with objdump.
+```
+
+最后，如果需要的话，整个内核通过elf的格式转换成hex或者bin的格式供 flash tool使用。这个阶段是通过objdump完成的，实际上是`objcopy`
+
+我们看最后一条命令后面有几步操作
+
+```
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-objcopy.exe --gap-fill 0xff --output-target=ihex --remove-section=.comment --remove-section=COMMON --remove-section=.eh_frame zephyr.elf zephyr.hex 
+
+&& D:\Nrodic_NCS\toolchains\v2.3.0\opt\zephyr-sdk\arm-zephyr-eabi\bin\arm-zephyr-eabi-objcopy.exe --gap-fill 0xff --output-target=binary --remove-section=.comment --remove-section=COMMON --remove-section=.eh_frame zephyr.elf zephyr.bin 
+```
+
+
+
+![image-20230809141116491](images/image-20230809141116491.png)
 
 ## 脚本介绍
 
@@ -608,11 +831,9 @@ zephyr 构建生成一个中间 ELF 二进制文件 zephyr_prebuilt.elf，该脚
 
 //==============上面几个脚本呢，是这次会用到的，下面的脚本这次没有用到，内容也不是很确定，我也觉得不是特别通用=========
 
-### scripts/build/gen_device_deps.py
+### scripts/build/gen_handles.py
 
-这个我觉得它文档里面好像写错了，或者更新不及时，这个应该已经变成了
-
-`zephyr/scripts/build/gen_handles.py`
+这个最新的zephyr代码中已经改名为`gen_device_deps.py`
 
 将通用句柄转换为针对应用程序优化的句柄。
 
@@ -621,3 +842,14 @@ zephyr 构建生成一个中间 ELF 二进制文件 zephyr_prebuilt.elf，该脚
 例如，传感器可能有一个由其设备树序号 52 定义的首轮句柄，I2C 驱动程序的序号为 24，GPIO 控制器序号为 14。运行时序号是静态设备树数组中相应设备的索引，这可能是分别为 6、5 和 3。
 
 输出是一个 C 源文件，它为从不可变设备对象引用的数组内容提供替代定义。在最后一个链接中，这些定义将取代特定于驱动程序的目标文件中的定义。
+
+剩下的，我感觉和MCU关系不大，放在下面，大家需要可以自行查阅
+
+https://developer.nordicsemi.com/nRF_Connect_SDK/doc/latest/zephyr/build/cmake/index.html#supporting-scripts-and-tools
+
+arch/x86/gen_idt.py
+arch/x86/gen_gdt.py
+scripts/build/gen_relocate_app.py
+scripts/build/process_gperf.py
+scripts/build/gen_app_partitions.py
+scripts/build/check init_priorities.py
