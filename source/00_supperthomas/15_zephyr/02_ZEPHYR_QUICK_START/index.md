@@ -76,6 +76,12 @@ python3 -m venv ~/zephyrproject/.venv
 source ~/zephyrproject/.venv/bin/activate
 ```
 
+如果不希望创建虚拟环境，直接改现有环境可以进入下面的tab页进行安装
+
+![image-20230802063533535](images/image-20230802063533535.png)
+
+
+
 ### 安装west
 
 ```
@@ -164,7 +170,7 @@ wget https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/zeph
 wget -O - https://github.com/zephyrproject-rtos/sdk-ng/releases/download/v0.16.1/sha256.sum | shasum --check --ignore-missing
 ```
 
-这个命令也要`github.com` ， 这个可以自己在网页上下载。
+这个命令也要`github.com` ， 这个可以自己在网页上下载。这个用`https://ghproxy.com/` 这个网站上下载，非常快。
 
 ### 解压
 
@@ -226,3 +232,9 @@ https://docs.zephyrproject.org/latest/boards/arm/qemu_cortex_m3/doc/index.html
 west build -b qemu_cortex_m3 samples/synchronization
 west build -t run
 ```
+
+## 高级用法Kconfig配置
+
+在zephyr目录下面执行命令`west build -t menuconfig`
+
+可以进入menuconfig配置页面。
