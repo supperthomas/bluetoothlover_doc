@@ -12,4 +12,5 @@ NORDIC:chenyingchun0312
     usb.md
     i2s.md
     mcc.md
+    03_GitLab_CDCD/GitLab_CICD.md
 
