@@ -6,8 +6,6 @@
 
 zephyr 通过各种手段，将不同平台的中断特性整合到一起，尽量让上层可以使用统一的API进行中断管理。抽象和管理不同架构芯片的中断。
 
-
-
 zephyr引入了以下概念
 
 - 多级中断
@@ -245,8 +243,6 @@ _ _ _ _ _ _ _                         (LEVEL 3)
 
 
 
-
-
 ```
 static inline unsigned int irq_get_level(unsigned int irq)
 {
@@ -348,8 +344,6 @@ gen_isr_tables.py: IRQ_Pos  = 0x51
 
 ```
 
-
-
 0x1c19
 
 先找到父亲中断0x19 （25）那这个中断在2级中断list2nd[24, 25, 26, 27, 28, 29, 30, 31]里面的偏移是1
@@ -443,11 +437,6 @@ gen_isr_tables.py: IRQ_Pos  = 0x51
 
 
 
-
-
-
-
-
 ### 中断工作转移offload
 
 中断转移是一种zephyr定义的一个非常重要的概念，并没有过多的实现来对接的API，主要意思就是，如果中断中需要处理的事务过多，那么就将该任务的内容卸载到task里面来执行，以快速响应中断和防止阻碍其他中断。通常我们写SDK写多了之后，会发现，中断中要处理的事情过多，或者中断中嵌套函数过多，会导致cache等不能命中，zephyr更多的是建议大家把中断信号发出来，然后通过其他信号量通知到线程来处理，或者`work`来处理。
@@ -486,8 +475,6 @@ int arch_irq_is_enabled(unsigned int irq)
 }
 
 ```
-
-
 
 ## 如何实现及为何如此实现
 
@@ -775,8 +762,6 @@ GTEXT(_isr_wrapper)
 #endif /* CONFIG_GEN_ISR_TABLES */
 ```
 
-### 
-
 ## 头文件定义
 
 zephyr\include\zephyr\irq.h
@@ -933,8 +918,6 @@ GDATA(__vector_relay_table)
 
 
 
-
-
 ```
 Running TESTSUITE arm_sw_vector_relay
 
@@ -971,8 +954,6 @@ PROJECT EXECUTION SUCCESSFUL
 
 ```
 
-
-
 ### arm_interrupt
 
 test_arm_esf_collection
@@ -980,8 +961,6 @@ test_arm_esf_collection
 这个是用来测试esf收集的数据是否和预期匹配的。
 
 esf异常内容，出异常当时的上下文。
-
-
 
 创建一个线程set_regs_with_known_pattern, 最后一个指令`udf #90` 来触发中断USAGE中断
 
@@ -1424,6 +1403,7 @@ zero-latency
 
 在中断A中，中途出发了B中断，那这个中断的时候就先执行	B中断，结束再回到A中断
 
+
 **这个测项确保低优先级的中断会被高优先级的中断打断**。在zero-latency的时候,
 
 只有在ZERO_LATENCY_LEVELS CONFIG_ZERO_LATENCY_LEVELS
@@ -1431,6 +1411,7 @@ zero-latency
 CONFIG_ZERO_LATENCY_LEVELS 如果大于1 则由参数指定优先级
 
 如果CONFIG_ZERO_LATENCY_LEVELS 等于1 则零中断服务历程有专门的最高优先级。
+
 
 ```
 
@@ -1961,6 +1942,7 @@ test_isr_offload_job 这个测试中断offload
 
 offload可以将中断中需要处理时间比较多的，放到线程中去处理。
 
+
 触发中断4次，
 
 这里要将
@@ -1993,6 +1975,7 @@ offload可以将中断中需要处理时间比较多的，放到线程中去处�
 
 zephyr\arch\arm\core\aarch32\irq_offload.c
 
+
 irq_offload  感觉这个函数是个软件中断，只负责触发软件中断服务历程，通过svc call来触发。
 
 所以这个测试用例在线程中，先触发中断，然后等待信号量，然后work在wq_queue里面执行，执行完成之后，发送信号量给线程，然后线程会检测是否执行成功，
@@ -2000,6 +1983,7 @@ irq_offload  感觉这个函数是个软件中断，只负责触发软件中断�
 至于真中断，还是假中断，
 
 entry_offload_job 这个是执行work的和函数
+
 
 ```
 /**
@@ -2144,6 +2128,11 @@ SUITE PASS - 100.00% [interrupt_feature]: pass = 5, fail = 0, skip = 1, total = 
 ===================================================================
 
 PROJECT EXECUTION SUCCESSFUL
+
+
+```
+
+=======
 ```
 
 
