@@ -1,5 +1,782 @@
 # 中断系统
 
+## 概述
+
+中断服务例程（ISR) 是zephyr的系统中的一个重要组成部分。
+
+zephyr 通过各种手段，将不同平台的中断特性整合到一起，尽量让上层可以使用统一的API进行中断管理。抽象和管理不同架构芯片的中断。
+
+
+
+zephyr引入了以下概念
+
+- 多级中断
+- 防止中断被打断，也叫中断锁
+- 零延迟中断
+- 中断转移offload
+
+
+
+如何实现
+
+- 定义常规的中断
+- 定义直接中断
+- 中断向量表和软件中断
+
+
+
+我们先了解一下如何使用zehpyr的中断系统。基于的MCU主要是`cortex-M`
+
+### 注册IRQ 
+
+#### 注册普通中断
+
+IRQ_CONNECT
+
+> 这个必须放在函数里面执行，不能放在函数外面。
+
+这个是一个宏定义，这个并不是一个函数，所以这个在编译的时候会处理这个宏，里面内置了一些section的语法，将中断服务历程和flag放置到`intList`段中。
+
+这个默认中断都是注册到软件中断向量表中的。
+
+```
+#define ARCH_IRQ_CONNECT(irq_p, priority_p, isr_p, isr_param_p, flags_p) \
+{ \
+	BUILD_ASSERT(IS_ENABLED(CONFIG_ZERO_LATENCY_IRQS) || !(flags_p & IRQ_ZERO_LATENCY), \
+			"ZLI interrupt registered but feature is disabled"); \
+	_CHECK_PRIO(priority_p, flags_p) \
+	Z_ISR_DECLARE(irq_p, 0, isr_p, isr_param_p); \
+	z_arm_irq_priority_set(irq_p, priority_p, flags_p); \
+}
+
+```
+
+这个宏主要调用了Z_ISR_DECLARE 这个函数
+
+```
+#define Z_ISR_DECLARE(irq, flags, func, param) \
+	static Z_DECL_ALIGN(struct _isr_list) Z_GENERIC_SECTION(.intList) \
+		__used _MK_ISR_NAME(func, __COUNTER__) = \
+			{irq, flags, (void *)&func, (const void *)param}
+```
+
+#### 注册直接中断
+
+IRQ_DIRECT_CONNECT
+
+这个也是一个宏定义，原理和上面的IRQ_CONNECT一样，不同之处在于，这个是直接注册到中断向量表中的，也就是ROM区域的，这个中断服务例程是无法更改的。而且需要注意的是直接中断，是没有参数的，这样做的目的是为了更快的响应，一般用在低功耗唤醒等场景中。
+
+而代码中不同之处就在于`ISR_FLAG_DIRECT`   flag 是不一样的
+
+```
+#define ARCH_IRQ_DIRECT_CONNECT(irq_p, priority_p, isr_p, flags_p) \
+{ \
+	BUILD_ASSERT(IS_ENABLED(CONFIG_ZERO_LATENCY_IRQS) || !(flags_p & IRQ_ZERO_LATENCY), \
+			"ZLI interrupt registered but feature is disabled"); \
+	_CHECK_PRIO(priority_p, flags_p) \
+	Z_ISR_DECLARE(irq_p, ISR_FLAG_DIRECT, isr_p, NULL); \
+	z_arm_irq_priority_set(irq_p, priority_p, flags_p); \
+}
+```
+
+
+
+这两个宏`IRQ_CONNECT` 和`IRQ_DIRECT_CONNECT` 实际上调用的主要是宏`Z_ISR_DECLARE`
+
+这个实现如下
+
+```
+#define Z_ISR_DECLARE(irq, flags, func, param) \
+	static Z_DECL_ALIGN(struct _isr_list) Z_GENERIC_SECTION(.intList) \
+		__used _MK_ISR_NAME(func, __COUNTER__) = \
+			{irq, flags, (void *)&func, (const void *)param}
+```
+
+这个如何实现，我们在下面中断向量表章节会介绍如何具体来实现。
+
+### 动态注册IRQ
+
+zephyr支持动态注册中断，如何实现的呢？这就引入了软件中断向量表的概念。
+
+动态加载主要API 是arch_irq_connect_dynamic， 它是由宏`CONFIG_DYNAMIC_INTERRUPTS` 来控制是否需要实现，
+
+最终会注册到软件中断向量表`_sw_isr_table` 中。由于`_sw_isr_table`是存放在ram中的，可以直接对其进行修改
+
+```
+int arch_irq_connect_dynamic(unsigned int irq, unsigned int priority,
+			     void (*routine)(const void *parameter),
+			     const void *parameter, uint32_t flags)
+```
+
+动态注册如何实现，我们下面介绍中断向量表的时候，会介绍。
+
+### 中断锁定lock
+
+zephyr中定义了一个概念`防止中断被打断`, 为了实现这一目标，zephyr定义了irq_lock() 函数用来防止其他中断来打断这个中断，这个lock的用法见下面的例子，很类似于，操作系统中调度锁的概念，即当前中断不允许被其他中断打断（除了内核中断）
+
+```c
+void arch_irq_enable(unsigned int irq)
+{
+	unsigned int key;
+	uint32_t irq_mask;
+
+	key = irq_lock();
+
+	.....
+
+	irq_unlock(key);
+}
+```
+
+这个函数实际实现就是使用了`BASEPRI`, 不同平台寄存器不一样，这里主要ARM-cortex-M中，其他平台如果有也可以实现。
+
+include\zephyr\arch\arm\aarch32\asm_inline_gcc.h
+
+```
+static ALWAYS_INLINE unsigned int arch_irq_lock(void)
+{
+	unsigned int key;
+	unsigned int tmp;
+	__asm__ volatile(
+		"mov %1, %2;"
+		"mrs %0, BASEPRI;"
+		"msr BASEPRI_MAX, %1;"
+		"isb;"
+		: "=r"(key), "=r"(tmp)
+		: "i"(_EXC_IRQ_DEFAULT_PRIO)
+		: "memory");
+	return key;
+}
+```
+
+
+#### 中断零延迟
+
+零延迟中断是zephyr中用来处理，这个零延迟可以算中断锁定概念中的特例，就是相当于零延迟中断无法被`irq_lock` 锁住，
+
+它是通过设置更高的中断优先级来实现的，我们先看看如何使用，在通过IRQ_CONNECT注册中断的时候，最后的flag添加`IRQ_ZERO_LATENCY`
+
+
+
+```
+IRQ_DIRECT_CONNECT(DT_IRQN(RTC(idx)),			       \
+				    DT_IRQ(RTC(idx), priority),		       \
+				    counter_rtc##idx##_isr_wrapper,	       \
+				    IRQ_ZERO_LATENCY))
+```
+
+那它是如何实现的呢？
+
+操作系统很巧妙，它用一个特定的最高优先级来定义零延迟中断，
+
+这里还有个变量`ZERO_LATENCY_LEVELS` 由 `CONFIG_ZERO_LATENCY_LEVELS` Kconfig来控制，
+
+arch\arm\core\aarch32\irq_manage.c
+
+```
+	if (IS_ENABLED(CONFIG_ZERO_LATENCY_IRQS) && (flags & IRQ_ZERO_LATENCY)) {
+		if (ZERO_LATENCY_LEVELS == 1) {
+			prio = _EXC_ZERO_LATENCY_IRQS_PRIO;
+		} else {
+			/* Use caller supplied prio level as-is */
+		}
+	} else {
+		prio += _IRQ_PRIO_OFFSET;
+	}
+```
+
+通常CONFIG_ZERO_LATENCY_LEVELS=1 那零延时中断就是采用最高优先级`_EXC_ZERO_LATENCY_IRQS_PRIO` 这个通常值是`0` ,
+
+如果定义了CONFIG_ZERO_LATENCY_LEVELS大于1，则优先级使用原始的优先级。而普通如果不用零延时中断的话，则采用`_IRQ_PRIO_OFFSET` 作为优先级偏移
+
+这些宏的定义在文件`include\zephyr\arch\arm\aarch32\exc.h` 中
+
+
+
+### 多级中断
+
+当某个外设中断是由父级中断触发而来的，比如一些GPIO中断和`iomux`中断具有层级嵌套关系，
+
+多级中断，指定一些父级中断的列表，这些父级节点列表每个中断都可以触发一组中断，假设这组中断数量是7，那通过32bit的数据，第一个byte代表父级中断，第二个byte代表第二级的父级中断，第三个byte代表第三级的中断，
+
+最高位byte的数据代表这个中断向量号的index值，紧接着代表第二级的中断的入口中断，第1个byte代表父级中断
+
+下面我们看下官方的例子：
+
+
+
+分为1，2，3 级
+
+```
+A -> 0x00000004
+B -> 0x00000302
+C -> 0x00000409
+D -> 0x00030609
+```
+
+如果二级中断，第二个byte是有数据的
+
+如果是三级中断，第三个byte是有数据的。
+
+找到最高一位的是第几个byte就是几级中断
+
+```
+          9             2   0
+    _ _ _ _ _ _ _ _ _ _ _ _ _         (LEVEL 1)
+  5       |         A   |
+_ _ _ _ _ _ _         _ _ _ _ _ _ _   (LEVEL 2)
+  |   C                       B
+_ _ _ _ _ _ _                         (LEVEL 3)
+        D
+```
+
+这张图看起来很复杂，我们转换成可以方便阅读的形式
+
+![image-20230906203558579](images/image-20230906203558579.png)
+
+
+
+- '-' 表示中断线，从 0（最右边）开始编号。
+- LEVEL 1 有 12 条中断线，其中两条线（2 和 9）连接到嵌套控制器，并且线 4 上有一个设备“A”。
+- 其中一个 LEVEL 2 控制器具有连接到 LEVEL 3 嵌套控制器的中断线路 5，以及线路 3 上的一个设备“C”。
+- 另一个 LEVEL 2 控制器没有嵌套控制器，但在第 2 行有一个设备“B”。
+- LEVEL 3 控制器在第 2 行有一个设备“D”。
+- 这里的每一级中断的，除了父级中断，是7
+
+
+
+
+
+```
+static inline unsigned int irq_get_level(unsigned int irq)
+{
+#if defined(CONFIG_3RD_LEVEL_INTERRUPTS)
+	return ((irq >> 16) & 0xFF) != 0 ? 3 :
+		(((irq >> 8) & 0xFF) == 0 ? 1 : 2);
+#elif defined(CONFIG_2ND_LEVEL_INTERRUPTS)
+	return ((irq >> 8) & 0xFF) == 0 ? 1 : 2;
+#else
+	ARG_UNUSED(irq);
+
+	return 1;
+#endif
+}
+```
+
+
+
+```
+ *(SORT_BY_ALIGNMENT(.intList*))
+
+ .intList       0x00000000fffff808       0x80 zephyr/drivers/interrupt_controller/libdrivers__interrupt_controller.a(intc_rv32m1_intmux.c.obj)
+
+ .intList       0x00000000fffff888       0x50 zephyr/drivers/gpio/libdrivers__gpio.a(gpio_rv32m1.c.obj)
+
+ .intList       0x00000000fffff8d8       0x10 zephyr/drivers/serial/libdrivers__serial.a(uart_rv32m1_lpuart.c.obj)
+
+ .intList       0x00000000fffff8e8       0x10 zephyr/drivers/timer/libdrivers__timer.a(rv32m1_lptmr_timer.c.obj)
+
+                                                                        \
+        static int gpio_rv32m1_##n##_init(const struct device *dev)     \
+        {                                                               \
+                IRQ_CONNECT(DT_INST_IRQN(n),                            \
+                            0,                                          \
+                            gpio_rv32m1_port_isr,                       \
+                            DEVICE_DT_INST_GET(n), 0);                  \
+                irq_enable(DT_INST_IRQN(0));                            \
+                return 0;                                               
+        }
+
+
+```
+
+
+
+```
+#define CONFIG_MAX_IRQ_PER_AGGREGATOR 32
+#define CONFIG_2ND_LEVEL_INTERRUPTS 1
+#define CONFIG_2ND_LVL_ISR_TBL_OFFSET 32
+#define CONFIG_NUM_2ND_LEVEL_AGGREGATORS 8
+#define CONFIG_2ND_LVL_INTR_00_OFFSET 24
+#define CONFIG_2ND_LVL_INTR_01_OFFSET 25
+#define CONFIG_2ND_LVL_INTR_02_OFFSET 26
+#define CONFIG_2ND_LVL_INTR_03_OFFSET 27
+#define CONFIG_2ND_LVL_INTR_04_OFFSET 28
+#define CONFIG_2ND_LVL_INTR_05_OFFSET 29
+#define CONFIG_2ND_LVL_INTR_06_OFFSET 30
+#define CONFIG_2ND_LVL_INTR_07_OFFSET 31
+#define CONFIG_MULTI_LEVEL_INTERRUPTS 1
+
+gen_isr_tables.py: 2nd level offsets: [24, 25, 26, 27, 28, 29, 30, 31]
+gen_isr_tables.py: Configured interrupt routing
+gen_isr_tables.py: handler    irq flags param
+gen_isr_tables.py: --------------------------
+gen_isr_tables.py: 0x17b8     31  0     0x7
+gen_isr_tables.py: 0x17b8     30  0     0x6
+gen_isr_tables.py: 0x17b8     29  0     0x5
+gen_isr_tables.py: 0x17b8     28  0     0x4
+gen_isr_tables.py: 0x17b8     27  0     0x3
+gen_isr_tables.py: 0x17b8     26  0     0x2
+gen_isr_tables.py: 0x17b8     25  0     0x1
+gen_isr_tables.py: 0x17b8     24  0     0x0
+
+//gpio
+gen_isr_tables.py: 0x1ad4     0x1c19 0     0x357c
+gen_isr_tables.py: 0x1ad4     0x1219 0     0x3590
+gen_isr_tables.py: 0x1ad4     0x1119 0     0x35a4
+gen_isr_tables.py: 0x1ad4     0x1019 0     0x35b8
+
+
+gen_isr_tables.py: 0x1ad4     18  0     0x35cc
+gen_isr_tables.py: 0x1c26     17  0     0x35e0
+gen_isr_tables.py: 0x1fd4     2072 0     0x0
+
+gen_isr_tables.py: IRQ = 7193
+gen_isr_tables.py: IRQ = 0x1c19
+gen_isr_tables.py: IRQ_level = 2
+gen_isr_tables.py: IRQ_Indx = 28
+gen_isr_tables.py: IRQ_Indx = 0x1c
+gen_isr_tables.py: IRQ_Pos  = 91
+gen_isr_tables.py: IRQ_Pos  = 0x5b
+gen_isr_tables.py: IRQ = 4633
+gen_isr_tables.py: IRQ = 0x1219
+gen_isr_tables.py: IRQ_level = 2
+gen_isr_tables.py: IRQ_Indx = 18
+gen_isr_tables.py: IRQ_Indx = 0x12
+gen_isr_tables.py: IRQ_Pos  = 81
+gen_isr_tables.py: IRQ_Pos  = 0x51
+
+```
+
+
+
+0x1c19
+
+先找到父亲中断0x19 （25）那这个中断在2级中断list2nd[24, 25, 26, 27, 28, 29, 30, 31]里面的偏移是1
+
+32是偏移+32*1+
+
+```
+gen_isr_tables.py: IRQ = 7193
+gen_isr_tables.py: IRQ = 0x1c19
+gen_isr_tables.py: IRQ_level = 2
+gen_isr_tables.py: irq2_baseoffset = 32
+gen_isr_tables.py: max_irq_per = 32
+gen_isr_tables.py: list_index = 1
+gen_isr_tables.py: irq2 = 28
+gen_isr_tables.py: IRQ_Indx = 28
+gen_isr_tables.py: IRQ_Indx = 0x1c
+gen_isr_tables.py: IRQ_Pos  = 91
+gen_isr_tables.py: IRQ_Pos  = 0x5b
+
+en_isr_tables.py: IRQ = 4633
+gen_isr_tables.py: IRQ = 0x1219
+gen_isr_tables.py: IRQ_level = 2
+gen_isr_tables.py: irq2_baseoffset = 32
+gen_isr_tables.py: max_irq_per = 32
+gen_isr_tables.py: list_index = 1
+gen_isr_tables.py: irq2 = 18
+gen_isr_tables.py: IRQ_Indx = 18
+gen_isr_tables.py: IRQ_Indx = 0x12
+gen_isr_tables.py: IRQ_Pos  = 81
+gen_isr_tables.py: IRQ_Pos  = 0x51
+
+#ifdef CONFIG_RV32M1_INTMUX_CHANNEL_0
+        IRQ_CONNECT(INTMUX_CH0_IRQ, 0, rv32m1_intmux_isr,
+                    UINT_TO_POINTER(0), 0);
+        irq_enable(INTMUX_CH0_IRQ);
+#endif
+
+#ifdef CONFIG_RV32M1_INTMUX_CHANNEL_1
+        IRQ_CONNECT(INTMUX_CH1_IRQ, 0, rv32m1_intmux_isr,
+                    UINT_TO_POINTER(1), 0);
+        irq_enable(INTMUX_CH1_IRQ);
+#endif
+
+#ifdef CONFIG_RV32M1_INTMUX_CHANNEL_2
+        IRQ_CONNECT(INTMUX_CH2_IRQ, 0, rv32m1_intmux_isr,
+                    UINT_TO_POINTER(2), 0);
+        irq_enable(INTMUX_CH2_IRQ);
+#endif
+
+#ifdef CONFIG_RV32M1_INTMUX_CHANNEL_3
+        IRQ_CONNECT(INTMUX_CH3_IRQ, 0, rv32m1_intmux_isr,
+                    UINT_TO_POINTER(3), 0);
+        irq_enable(INTMUX_CH3_IRQ);
+#endif
+
+#ifdef CONFIG_RV32M1_INTMUX_CHANNEL_4
+        IRQ_CONNECT(INTMUX_CH4_IRQ, 0, rv32m1_intmux_isr,
+                    UINT_TO_POINTER(4), 0);
+        irq_enable(INTMUX_CH4_IRQ);
+#endif
+
+#ifdef CONFIG_RV32M1_INTMUX_CHANNEL_5
+        IRQ_CONNECT(INTMUX_CH5_IRQ, 0, rv32m1_intmux_isr,
+                    UINT_TO_POINTER(5), 0);
+        irq_enable(INTMUX_CH5_IRQ);
+#endif
+
+```
+
+32+32*1+28-1 = 91
+
+
+
+```
+
+                 irq_parent = irq1
+                    list_index = getindex(irq_parent, list_2nd_lvl_offsets)
+                    irq2_pos = irq2_baseoffset + max_irq_per*list_index + irq2 - 1
+                    debug('IRQ_level = 2')
+                    debug('irq2_baseoffset = ' + str(irq2_baseoffset))
+                    debug('max_irq_per = ' + str(max_irq_per))
+                    debug('list_index = ' + str(list_index))
+                    debug('irq2 = ' + str(irq2))
+                    debug('IRQ_Indx = ' + str(irq2))
+                    debug('IRQ_Indx = ' + hex(irq2))
+                    debug('IRQ_Pos  = ' + str(irq2_pos))
+                    debug('IRQ_Pos  = ' + hex(irq2_pos))
+                    table_index = irq2_pos - offset
+```
+
+
+
+
+
+
+
+
+
+### 中断工作转移offload
+
+中断转移是一种zephyr定义的一个非常重要的概念，并没有过多的实现来对接的API，主要意思就是，如果中断中需要处理的事务过多，那么就将该任务的内容卸载到task里面来执行，以快速响应中断和防止阻碍其他中断。通常我们写SDK写多了之后，会发现，中断中要处理的事情过多，或者中断中嵌套函数过多，会导致cache等不能命中，zephyr更多的是建议大家把中断信号发出来，然后通过其他信号量通知到线程来处理，或者`work`来处理。
+
+内核可以支持多种方式来处理中断offload
+
+- 可以用信号量向线程发送信号
+- 可以使用工作队列`work`来执行工作
+
+### 中断使能enable
+
+上面都是讲中断如何注册和加载，也就是把中断服务例程放到中断向量表中，防置好了之后，还需要打开中断，也就是要调用`irq_enable`来使能中断，这个是不同架构实现是不一样的，CORTEX-M是通过NVIC开关来控制中断的使能。
+
+下面是个例子，就是调用IRQ_CONNECT之后要使用irq_enable来使能。
+
+```
+	IRQ_CONNECT(SGI_FPU_IPI, IRQ_DEFAULT_PRIORITY, flush_fpu_ipi_handler, NULL, 0);
+	irq_enable(SGI_FPU_IPI);
+```
+
+详见arch\arm\core\aarch32\irq_manage.c
+
+```
+void arch_irq_enable(unsigned int irq)
+{
+	NVIC_EnableIRQ((IRQn_Type)irq);
+}
+
+void arch_irq_disable(unsigned int irq)
+{
+	NVIC_DisableIRQ((IRQn_Type)irq);
+}
+int arch_irq_is_enabled(unsigned int irq)
+{
+	return NVIC->ISER[REG_FROM_IRQ(irq)] & BIT(BIT_FROM_IRQ(irq));
+}
+
+```
+
+
+
+## 如何实现及为何如此实现
+
+### 注册IRQ
+
+上面提到Z_ISR_DECLARE 这个宏是主要来注册IRQ函数的，
+
+include\zephyr\sw_isr_table.h
+
+```
+#define Z_ISR_DECLARE(irq, flags, func, param) \
+	static Z_DECL_ALIGN(struct _isr_list) Z_GENERIC_SECTION(.intList) \
+		__used _MK_ISR_NAME(func, __COUNTER__) = \
+			{irq, flags, (void *)&func, (const void *)param}
+```
+
+这里定义了结构体
+
+这个是个static的变量  是这样的一个结构体，4byte*4 = 16个字节，即每个中断都会生成一个变量_MK_ISR_NAME
+
+```
+struct _isr_list {
+	/** IRQ line number */
+	int32_t irq;
+	/** Flags for this IRQ, see ISR_FLAG_* definitions */
+	int32_t flags;
+	/** ISR to call */
+	void *func;
+	/** Parameter for non-direct IRQs */
+	const void *param;
+};
+```
+
+这里的_MK_ISR_NAME 是个语法糖，名字是以函数`func`和 `__LINE__` 来命名的。
+
+```
+#define _MK_ISR_NAME(x, y) __MK_ISR_NAME(x, y)
+#define __MK_ISR_NAME(x, y) __isr_ ## x ## _irq_ ## y
+#define __COUNTER__ __LINE__
+```
+
+编译之后，这个结构体存放在段`.intList` 中
+
+而`.intList` 中的数据如何存放呢？
+
+看下zephyr\include\zephyr\linker\intlist.ld
+
+中的
+
+```
+#ifndef LINKER_ZEPHYR_FINAL
+SECTION_PROLOGUE(.intList,,)
+{
+	KEEP(*(.irq_info*))
+	KEEP(*(.intList*))
+} GROUP_ROM_LINK_IN(IDT_LIST, IDT_LIST)
+#else
+/DISCARD/ :
+{
+	KEEP(*(.irq_info*))
+	KEEP(*(.intList*))
+}
+#endif
+
+```
+
+这里存放了所有`.intList`段，前面还加了个头
+
+这个头在zephyr\arch\common\isr_tables.c
+
+```
+Z_GENERIC_SECTION(.irq_info) struct int_list_header _iheader = {
+	.table_size = IRQ_TABLE_SIZE,
+	.offset = CONFIG_GEN_IRQ_START_VECTOR,
+};
+```
+
+这里的配置CONFIG_GEN_IRQ_START_VECTOR通常是0
+
+这里的配置IRQ_TABLE_SIZE 通常是CONFIG_NUM_IRQS(48) - CONFIG_GEN_IRQ_START_VECTOR(0)
+
+这个头主要给`gen_isr_tables.py ` 使用的，用于自动生成硬件中断向量表和软件中断向量表。
+
+最后生成的中断向量表，有两个一个是硬件中断向量表和软件中断向量表。
+
+build\zephyr\isr_tables.c
+
+```
+typedef void (* ISR)(const void *);
+uintptr_t __irq_vector_table _irq_vector_table[48] = {
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+	((uintptr_t)&_isr_wrapper),
+};
+struct _isr_table_entry __sw_isr_table _sw_isr_table[48] = {
+	{(const void *)0x45c1, (ISR)0x874f},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x8ad0, (ISR)0x84fd},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x4c49, (ISR)0x874f},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)0x3d65},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x8ab8, (ISR)0x84fd},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+	{(const void *)0x0, (ISR)((uintptr_t)&z_irq_spurious)},
+};
+
+```
+
+这里我们可以看到两个数组，一个直接中断数组只有一个元素中断服务例程，
+
+而软件中断则存放了两个元素,一个是参数，一个是中断服务历程，这个参数地址是固定的，直接放进去的。当然也可以中途修改。
+
+```
+struct _isr_table_entry {
+    void *arg;
+    void (*isr)(void *);
+};
+```
+
+
+
+### 软件中断向量表
+
+上面有讲到动态注册IRQ是报存在软件中断向量表中的，就是上面的`_sw_isr_table` 这个数组，那zephyr是如何实现的呢？
+
+![isr_table](isr_table.png)
+
+
+
+实际上秘诀就在_isr_wrapper 这个函数中
+
+这个函数的实现是在zephyr里面
+
+arch\arm\core\aarch32\isr_wrapper.S
+
+当然每个架构实现方式不一样，这里用到汇编，也是希望能快速响应普通中断。这里根据中断向量号来进行数组偏移执行
+
+### 多级中断
+
+多级终端的代码实现只有在RISC-V中，我理解就是一个中断源触发了一个中断，同时这个中断会连锁触发另外一组中断中的中断，需要一个特别的中断level来判断是哪一个中断产生的，多个中断嵌套控制器，是用来应对中断向量号比较多的情况，目前默认的中断号不超过255个。
+
+当中断向量号超过255个的时候，就要考虑设置多级中断来。
+
+```
+CONFIG_MULTI_LEVEL_INTERRUPTS
+CONFIG_2ND_LEVEL_INTERRUPTS
+CONFIG_3RD_LEVEL_INTERRUPTS
+```
+
+这个其实用的不多，只有在riscv 中会有
+
+
+
+如果IRQ_CONNECT 定义多次会怎样，如果定义多次，会有多个_isr_list， 但是最后会整合到中断向量表里面只有一个。但是需要注意的是，最后注册到中断向量表中的，会以第一次为准，并不是最后一次，也就是下面的代码，最后isr2会被注册到中断向量表里面。
+
+```
+	IRQ_DIRECT_CONNECT(IRQ_LINE(ISR1_OFFSET), 0, isr2, 0);
+	IRQ_DIRECT_CONNECT(IRQ_LINE(ISR1_OFFSET), 0, isr3, 0);
+	IRQ_DIRECT_CONNECT(IRQ_LINE(ISR1_OFFSET), 0, isr1, 0);
+	
+gen_isr_tables.py: 0x489      47  1     0x0
+gen_isr_tables.py: 0x3d5      47  1     0x0
+gen_isr_tables.py: 0x4f9      47  1     0x0
+```
+
+
+
+
+
+内核中断是直接写进去的
+
+zephyr\arch\arm\core\aarch32\cortex_m\vector_table.h
+
+```
+GTEXT(__start)
+GDATA(_vector_table)
+
+GTEXT(z_arm_reset)
+GTEXT(z_arm_nmi)
+GTEXT(z_arm_hard_fault)
+#if defined(CONFIG_ARMV6_M_ARMV8_M_BASELINE)
+GTEXT(z_arm_svc)
+#elif defined(CONFIG_ARMV7_M_ARMV8_M_MAINLINE)
+GTEXT(z_arm_mpu_fault)
+GTEXT(z_arm_bus_fault)
+GTEXT(z_arm_usage_fault)
+#if defined(CONFIG_ARM_SECURE_FIRMWARE)
+GTEXT(z_arm_secure_fault)
+#endif /* CONFIG_ARM_SECURE_FIRMWARE */
+GTEXT(z_arm_svc)
+GTEXT(z_arm_debug_monitor)
+#else
+#error Unknown ARM architecture
+#endif /* CONFIG_ARMV6_M_ARMV8_M_BASELINE */
+GTEXT(z_arm_pendsv)
+GTEXT(z_arm_exc_spurious)
+
+GTEXT(z_arm_prep_c)
+#if defined(CONFIG_GEN_ISR_TABLES)
+GTEXT(_isr_wrapper)
+#endif /* CONFIG_GEN_ISR_TABLES */
+```
+
+### 
+
 ## 头文件定义
 
 zephyr\include\zephyr\irq.h
@@ -647,7 +1424,13 @@ zero-latency
 
 在中断A中，中途出发了B中断，那这个中断的时候就先执行	B中断，结束再回到A中断
 
-**这个测项确保低优先级的中断会被高优先级的中断打断**。在zero-latency的时候
+**这个测项确保低优先级的中断会被高优先级的中断打断**。在zero-latency的时候,
+
+只有在ZERO_LATENCY_LEVELS CONFIG_ZERO_LATENCY_LEVELS
+
+CONFIG_ZERO_LATENCY_LEVELS 如果大于1 则由参数指定优先级
+
+如果CONFIG_ZERO_LATENCY_LEVELS 等于1 则零中断服务历程有专门的最高优先级。
 
 ```
 
@@ -1178,9 +1961,45 @@ test_isr_offload_job 这个测试中断offload
 
 offload可以将中断中需要处理时间比较多的，放到线程中去处理。
 
+触发中断4次，
+
+这里要将
+
+#define TEST_IRQ_DYN_LINE 0 改成5
+
+
+
+```
+	run_test_offload(TEST_OFFLOAD_MULTI_JOBS, true);
+	run_test_offload(TEST_OFFLOAD_IDENTICAL_JOBS, true);
+```
+
+这里的true代表使用真正的中断来触发，通过动态注册中断的方式进行注册。
+
+触发中断，然后在线程中等待，4次，multi_jobs代表多次task触发。
+
+
+
+```
+	run_test_offload(TEST_OFFLOAD_MULTI_JOBS, false);
+	run_test_offload(TEST_OFFLOAD_IDENTICAL_JOBS, false);
+	
+	如果是false会使用irq_offload 这个函数来直接通过svc调用中断来执行中断服务历程，
+```
+
+
+
 /include/zephyr/irq_offload.h  
 
 zephyr\arch\arm\core\aarch32\irq_offload.c
+
+irq_offload  感觉这个函数是个软件中断，只负责触发软件中断服务历程，通过svc call来触发。
+
+所以这个测试用例在线程中，先触发中断，然后等待信号量，然后work在wq_queue里面执行，执行完成之后，发送信号量给线程，然后线程会检测是否执行成功，
+
+至于真中断，还是假中断，
+
+entry_offload_job 这个是执行work的和函数
 
 ```
 /**
@@ -1325,7 +2144,14 @@ SUITE PASS - 100.00% [interrupt_feature]: pass = 5, fail = 0, skip = 1, total = 
 ===================================================================
 
 PROJECT EXECUTION SUCCESSFUL
-
-
 ```
 
+
+
+## 参考：
+
+1. [**清风徐来——Zephyr实战篇(6)之中断**](https://www.nxpic.org.cn/module/forum/thread-627933-1-1.html)
+2. [Zephyr中断系统-概述](https://mp.weixin.qq.com/s/QQlyDVbf5HgsmuWmwBAiBQ)
+3. [Zephyr中断系统-使用](https://mp.weixin.qq.com/s/MqremjpTOF7iuTb4QRweDA)
+4. [Zephyr中断系统-实现](https://mp.weixin.qq.com/s/Ekhmx0SY3roGchkVCEtgWw)
+5. [zephyr Interrupt](https://docs.zephyrproject.org/latest/kernel/services/interrupts.html)
