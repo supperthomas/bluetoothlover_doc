@@ -1,19 +1,5 @@
 
 
-#
-
-
-
-KERNEL sleep 在nordic平台上用的是RTC定时器。
-
-![image-20231117192848409](images/image-20231117192848409.png)
-
-![image-20231117204719793](images/image-20231117204719793.png)
-
-
-
-
-
 发现的前提规则
 
 - 内核的API都是以k_打头的。
@@ -482,6 +468,40 @@ sys_sem_count_get
 
 使用信号量来同步生产和消费线程或 ISR 之间的处理。
 
+```
+K_SEM_DEFINE(sem_A, 1, 1);
+K_SEM_DEFINE(sem_B, 0, 1);
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{
+        while(1)
+        {
+                k_sem_take(&sem_A, K_FOREVER);
+                printk("threadA:get sem_A\r\n");
+                k_msleep(1000);
+                k_sem_give(&sem_B);
+        }
+}
+void threadB(void *dummy1, void *dummy2, void *dummy3)
+{
+        while(1)
+        {
+                k_sem_take(&sem_B, K_FOREVER);
+                printk("threadB:get sem_B\r\n");
+                k_msleep(1000);
+                k_sem_give(&sem_A);
+        }
+}
+int main(void)
+{
+        printk("main\r\n");
+        return 0;
+}
+K_KERNEL_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 1000);
+K_KERNEL_THREAD_DEFINE(thread_b, 1024, threadB, NULL, NULL, NULL, 8, 0 , 3000);
+```
+
+
+
 ## mutex 互斥信号量
 
 ### 定义
@@ -517,6 +537,46 @@ k_mutex_unlock(&my_mutex);
 ### 建议用途
 
 使用互斥体提供对资源（例如物理设备）的独占访问。
+
+```
+uint32_t number_x = 0;
+uint32_t number_y = 0;
+K_MUTEX_DEFINE(my_mutex);
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{
+        while(1)
+        {
+                k_mutex_lock(&my_mutex, K_FOREVER);
+                number_x++;
+                k_msleep(1000);
+                number_y++;
+                printf("this is thread A: number_x:%d, number_y:%d\r\n",number_x,number_y);
+                k_mutex_unlock(&my_mutex);
+        }
+}
+void threadB(void *dummy1, void *dummy2, void *dummy3)
+{
+        while(1)
+        {
+                k_mutex_lock(&my_mutex, K_FOREVER);
+                number_x++;
+                number_y++;
+                printf("this is thread B: number_x:%d, number_y:%d\r\n",number_x,number_y);
+                k_mutex_unlock(&my_mutex);
+        }
+}
+K_KERNEL_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 1000);
+K_KERNEL_THREAD_DEFINE(thread_b, 1024, threadB, NULL, NULL, NULL, 8, 0 , 1000);
+int main(void)
+{
+        printk("main\r\n");
+        return 0;
+}
+```
+
+
+
+
 
 ## event事件
 
@@ -615,6 +675,65 @@ void consumer_thread(void)
 
 使用事件将少量数据一次传递到多个线程。
 
+```
+K_EVENT_DEFINE(my_event);
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{
+	uint32_t  events;
+	while(1)
+	{
+		events = k_event_wait_all(&my_event, BIT(2)|BIT(0), true, K_FOREVER);
+		if (events == 0) {
+			printk("No input devices are available!\r\n");
+		} else {
+			printk("threadA:events value:%d\r\n",events);
+		}
+	}
+}
+void threadB(void *dummy1, void *dummy2, void *dummy3)
+{
+	uint32_t  events;
+	while(1)
+	{
+		events = k_event_wait(&my_event, BIT(1), true, K_FOREVER);
+		if (events == 0) {
+			printk("No input devices are available!\r\n");
+		} else {
+			printk("threadB:events value:%d\r\n",events);
+		}
+	}
+}
+K_KERNEL_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 1000);
+K_KERNEL_THREAD_DEFINE(thread_b, 1024, threadB, NULL, NULL, NULL, 8, 0 , 1000);
+int main(void)
+{
+    printk("main\r\n");
+	k_msleep(2000);
+	while(1)
+	{
+		printk("main:set 1\r\n");
+		k_event_set(&my_event, BIT(0));
+		k_msleep(1000);
+		printk("main:set 2\r\n");
+		k_event_set(&my_event, BIT(1));
+		k_msleep(1000);
+		printk("main:set 3\r\n");
+		k_event_set(&my_event, BIT(0)|BIT(1));
+		k_msleep(1000);
+		printk("main:post 5\r\n");
+		k_event_post(&my_event, BIT(0));
+		k_event_post(&my_event, BIT(2));
+		k_msleep(1000);
+		printk("main:post 7\r\n");
+		k_event_set(&my_event, BIT(0)|BIT(1)|BIT(2));
+		k_msleep(1000);
+	}
+	return 0;
+}
+```
+
+
+
 ## condition variables条件变量
 
 tests\kernel\condvar\condvar_api
@@ -680,7 +799,11 @@ void worker_thread(void)
 
 [`k_condvar_broadcast()`](https://docs.zephyrproject.org/latest/kernel/services/synchronization/condvar.html#c.k_condvar_broadcast)
 
-这个有点像
+这个有点像为了解决生产者消费者而设置的一种模式。
+
+https://blog.csdn.net/qq_23274715/article/details/110679298?spm=1001.2014.3001.5502
+
+
 
 ### 建议用途
 
@@ -701,9 +824,56 @@ void worker_thread(void)
 3. 条件变量必须搭配互斥锁使用。
 4. Zephyr中信号量可以用于Poll，条件变量则不行。
 
+### 示例代码
+
+```
+K_MUTEX_DEFINE(my_mutex);
+K_CONDVAR_DEFINE(my_condvar);
+#define BUFF_MAX 512
+static int share_num = 0;
+static int share_buff[BUFF_MAX] = {0};
+void produce_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+        uint32_t  events;
+        int count = 0;
+        while(1)
+        {
+                k_mutex_lock(&my_mutex, K_FOREVER);
+                if(share_num < BUFF_MAX)
+                {
+                        share_buff[share_num] = count++;
+                        share_num ++;
+                }
+                printk("Producter: create a produce, share_num:%d\r\n",share_num);
+                k_mutex_unlock(&my_mutex);
+                k_condvar_signal(&my_condvar);
+                k_msleep(1000);
+        }
+}
+void customer_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+        uint32_t  events;
+        while(1)
+        {
+                k_mutex_lock(&my_mutex, K_FOREVER);
+                while(share_num <=0)
+                {
+                        k_condvar_wait(&my_condvar, &my_mutex, K_FOREVER);
+                }
+                share_num --;
+                k_mutex_unlock(&my_mutex);
+                printk("Customer: get a produce, share_num:%d\r\n",share_num);
+        }
+}
+K_KERNEL_THREAD_DEFINE(producer, 1024, produce_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_KERNEL_THREAD_DEFINE(customer, 1024, customer_thread, NULL, NULL, NULL, 8, 0 , 1000);
+```
+
 ## polling API轮询
 
 轮询有点类似于posix里面的poll机制
+
+![image-20231208112814456](images/image-20231208112814456.png)
 
 ### 定义
 
@@ -742,17 +912,162 @@ void some_init(void)
 - K_POLL_TYPE_SEM_AVAILABLE: 信号量
 - K_POLL_TYPE_FIFO_DATA_AVAILABLE：FIFO，实际上FIFO使用queue实现的，真正的等待条件是queue
 
+**void k_poll_event_init(struct k_poll_event \*event, u32_t type, int mode, void\* obj)**
+作用：初始化一个k_poll_event实例，这个实例将被k_poll轮询
+event:要初始化的event
+type：event轮询条件的类型，目前支援三种类型，当使用K_POLL_TYPE_IGNORE 表示该event将被禁用
+
+- K_POLL_TYPE_SIGNAL：poll event 信号
+- K_POLL_TYPE_SEM_AVAILABLE: 信号量
+- K_POLL_TYPE_FIFO_DATA_AVAILABLE：FIFO，实际上FIFO使用queue实现的，真正的等待条件是queue
+
+mode：触发模式，目前只支持K_POLL_MODE_NOTIFY_ONLY
+obj：轮询的条件，和type要对应，可以是内核对象或者event signal
 
 
 
+**int k_poll(struct k_poll_event \*events, int num_events, s32_t timeout)**
+作用：等待一个或者多个event条件有效。
+events: 等待事件的数组
+num_events: 等待事件的数量，也就是events的个数
+timeout: 等待超时，单位ms。K_NO_WAIT不等待, K_FOREVER一直等
+返回值：当返回0时表示一个或者多个条件有效
+注意事项：
+
+- k_poll收到条件有效时，仅仅是通知到线程该内核对象有效，还需要线程使用代码主动获取内核对象。
+- k_poll返回0时，有可能是多个条件有效，需要循环使用k_poll, 每次循环后检查那个event有效，需要将其状态设置为K_POLL_STATE_NOT_READY。
+
+**void k_poll_signal_init(struct k_poll_signal \*signal)**
+作用：初始化一个poll signal, 该信号可以作为poll event的条件
+signal：要初始化的poll signal
+
+**int k_poll_signal_raise(struct k_poll_signal \*signal, int result)**
+作用：发送poll signal
+signal: 要发送的signal
+result: 信号的一个标记值，poll收到信号后可以获得这个值
+
+**void k_poll_signal_reset(struct k_poll_signal \*signal)**
+作用：reset signal，如果一个signal被发送，但未被poll前，可以使用该API reset掉
+signal: 要reset的signal
+
+**void k_poll_signal_check(struct k_poll_signal \*signal, unsigned int\* signaled, int \*result)**
+作用：获取被轮询信号的状态和值
+signal: 要获取的signal
+signaled: 是否已发送signal
+result: 如果已发送，这里是发送的值
+
+## 使用说明
+
+poll由于可以等待多个条件，因此可以将每个条件一个线程等的形式转化为一个线程等多个条件，减少线程节约线程堆栈。
+由于poll被通知并未获取到内核对象，因此实际使用中应尽量避免有将有竞争的内核对象做为poll条件
+
+ signal, sem, queue(fifo/lifo是由queue实现)
 
 
 
+```
+#include <zephyr/kernel.h>
+#include <zephyr/sys/printk.h>
+struct fifo_msg {
+	void *private;
+	uint32_t msg;
+};
+static K_SEM_DEFINE(wait_sem, 0, 1);
+static K_FIFO_DEFINE(wait_fifo);
+static struct k_poll_signal wait_signal =
+	K_POLL_SIGNAL_INITIALIZER(wait_signal);
+static struct k_msgq wait_msgq;
+static struct k_msgq *wait_msgq_ptr;
+#define TAG_0 10
+#define TAG_1 11
+#define TAG_2 12
+#define TAG_3 13
 
+#define SIGNAL_RESULT 0x1ee7d00d
+#define FIFO_MSG_VALUE 0xdeadbeef
+#define MSGQ_MSG_SIZE 4
+#define MSGQ_MAX_MSGS 16
+#define MSGQ_MSG_VALUE {'a', 'b', 'c', 'd'}
+struct fifo_msg wait_msg = { NULL, FIFO_MSG_VALUE };
+void poll_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	struct k_poll_event wait_events[] = {
+	K_POLL_EVENT_STATIC_INITIALIZER(K_POLL_TYPE_SEM_AVAILABLE,
+					K_POLL_MODE_NOTIFY_ONLY,
+					&wait_sem, TAG_0),
+	K_POLL_EVENT_STATIC_INITIALIZER(K_POLL_TYPE_FIFO_DATA_AVAILABLE,
+					K_POLL_MODE_NOTIFY_ONLY,
+					&wait_fifo, TAG_1),
+	K_POLL_EVENT_STATIC_INITIALIZER(K_POLL_TYPE_SIGNAL,
+					K_POLL_MODE_NOTIFY_ONLY,
+					&wait_signal, TAG_2),
+	};
+	int rc;
+	k_poll_signal_init(&wait_signal);
+	wait_msgq_ptr = &wait_msgq;
+	k_msgq_alloc_init(wait_msgq_ptr, MSGQ_MSG_SIZE, MSGQ_MAX_MSGS);
+	printk("!producer:\r\n");
+	while(1)
+	{
+		rc = k_poll(wait_events, ARRAY_SIZE(wait_events), K_FOREVER);//K_NO_WAIT);
+		if(wait_events[0].state == K_POLL_TYPE_SEM_AVAILABLE)
+		{
+			printk("==Poller==: poll semphore\r\n");
+			k_sem_take(&wait_sem, K_NO_WAIT);
+			wait_events[0].state = K_POLL_STATE_NOT_READY;
+		}
+		if(wait_events[1].state == K_POLL_TYPE_FIFO_DATA_AVAILABLE)
+		{
+			printk("==Poller: poll fifo\r\n");
+			wait_events[1].state = K_POLL_STATE_NOT_READY;
+		}
+		if(wait_events[2].state == K_POLL_STATE_SIGNALED)
+		{
+			printk("==Poller: poll signal singed:%x, signal tag:%x\r\n",wait_events[2].signal->signaled,wait_events[2].signal->result);
+			wait_events[2].state = K_POLL_STATE_NOT_READY;
+			wait_signal.signaled = 0U;
+			k_poll_signal_reset(&wait_signal);//same as wait_signal.signaled = 0U;
+			printk("==Poller: poll signal singed:%x, signal tag:%x\r\n",wait_signal.signaled,wait_signal.result);
+		}
+		k_msleep(1000);
+	}
+}
+void sender_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	printk("sender:\r\n");
+	while(1)
+	{
+		//wait the poller
+		k_msleep(2000);
+		printk("sender: do nothing\r\n");
+		k_msleep(2000);
+		printk("sender: send the sephore\r\n");
+		k_sem_give(&wait_sem);
+		k_msleep(2000);
+		printk("sender: send fifo messag\r\n");
+		k_fifo_alloc_put(&wait_fifo, &wait_msg);
+		k_msleep(2000);
+		printk("sender: send the signal\r\n");
+		k_poll_signal_raise(&wait_signal, SIGNAL_RESULT);
+		k_msleep(100000);
+	}
+}
+K_KERNEL_THREAD_DEFINE(poller, 1024, poll_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_KERNEL_THREAD_DEFINE(sender, 1024, sender_thread, NULL, NULL, NULL, 7, 0 , 1000);
+int main(void)
+{
+        printk("main hello\r\n");
+	return 0;
+}
+```
+
+![image-20231208152114424](images/image-20231208152114424.png)
 
 # 数据传递
 
 ## 数据传递本质queue
+
+**Notice :**
 
 kernel/queue.c
 
@@ -812,15 +1127,224 @@ void k_queue_append(struct k_queue *queue, void *data)
 
 queue 的本质是链表list，只需要定义头节点，后续的数据结构应该是一个全局的数据。
 
+**Notice:the first word of the item is reserved for the kernel’s use**
 
+第一个字节是给kernel使用的，不能用来传输数据。kernel会写东西进去。
 
+所以queue其实是通常用来组成其他的数据传输的基石，并不是用来给用户使用的，相当于一个kernel内部使用的一个工具
 
+```
+typedef struct qdata {
+        sys_snode_t snode;
+        uint32_t data;
+        bool allocated;
+} qdata_t;
+struct k_queue queue;
+static char data[]={"Hello world"};
+static qdata_t data_sig;
+
+void recv_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+        int rc;
+        qdata_t *rx_data;
+
+{       while(1)
+        {
+                rx_data = k_queue_get(&queue, K_FOREVER);
+                printk("Receive: %p,%x\r\n",rx_data,rx_data->data);
+        }
+        {
+}
+void sender_thread(void *dummy1, void *dummy2, void *dummy3)
+{       }
+        data_sig.data= 0x12;
+}       printk("sender:%p\r\n",&data_sig);
+
+{       k_queue_init(&queue);
+        while(1)
+        {
+                k_queue_append(&queue, (void *)&data_sig);
+                k_msleep(10000);
+                printk("sender:%x\r\n",data_sig.data);
+        {
+}
+K_KERNEL_THREAD_DEFINE(receiver, 1024, recv_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_KERNEL_THREAD_DEFINE(sender, 1024, sender_thread, NULL, NULL, NULL, 7, 0 , 1000);
+int main}void)
+}
+        printk("main hello\r\n");
+        return 0;
+}
+
+```
+
+![image-20231210110641565](images/image-20231210110641565.png)
+
+![image-20231210111511173](images/image-20231210111511173.png)
 
 ## 数据传递邮箱
 
 kernel/mailbox.c
 
 邮箱存放的是指针，所以只能是静态的或者全局的
+
+![image-20231211094740474](images/image-20231211094740474.png)
+
+
+
+![image-20231211094816725](images/image-20231211094816725.png)
+
+
+
+```
+/* main.c - Hello World demo */
+/*
+ * Copyright (c) 2012-2014 Wind River Systems, Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+#include <zephyr/kernel.h>
+#include <zephyr/sys/printk.h>
+K_MBOX_DEFINE(my_mailbox);
+void recv_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	struct k_mbox_msg recv_msg;
+	char buffer[100];
+	int i;
+	int total;
+	printk("recevthread:\r\n");
+	while(1)
+	{
+		recv_msg.info = 456;
+		recv_msg.size = 30;
+		//recv_msg.rx_source_thread = sender_thread_id;
+		printk("recevthread:start get mbox\r\n");
+		k_mbox_get(&my_mailbox, &recv_msg, buffer, K_FOREVER);
+		if (recv_msg.info != recv_msg.size) {
+			printf("recv:some message data dropped during transfer!\r\n");
+			printf("recv:sender tried to send %d bytes,size:%d\r\n", recv_msg.info,recv_msg.size);
+		}
+		printk("recev:\r\n");
+		for (i = 0; i < recv_msg.size; i++) {
+			printk(" %x", buffer[i]);
+		}
+		printk("\r\n");
+	}
+}
+void sender_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	char buffer[100];
+	int buffer_bytes_used;
+	struct k_mbox_msg send_msg;
+	for(int i =0;i<100;i++)
+	{
+		buffer[i]=i;
+	}
+	buffer_bytes_used = 50;
+	printk("sender:%d\r\n",buffer_bytes_used);
+	send_msg.info = 123;
+	send_msg.size = buffer_bytes_used;
+	send_msg.tx_data = buffer;
+	send_msg.tx_block.data = NULL;
+//	send_msg.tx_target_thread = recv_thread_id;
+	while(1)
+	{
+		printk("sender:start send the mbox\r\n");
+		k_mbox_put(&my_mailbox, &send_msg, K_FOREVER);
+		printk("sender:send the mbox ok receiver\r\n");
+		if (send_msg.size < buffer_bytes_used) {
+			printk("sender:some message data dropped during transfer!\r\n");
+			printk("sender:receiver only had room for %d bytes\r\n", send_msg.size);
+		}
+		k_msleep(100000);
+	}
+}
+K_KERNEL_THREAD_DEFINE(receiver, 1024, recv_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_KERNEL_THREAD_DEFINE(sender, 1024, sender_thread, NULL, NULL, NULL, 7, 0 , 1000);
+int main(void)
+{
+	
+        printk("main hello\r\n");/* main.c - Hello World demo */
+
+/*
+ * Copyright (c) 2012-2014 Wind River Systems, Inc.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <zephyr/kernel.h>
+#include <zephyr/sys/printk.h>
+
+K_MBOX_DEFINE(my_mailbox);
+#define SEND_DATA_SIZE 50
+void recv_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	struct k_mbox_msg recv_msg;
+	char buffer[100];
+	int i;
+	int total;
+	printk("recevthread:\r\n");
+	while(1)
+	{
+		recv_msg.info = 456;
+		recv_msg.size = 30;
+		//recv_msg.rx_source_thread = sender_thread_id;
+		printk("recevthread:start get mbox\r\n");
+		k_mbox_get(&my_mailbox, &recv_msg, buffer, K_FOREVER);
+		if (recv_msg.size != SEND_DATA_SIZE) {
+			printf("recv:sender tried to send %d bytes,size:%d\r\n", SEND_DATA_SIZE,recv_msg.size);
+		}
+		printk("recev:\r\n");
+		for (i = 0; i < recv_msg.size; i++) {
+			printk(" %x", buffer[i]);
+		}
+		printk("\r\n");
+	}
+}
+void sender_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	char buffer[100];
+	int buffer_bytes_used;
+	struct k_mbox_msg send_msg;
+	for(int i =0;i<100;i++)
+	{
+		buffer[i]=i;
+	}
+	buffer_bytes_used = 50;
+	printk("sender:%d\r\n",buffer_bytes_used);
+	send_msg.info = 123;
+	send_msg.size = buffer_bytes_used;
+	send_msg.tx_data = buffer;
+	send_msg.tx_block.data = NULL;
+//	send_msg.tx_target_thread = recv_thread_id;
+	while(1)
+	{
+		printk("sender:start send the mbox\r\n");
+		k_mbox_put(&my_mailbox, &send_msg, K_FOREVER);
+		printk("sender:send the mbox ok receiver\r\n");
+		if (send_msg.size < buffer_bytes_used) {
+			printk("sender:receiver only had room for %d bytes\r\n", send_msg.size);
+		}
+		k_msleep(100000);
+	}
+}
+K_KERNEL_THREAD_DEFINE(receiver, 1024, recv_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_KERNEL_THREAD_DEFINE(sender, 1024, sender_thread, NULL, NULL, NULL, 7, 0 , 1000);
+int main(void)
+{
+	
+        printk("main hello\r\n");
+	return 0;
+}
+```
+
+
+
+![image-20231211095547706](images/image-20231211095547706.png)
+
+![image-20231211095639332](images/image-20231211095639332.png)
+
+![image-20231211100324382](images/image-20231211100324382.png)
 
 ## 数据传递FIFO/LIFO
 
@@ -880,11 +1404,228 @@ kernel/msg_q.c
 
 这个是会进行数据拷贝的
 
+
+
+[Zephyr内核对象-数据传递之Message Queue](https://mp.weixin.qq.com/s?__biz=MzU1ODI3MzQ1MA==&mid=2247484153&idx=1&sn=06e7dfcdeeab1cc9fe55ae680b5a0f5d&chksm=fc28443ccb5fcd2a142180682d2bde9ca2f431a97ac183e42b394da1996bdf63196fafed21cd&scene=21#wechat_redirect)
+
+### API
+
+Message queue的API有下面10个全部声明在kernel.h中，每个函数都有参数struct k_msgq *msgq. 都是指该函数操作或者使用的msgq后面就不在单独列出说明
+**void k_msgq_init(struct k_msgq* q, char *buffer, size_t msg_size, u32_t max_msgs);**
+作用：初始化一个msgq, 内存由使用者分配
+buffer: msgq的buffer，需要由使用者分配，大小为msg_size*max_msgs
+msg_size: msgq中每个message的大小
+max_mags: msgq中最多容纳的message数量
+**__syscall int k_msgq_alloc_init(struct k_msgq \*msgq, size_t msg_size, u32_t max_msgs);**
+作用：初始化一个msgq, 内存由msgq从线程池中分配
+msg_size: msgq中每个message的大小
+max_mags: msgq中最多容纳的message数量
+**int k_msgq_cleanup(struct k_msgq \*msgq);**
+作用：释放k_msgq_alloc_init分配msgq内存
+**__syscall int k_msgq_put(struct k_msgq \*msgq, void\* data, s32_t timeout);**
+作用：将message放入到msgq
+data：message数据
+timeout: 等待时间，单位ms。K_NO_WAIT不等待, K_FOREVER一直等
+返回值：放入成功返回0
+**__syscall int k_msgq_get(struct k_msgq \*msgq, void\* data, s32_t timeout);**
+作用：从msgq读出message
+data：message数据
+timeout: 等待时间，单位ms。K_NO_WAIT不等待, K_FOREVER一直等
+返回值：读出成功返回0
+**__syscall int k_msgq_peek(struct k_msgq \*msgq, void\* data);**
+作用：peek msgq
+data: peek到的message
+返回：peek到数据返回0
+**__syscall void k_msgq_purge(struct k_msgq \*msgq);**
+作用：清空msgq中的message
+**__syscall u32_t k_msgq_num_free_get(struct k_msgq \*msgq);**
+作用：获取msgq还可以放多少个message
+返回值：空闲数目
+**__syscall void k_msgq_get_attrs(struct k_msgq \*msgq, struct k_msgq_attrs\* attrs);**
+作用：获取msgq的信息，也就是message的大小，总数量和已使用数量，都放在struct k_msgq_attrs 内
+**__syscall u32_t k_msgq_num_used_get(struct k_msgq \*msgq);**
+作用：获取msgq中有多少个message
+返回值：message数目
+
+```
+K_MSGQ_DEFINE(my_msgq, sizeof(uint32_t), 10, 1);
+void recv_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+        uint32_t rx_data, read_data;
+        int ret;
+
+        while(1)
+        {
+                ret = k_msgq_get(&my_msgq, &rx_data, K_FOREVER);
+                printk("recever:0x%x\r\n",rx_data);
+        }
+}
+void sender_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+        int ret;
+        uint32_t send_data= 0xAA00;
+        printk("sender:0x%x\r\n",send_data);
+        while(1)
+        {
+                send_data ++;
+                ret = k_msgq_put(&my_msgq, (void *)&send_data, K_NO_WAIT);
+                k_msleep(1000);
+        }
+}
+K_KERNEL_THREAD_DEFINE(receiver, 1024, recv_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_KERNEL_THREAD_DEFINE(sender, 1024, sender_thread, NULL, NULL, NULL, 7, 0 , 1000);
+int main(void)
+{
+
+        printk("main hello\r\n");
+        return 0;
+}
+
+```
+
+
+
+### 使用说明
+
+可以在ISR中put msgq.也可在ISR内get msgq，但不能等待。
+msgq必须事先指定message的大小和个数。大小需要是2的幂对齐。
+msgq用于异步传输小数据。msgq在读写时需要锁中断，因此不建议用来传输大数据。
+
+
+
 ## 数据传递 管道
 
 管道有些像ringbuffer，最底层就是采用ringbuffer的逻辑，上层就是可以像管道一样，往通道里面塞数据，数据可以是个流一样的形式，比如1024个字节，然后取的时候，也可以任意取，比如取512字节。
 
 数据需要一次拷贝
+
+![image-20231211112436824](images/image-20231211112436824.png)
+
+### API
+
+`#define K_PIPE_DEFINE(name, pipe_buffer_size, pipe_align)`
+作用:定义一个k_pipe，为其分配ring buffer
+name: k_pipe name
+pipe_buffer_size: pipe内ring buffer的大小
+pipe_align: 定义静态数组作为ring buffer，该参数指定该数组的对齐大小，只能是2的幂
+
+`void k_pipe_init(struct k_pipe *pipe, unsigned char *buffer, size_t size)`
+作用:初始化k_pipe, 并为其指定ring buffer
+pipe: 要初始化的pipe
+buffer: ringbuffer地址
+size: ring buffer大小
+
+`int k_pipe_alloc_init(struct k_pipe *pipe, size_t size)`
+作用:初始化k_pipe, 并为其分配ring buffer
+pipe: 要初始化的pipe
+size: 分配ring buffer大小
+返回值：0表示成功，-ENOMEM表示memory不足
+
+`int k_pipe_cleanup(struct k_pipe *pipe)`
+作用:释放k_pipe_alloc_init分配的ring buffer
+pipe: 要释放buffer的pipe
+返回值：0表示成功，-EAGAIN表示目前正在使用无法释放
+
+`int k_pipe_put(struct k_pipe *pipe, void *data, size_t bytes_to_write, size_t *bytes_written, size_t min_xfer, k_timeout_t timeout)`
+作用:发送数据到pipe
+pipe: 管道
+data: 发送数据的地址
+bytes_to_write：发送数据的尺寸
+bytes_written：实际发送的尺寸
+min_xfer：最小发送尺寸
+timeout：等待时间，单位ms。K_NO_WAIT不等待, K_FOREVER一直等
+返回值：0表示成功，-EINVAL表示参数错误，-EIO表示未等待且未传送任何数据，-EAGAIN表示传送的数据单数据量小于min_xfer
+
+`int k_pipe_get(struct k_pipe *pipe, void *data, size_t bytes_to_read, size_t *bytes_read, size_t min_xfer, k_timeout_t timeout)`
+作用:从pipe接收数据
+pipe: 管道
+data: 发送数据的地址
+bytes_to_read 接收数据的尺寸
+bytes_read 实际接收的尺寸
+min_xfer 最小接收尺寸
+timeout：等待时间，单位ms。K_NO_WAIT不等待, K_FOREVER一直等
+返回值：0表示成功，-EINVAL表示参数错误，-EIO表示未等待且未收到任何数据，-EAGAIN表示接收的数据单数据量小于min_xfer
+
+`size_t k_pipe_read_avail(struct k_pipe *pipe)`
+作用:获取pipe内有多少有效数据，也就是ring buffer的有效数据大小
+pipe: 管道
+返回值：可读数据大小
+
+`size_t k_pipe_write_avail(struct k_pipe *pipe)`
+作用:获取可以向管道写多少数据，也就是ring buffer内的空闲空间大小
+pipe: 管道
+返回值：可写数据大小
+
+![image-20231211152443458](images/image-20231211152443458.png)
+
+```
+K_PIPE_DEFINE(my_pipe,100,4);
+struct message_header {
+    uint32_t header;
+};
+void recv_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	uint8_t rx_buffer[256];
+	int rc,i;
+	int rx_length=0;
+	struct message_header  *header = (struct message_header *)rx_buffer;
+	printk("recevthread:\r\n");
+	while(1)
+	{
+		rc = k_pipe_get(&my_pipe,rx_buffer,100,&rx_length,sizeof(*header),K_NO_WAIT);
+		printk("recev:rc:%d,rx_length:%d\r\n",rc,rx_length);
+		for (i = 0; i < rx_length; i++) {
+			printk(" %x", rx_buffer[i]);
+		}
+		printk("\r\n");
+		k_msleep(100000);
+	}
+}
+void sender_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+	uint8_t tx_buffer[256];
+	int i;
+	for(i =0;i<256;i++)
+	{
+		tx_buffer[i]=i;
+	}
+	uint8_t tx_writen = 0;
+	int rc = 0;
+	while(1)
+	{
+		printk("sender:start send the pipe\r\n");
+		for (i = 0; i < 256; i++) {
+			printk(" %x", tx_buffer[i]);
+		}
+		printk("\r\n");
+		rc = k_pipe_put(&my_pipe,tx_buffer,50,&tx_writen,sizeof(struct message_header),K_NO_WAIT);
+		if(rc<0)
+		{
+			printk("sender:send the pipe fail receiver\r\n");
+		}
+		else if(tx_writen < 120)
+		{
+			printk("sender:send the pipe tx_writen %d\r\n",tx_writen);
+		}
+		else
+		{
+			printk("sender:send the pipe OK\r\n");
+		}
+		printk("sender:send the pipe OK:RC:%d\r\n",rc);
+		k_msleep(100000);
+	}
+}
+K_KERNEL_THREAD_DEFINE(receiver, 1024, recv_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_KERNEL_THREAD_DEFINE(sender, 1024, sender_thread, NULL, NULL, NULL, 7, 0 , 1000);
+int main(void)
+{
+	
+        printk("main hello\r\n");
+	return 0;
+}
+```
+
+
 
 
 
@@ -1164,3 +1905,5 @@ static inline uint32_t k_uptime_get_32(void)
  2021公众号目录
 
 https://mp.weixin.qq.com/s/OtL0sCA9sWzZ4Eo3Jaz-QA
+
+https://openeuler.gitee.io/zephyr-cn/develop/kernel/pipe.html
