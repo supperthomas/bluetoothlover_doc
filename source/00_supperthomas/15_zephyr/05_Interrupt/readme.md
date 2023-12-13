@@ -243,6 +243,7 @@ _ _ _ _ _ _ _                         (LEVEL 3)
 
 
 
+
 ```
 static inline unsigned int irq_get_level(unsigned int irq)
 {
@@ -437,6 +438,7 @@ gen_isr_tables.py: IRQ_Pos  = 0x51
 
 
 
+
 ### 中断工作转移offload
 
 中断转移是一种zephyr定义的一个非常重要的概念，并没有过多的实现来对接的API，主要意思就是，如果中断中需要处理的事务过多，那么就将该任务的内容卸载到task里面来执行，以快速响应中断和防止阻碍其他中断。通常我们写SDK写多了之后，会发现，中断中要处理的事情过多，或者中断中嵌套函数过多，会导致cache等不能命中，zephyr更多的是建议大家把中断信号发出来，然后通过其他信号量通知到线程来处理，或者`work`来处理。
@@ -475,6 +477,7 @@ int arch_irq_is_enabled(unsigned int irq)
 }
 
 ```
+
 
 ## 如何实现及为何如此实现
 
@@ -1975,7 +1978,6 @@ offload可以将中断中需要处理时间比较多的，放到线程中去处�
 
 zephyr\arch\arm\core\aarch32\irq_offload.c
 
-
 irq_offload  感觉这个函数是个软件中断，只负责触发软件中断服务历程，通过svc call来触发。
 
 所以这个测试用例在线程中，先触发中断，然后等待信号量，然后work在wq_queue里面执行，执行完成之后，发送信号量给线程，然后线程会检测是否执行成功，
@@ -1983,7 +1985,6 @@ irq_offload  感觉这个函数是个软件中断，只负责触发软件中断�
 至于真中断，还是假中断，
 
 entry_offload_job 这个是执行work的和函数
-
 
 ```
 /**
@@ -2128,12 +2129,8 @@ SUITE PASS - 100.00% [interrupt_feature]: pass = 5, fail = 0, skip = 1, total = 
 ===================================================================
 
 PROJECT EXECUTION SUCCESSFUL
-
-
 ```
 
-=======
-```
 
 
 
