@@ -5,4 +5,5 @@
     :numbered: 2
 
     01_introduce.md
+    02_auto_pts.md
 
