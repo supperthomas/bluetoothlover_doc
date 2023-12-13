@@ -7,3 +7,4 @@
     01_NCS_quick_start/index.md
     01_NCS_quick_start/build_arch.md
     02_ZEPHYR_QUICK_START/index.md
+    06_devicetree/devicetree.md
