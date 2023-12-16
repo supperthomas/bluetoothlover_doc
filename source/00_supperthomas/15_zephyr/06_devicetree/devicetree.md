@@ -39,6 +39,32 @@ zephyr只支持最基础、最标准的硬件驱动，不支持各个厂商的�
 
 
 
+Kconfig和dts看起来是相辅相成的。
+
+对于driver 需要Kconfig来加入编译，同时，Kconfig也有对dts的依赖关系，需要先写好devicetree才能使能driver。
+
+```
+config NRFX_SPI
+	bool
+
+config NRFX_SPI0
+	bool "SPI0 driver instance"
+	depends on $(dt_nodelabel_has_compat,spi0,$(DT_COMPAT_NORDIC_NRF_SPI))
+	select NRFX_SPI
+```
+
+例如，考虑一个包含带有 2 个 UART 或串行端口的 SoC 的板， 实例。
+
+- 主板具有此 UART**硬件**这一事实是通过两个 UART 来描述的 设备树中的节点。它们提供 UART 类型（通过 `compatible` 属性）和某些设置，例如硬件的地址范围 内存中的外设寄存器（通过 `reg` 属性）。
+- 此外，UART **启动时配置**还描述为 设备树。这可能包括 RX IRQ 线等配置 优先级和UART波特率。这些可以在运行时修改，但是 它们的启动时配置在 devicetree 中进行了描述。
+- 是否在构建中包含**对 UART 的软件支持** 通过 Kconfig 控制。不需要使用 UART 的应用程序可以 使用 Kconfig 从构建中删除驱动程序源代码，即使 板的设备树仍然包含 UART 节点。
+
+
+
+参考API: https://docs.zephyrproject.org/latest/build/dts/index.html#devicetree-reference
+
+
+
 ## 语法
 
 我们类比于C语言， 设备树有下面的语法
