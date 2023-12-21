@@ -374,6 +374,33 @@ void critical_rtn(struct k_work *unused)
 		k_work_submit_to_queue(&offload_work_q, &work_item);
 ```
 
+```
+static void entry_offload_job(struct k_work *work)
+{
+        printk("Execute offload job\r\n");
+}
+void isr_handler(const void *param)
+{
+        struct k_work work_item;
+        k_work_init(&work_item, entry_offload_job);
+        k_work_submit(&work_item);
+}
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{       
+        while(1)
+        {
+                printk("hello world\r\n");
+                isr_handler(NULL);
+                k_msleep(5000);
+        }
+}
+K_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 5000);
+```
+
+![image-20231217222138870](images/image-20231217222138870.png)
+
+
+
 ## SMP 需要的API
 
 指定线程在某个CPU上运行
@@ -1392,7 +1419,47 @@ stack LIFO一样。不过它会进行拷贝数据，像线程栈一样。
 
 
 
+```
+struct k_stack stack;
+static stack_data_t stack_buffer[4];
+static stack_data_t data[4] = { 0xABCD, 0x1234 ,0x5678,0x9012};
+void recv_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+        int ret = 0;
+	stack_data_t rx_data;
+        while(1)
+        {
+           ret = k_stack_pop(&stack, &rx_data, K_FOREVER);
+           printk("Receive: %x,ret=%d\r\n",rx_data,ret);
+        }
+}
+void sender_thread(void *dummy1, void *dummy2, void *dummy3)
+{
+        int i = 0;
+        k_stack_init(&stack, stack_buffer, 4);
+        while(1)
+        {
+                i=i%4;
+                k_stack_push(&stack, data[i]);
+                printk("Send: i=%d,data=%x\r\n",i,(uint32_t)data[i]);
+                i++;
+                k_msleep(1000);
+        }
+}
+K_THREAD_DEFINE(receiver, 1024, recv_thread, NULL, NULL, NULL, 8, 0 , 2000);
+K_THREAD_DEFINE(sender, 1024, sender_thread, NULL, NULL, NULL, 7, 0 , 1000);
+int main(void)
+{
+        printk("main hello222\r\n");
+        while(1)
+        { 
+                k_msleep(10000);
+        }
+        return 0;
+}
+```
 
+![image-20231217114412222](images/image-20231217114412222.png)
 
 ## 数据传递 Message Queue
 
@@ -1774,9 +1841,316 @@ void on_heap_alloc(uintptr_t heap_id, void *mem, size_t bytes)
 HEAP_LISTENER_ALLOC_DEFINE(my_listener, HEAP_ID_LIBC, on_heap_alloc);
 ```
 
+![image-20231217085637617](images/image-20231217085637617.png)
+
+
+
+![image-20231217085651813](images/image-20231217085651813.png)
+
+![image-20231217091441693](images/image-20231217091441693.png)
+
+```
+K_HEAP_DEFINE(k_heap_test, 100);
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{       
+        void *p = NULL;
+        while(1)
+        {
+                printk("=========malloc BEFORE========\r\n");
+                sys_heap_print_info(&k_heap_test,true);
+                p = (char *)k_heap_alloc(&k_heap_test, 4, K_NO_WAIT);
+                printk("==========malloc:%p=======\r\n",p);
+                 k_msleep(10000);
+        }
+}
+K_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 5000);
+```
+
+
+
+0x200011a8
+
+开始， 0x200030E4
+
+struct z_heap  16bytes
+
+struct z_heap {
+
+  chunkid_t chunk0_hdr[2];
+
+  chunkid_t end_chunk;
+
+  uint32_t avail_buckets;
+
+
+
+![image-20231221170625888](images/image-20231221170625888.png)
+
+![image-20231221171056229](images/image-20231221171056229.png)
+
+
+
+![image-20231221171442226](images/image-20231221171442226.png)
+
+
+
+
+
+![image-20231221171957777](images/image-20231221171957777.png)
+
+```
+struct k_heap k_heap_test;
+uint8_t buffer[100];
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{       
+        void *p = NULL;
+        k_heap_init(&k_heap_test,buffer,100);
+        while(1)
+        {
+                printk("=========malloc BEFORE========\r\n");
+                sys_heap_print_info(&k_heap_test.heap,true);
+                p = (char *)k_heap_alloc(&k_heap_test, 4, K_NO_WAIT);
+                printk("==========malloc:%p=======\r\n",p);
+                 k_msleep(10000);
+        }
+}
+K_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 5000);
+```
+
+
+
+
+
+https://lgl88911.gitee.io/2020/09/06/Zephyr%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E4%B9%8BHeap/
+
+![image-20231217091859533](images/image-20231217091859533.png)
+
+![image-20231217092029610](images/image-20231217092029610.png)
+
+
+
+![image-20231217101811362](images/image-20231217101811362.png)
+
+
+
+heap_print_info
+
+K_HEAP_DEFINE(k_heap_test, 100);
+
+  char *p = (char *)k_heap_alloc(&k_heap_test, 4, K_NO_WAIT);
+
+  shell_print(sh, "p=%p",p);
+
+  sys_heap_print_info(&k_heap_test,true);
+
+
+
+```
+p=0x20003fe4
+Heap at 0x20003fc0 contains 12 units in 4 buckets
+
+  bucket#    min units        total      largest      largest
+             threshold       chunks      (units)      (bytes)
+  -----------------------------------------------------------
+        2            4            1            7           52
+
+Chunk dump:
+chunk    0: [*] size=4    left=0    right=4
+chunk    4: [*] size=1    left=0    right=5
+chunk    5: [-] size=7    left=4    right=12
+chunk   12: [*] size=0    left=5    right=12
+
+52 free bytes, 4 allocated bytes, overhead = 44 bytes (44.0%)
+```
+
+比如100个BYTE，初始化的时候，计算出可以转化成多少个chunk，每个chunk大小是8byte。
+
+heap 大小要8的倍数，需要取整，所以100个bytes大小可以分配11个chunk units
+
+但是实际上，88bytes，又要分配一些给其他的开销，最后100bytes你只有52bytes可以分配给数据。48bytes。
+
+
+
+
+
+chunk UNIT = 8
+
+head占4个bytes
+
+
+
+![image-20231218093904194](images/image-20231218093904194.png)
+
+上下取8的倍数，heap_sz=88bytes.
+
+
+
+```
+=========malloc BEFORE========
+Heap at 0x20000528 contains 11 units in 4 buckets
+
+  bucket#    min units        total      largest      largest
+             threshold       chunks      (units)      (bytes)
+  -----------------------------------------------------------
+        2            4            1            7           52
+
+Chunk dump:
+chunk    0: [*] size=4    left=0    right=4
+chunk    4: [-] size=7    left=0    right=11
+chunk   11: [*] size=0    left=4    right=11
+
+52 free bytes, 0 allocated bytes, overhead = 40 bytes (43.5%)
+```
+
+### k_malloc
+
+```
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{       
+        void *p = NULL;
+        int i = 0;
+        while(1)
+        {
+                printk("=========malloc BEFORE========\r\n");
+                p = (char *)k_malloc(16);
+                printk("==========malloc:%p===i=%d====\r\n",p,i);
+                k_msleep(100);
+                i++;
+                if (p== NULL)
+                {
+                        break;
+                }
+        }
+}
+K_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 5000);
+```
+
 
 
 ## slab
+
+对于固定大小的内存可以用slab来申请和释放
+
+c初始化，
+
+```
+struct k_mem_slab my_slab;
+char __aligned(4) my_slab_buffer[6 * 400];
+
+k_mem_slab_init(&my_slab, my_slab_buffer, 400, 6);
+```
+
+
+
+
+
+或者这样写。
+
+
+
+```
+K_MEM_SLAB_DEFINE(my_slab, 400, 6, 4);
+```
+
+
+
+也可以定义static的K_MEM_SLAB_DEFINE_STATIC(my_slab, 400, 6, 4);
+
+
+
+内存分配
+
+```
+char *block_ptr;
+
+if (k_mem_slab_alloc(&my_slab, (void **)&block_ptr, K_MSEC(100)) == 0) {
+    memset(block_ptr, 0, 400);
+    ...
+} else {
+    printf("Memory allocation time-out");
+}
+```
+
+这里的timeout是用来，比如申请不到的时候，需要等待多少ms，用于一些冗余。
+
+释放内存
+
+```
+char *block_ptr;
+
+k_mem_slab_alloc(&my_slab, (void **)&block_ptr, K_FOREVER);
+... /* use memory block pointed at by block_ptr */
+k_mem_slab_free(&my_slab, (void *)block_ptr);
+```
+
+这个主要对于整块的内存。
+
+https://lgl88911.gitee.io/2020/08/29/Zephyr%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86%E4%B9%8Bslab/
+
+![image-20231217102853842](images/image-20231217102853842.png)
+
+
+
+![image-20231217102843174](images/image-20231217102843174.png)
+
+Slab是一个内核对象，在分配时会存在等待资源的情况，释放时可能会从其它线程获取资源的情况，因此Slab分配和释放都有可能会引起线程的调度。
+在需要定长内存的分配情况下，优先使用Slab。当从一个线程发送大量数据到另一个线程时，可以使用Slab，之发送内存块地址，可以避免不必要的数据拷贝动作。
+
+slab释放和申请会触发schedule
+
+schedule
+
+
+
+可以用shell demo 来演示
+
+```
+art:~$ kernel threads
+Scheduler: 3833136 since last call
+Threads:
+ 0x20000d70 sysworkq  
+        options: 0x0, priority: -1 timeout: 0
+        state: pending, entry: 0x9171
+        Total execution cycles: 467 (0 %)
+        stack size 1024, unused 856, usage 168 / 1024 (16 %)
+
+*0x20000888 shell_uart
+        options: 0x0, priority: 14 timeout: 0
+        state: queued, entry: 0x4b2d
+        Total execution cycles: 2698316 (52 %)
+        stack size 2048, unused 1008, usage 1040 / 2048 (50 %)
+
+ 0x20000380 logging   
+        options: 0x0, priority: 14 timeout: 0
+        state: pending, entry: 0x2431
+        Total execution cycles: 4266 (0 %)
+        stack size 768, unused 632, usage 136 / 768 (17 %)
+
+ 0x20000b90 idle      
+        options: 0x1, priority: 15 timeout: 0
+        state: , entry: 0x8f2d
+        Total execution cycles: 2494561 (46 %)
+        stack size 320, unused 236, usage 84 / 320 (26 %)
+
+uart:~$ 
+```
+
+
+
+```
+uart:~$ kernel stacks
+0x20000d70 sysworkq                         (real size 1024):   unused  856     usage  168 / 1024 (16 %)
+0x20000888 shell_uart                       (real size 2048):   unused 1000     usage 1048 / 2048 (51 %)
+0x20000380 logging                          (real size  768):   unused  632     usage  136 /  768 (17 %)
+0x20000b90 idle                             (real size  320):   unused  236     usage   84 /  320 (26 %)
+0x20002d80 IRQ 00                           (real size 2048):   unused 1640     usage  408 / 2048 (19 %)
+```
+
+
+
+
+
+
 
 # 时间管理
 
@@ -1828,8 +2202,18 @@ static inline uint32_t k_uptime_get_32(void)
 
 
 
+```
+static int cmd_version(const struct shell *sh, size_t argc, char **argv)
+{
+	ARG_UNUSED(argc);
+	ARG_UNUSED(argv);
 
+	shell_print(sh, "Zephyr version %s", KERNEL_VERSION_STRING);
 
+	return 0;
+}
+SHELL_CMD_ARG_REGISTER(version, NULL, "Show kernel version", cmd_version, 1, 0);
+```
 
 
 
@@ -1851,48 +2235,30 @@ static inline uint32_t k_uptime_get_32(void)
 
 
 
+assert
 
 
 
+hardfault
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```
+void threadA(void *dummy1, void *dummy2, void *dummy3)
+{
+        volatile int * SCB_CCR = (volatile int *) 0xE000ED14; // SCB->CCR
+        *SCB_CCR |= (1 << 4); /* bit4: DIV_0_TRP. */
+	int x, y, z;
+	x = 10;
+	y = 0;
+	z = x / y;
+	printk("z:%d\n", z);
+        while(1)
+        {
+                printk("hello world\r\n");
+                k_msleep(5000);
+        }
+}
+K_THREAD_DEFINE(thread_a, 1024, threadA, NULL, NULL, NULL, 7, 0 , 5000);
+```
 
 
 
@@ -1907,3 +2273,5 @@ static inline uint32_t k_uptime_get_32(void)
 https://mp.weixin.qq.com/s/OtL0sCA9sWzZ4Eo3Jaz-QA
 
 https://openeuler.gitee.io/zephyr-cn/develop/kernel/pipe.html
+
+https://lgl88911.gitee.io/
