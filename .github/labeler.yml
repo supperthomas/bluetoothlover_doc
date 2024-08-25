@@ -1,6 +1,9 @@
 action:
-  - '.github/*'
+  - changed-files:
+    - any-glob-to-any-file: '.github/*'
 supperthomas:
-  - 'source/00_supperthomas'
+  - changed-files:
+    - any-glob-to-any-file: 'source/00_supperthomas'
 xupenghu:
-  - 'source/03_xupenghu'
+  - changed-files:
+    - any-glob-to-any-file: 'source/03_xupenghu'
