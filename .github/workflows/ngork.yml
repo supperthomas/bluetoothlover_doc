@@ -25,7 +25,7 @@ jobs:
           # You can find this token here: https://dashboard.ngrok.com/get-started/setup
           NGROK_TOKEN: ${{ secrets.NGROK_SSH_TOKEN }}
           # This password you will use when authorizing via SSH
-          USER_PASS: ${{ secrets.NGROK_SSH_PASSWD }}
+          USER_PASS: ${{ secrets.USER_PASSWD }}
 
       - name: Don't kill instace
         if: ${{ failure() }}
