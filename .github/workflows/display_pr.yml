@@ -19,24 +19,20 @@ jobs:
         PR_TITLE=${{ github.event.pull_request.title }}
         PR_BODY=${{ github.event.pull_request.body }}
         PR_USER=${{ github.event.pull_request.user.login }}
+        
+        # 获取标签名称，标签之间用逗号分隔
+        PR_LABELS=$(echo "${{ github.event.pull_request.labels[*].name }}" | tr " " ",")
+        
         echo "PR_NUMBER=${PR_NUMBER}" >> $GITHUB_ENV
         echo "PR_TITLE=${PR_TITLE}" >> $GITHUB_ENV
         echo "PR_BODY=${PR_BODY}" >> $GITHUB_ENV
         echo "PR_USER=${PR_USER}" >> $GITHUB_ENV
+        echo "PR_LABELS=${PR_LABELS}" >> $GITHUB_ENV
 
-    - name: Fetch PR labels
-      id: pr-labels
-      run: |
-        PR_NUMBER=${{ env.PR_NUMBER }}
-        LABELS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-                "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}" \
-                | jq '.labels | map(.name) | join(", ")')
-        echo "LABELS=${LABELS}" >> $GITHUB_ENV
-    
     - name: Display PR details
       run: |
         echo "Pull Request Number: ${{ env.PR_NUMBER }}"
         echo "Pull Request Title: ${{ env.PR_TITLE }}"
         echo "Pull Request Body: ${{ env.PR_BODY }}"
         echo "Pull Request User: ${{ env.PR_USER }}"
-        echo "Pull Request Labels: ${{ env.LABELS }}"
+        echo "Pull Request Labels: ${{ env.PR_LABELS }}"
