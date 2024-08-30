@@ -12,16 +12,16 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Fetch PR details
-      id: pr-details
+    - name: Extract PR information
+      id: extract-info
       run: |
         PR_NUMBER=${{ github.event.pull_request.number }}
         PR_TITLE=${{ github.event.pull_request.title }}
         PR_BODY=${{ github.event.pull_request.body }}
         PR_USER=${{ github.event.pull_request.user.login }}
         
-        # 获取标签名称，标签之间用逗号分隔
-        PR_LABELS=$(echo "${{ github.event.pull_request.labels[*].name }}" | tr " " ",")
+        # 将标签名称提取为以逗号分隔的字符串
+        PR_LABELS=$(echo "${{ toJson(github.event.pull_request.labels) }}" | jq -r 'map(.name) | join(", ")')
         
         echo "PR_NUMBER=${PR_NUMBER}" >> $GITHUB_ENV
         echo "PR_TITLE=${PR_TITLE}" >> $GITHUB_ENV
