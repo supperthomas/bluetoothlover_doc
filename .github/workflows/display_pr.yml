@@ -1,0 +1,42 @@
+name: Display PR Details
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  display-pr-details:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Fetch PR details
+      id: pr-details
+      run: |
+        PR_NUMBER=${{ github.event.pull_request.number }}
+        PR_TITLE=${{ github.event.pull_request.title }}
+        PR_BODY=${{ github.event.pull_request.body }}
+        PR_USER=${{ github.event.pull_request.user.login }}
+        echo "PR_NUMBER=${PR_NUMBER}" >> $GITHUB_ENV
+        echo "PR_TITLE=${PR_TITLE}" >> $GITHUB_ENV
+        echo "PR_BODY=${PR_BODY}" >> $GITHUB_ENV
+        echo "PR_USER=${PR_USER}" >> $GITHUB_ENV
+
+    - name: Fetch PR labels
+      id: pr-labels
+      run: |
+        PR_NUMBER=${{ env.PR_NUMBER }}
+        LABELS=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+                "https://api.github.com/repos/${{ github.repository }}/issues/${PR_NUMBER}" \
+                | jq '.labels | map(.name) | join(", ")')
+        echo "LABELS=${LABELS}" >> $GITHUB_ENV
+    
+    - name: Display PR details
+      run: |
+        echo "Pull Request Number: ${{ env.PR_NUMBER }}"
+        echo "Pull Request Title: ${{ env.PR_TITLE }}"
+        echo "Pull Request Body: ${{ env.PR_BODY }}"
+        echo "Pull Request User: ${{ env.PR_USER }}"
+        echo "Pull Request Labels: ${{ env.LABELS }}"
