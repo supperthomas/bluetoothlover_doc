@@ -18,7 +18,7 @@ jobs:
             curl -sSL https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null && echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list && sudo apt update && sudo apt install ngrok
             ngrok update
             ngrok --version
-      - uses: shaowenchen/debugger-action@v2
+      - uses: shaowenchen/debugger-action@main
         name: debugger
         timeout-minutes: 30
         continue-on-error: true
