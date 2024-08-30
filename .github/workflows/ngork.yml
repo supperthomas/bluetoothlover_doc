@@ -24,4 +24,5 @@ jobs:
         continue-on-error: true
         with:
           ngrok_token: ${{ secrets.NGROK_SSH_TOKEN }}
-
+      - name: Setup Debug Session
+        uses: csexton/debugger-action@master
