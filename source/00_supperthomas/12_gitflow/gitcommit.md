@@ -51,6 +51,17 @@
 
 
 ```
+<type>(<scope>): <subject>
+<BLANK LINE>
+<body>
+<BLANK LINE>
+<footer>
+
+```
+
+
+
+```
 <类型>[可选 范围]: <描述>
 
 [可选 正文]
@@ -77,6 +88,17 @@ ci: 用于修改持续集成流程，例如修改 Travis、Jenkins 等工作流�
 另外有个特殊的类型，即对API有破坏性的变更
 
 1. **BREAKING CHANGE:** 在脚注中包含 `BREAKING CHANGE:` 或 <类型>(范围) 后面有一个 `!` 的提交，表示引入了破坏性 API 变更（这和语义化版本中的 [`MAJOR`](https://semver.org/lang/zh-CN/#摘要) 相对应）。 破坏性变更可以是任意 *类型* 提交的一部分。
+
+### scope
+
+scope 主要用来描述修改了哪些文件，一般一个主要内容，比如
+
+### subject
+
+1. 使用祈使句， 用现代时：“change” not “changed” nor “changes”
+2. 第一个字母不要大写
+3. 最后不要以`.` 结尾
+4. 
 
 ### 举例说明
 
@@ -185,11 +207,116 @@ ci: 用于修改持续集成流程，例如修改 Travis、Jenkins 等工作流�
 
 
 
+## 常用方便的工具
 
+上述commit的feat和fix可以用下面的vscode工具来添加
 
+![image-20240916125222384](images/image-20240916125222384.png)
 
+使用的时候
+
+![image-20240916180651416](images/image-20240916180651416.png)
+
+直接在下面可以选择对应的内容
 
 ![image-20240916125344195](images/image-20240916125344195.png)
+
+emoji的工具可以选择下面的这个工具
+
+![image-20240916125216172](images/image-20240916125216172.png)
+
+使用的时候，根据下面的步骤
+
+![image-20240916180743939](images/image-20240916180743939.png)
+
+可以比较方便的选择图标
+
+![image-20240916180818258](images/image-20240916180818258.png)
+
+
+
+git log图标显示
+
+![image-20240916180951235](images/image-20240916180951235.png)
+
+
+
+commit 工具，linux里面方便使用的
+
+![Using commitizen cli](https://commitizen-tools.github.io/commitizen/images/demo.gif)
+
+https://commitizen-tools.github.io/commitizen/
+
+![image-20240916182453165](images/image-20240916182453165.png)
+
+## 其他部分需要注意的
+
+七条规则，根据https://cbea.ms/git-commit/  建议：
+
+
+
+- 用空行将主题与正文分开
+- 将主题行限制为 50 个字符
+- 主题行大写
+- 不要以句号结尾主题行
+- 在主题行中使用祈使语气
+- 在 72 个字符处换行
+- 使用正文来解释什么、为什么以及如何
+
+
+
+例如:
+
+```
+$ git log
+commit 42e769bdf4894310333942ffc5a15151222a87be
+Author: Kevin Flynn <kevin@flynnsarcade.com>
+Date:   Fri Jan 01 00:00:00 1982 -0200
+
+ Derezz the master control program
+
+ MCP turned out to be evil and had become intent on world domination.
+ This commit throws Tron's disc into MCP (causing its deresolution)
+ and turns it back into a chess game.
+```
+
+![image-20240916214705199](images/image-20240916214705199.png)
+
+Angular 规范
+
+https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.uyo6cb12dt6w
+
+https://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
+
+
+
+```
+git log --grep feat
+```
+
+
+
+### revert
+
+```
+revert: feat(pencil): add 'graphiteWidth' option
+
+This reverts commit 667ecc1654a317a13331b17617d973392f415f02.
+```
+
+
+
+
+
+## 总结
+
+git commit的emoji图标显示起来比较酷炫，适合年轻人，这样有个好处就是，看图标能知道干嘛的，当然也需要自己记一下图标的用途，其实表面上看似乎好看又方便，但是让人理解起来会比较吃力一些，如果团队所有人都理解图标的含义的话会比较好。
+
+git commit的`fix` 和`feature` 使用起来比较方便一些，
+
+当然使用起来，有一点比较麻烦的是，只能知道功能，并不能知道修改了哪些内容，也许使用scope可以比较好的显示修改内容。
+
+总结一下就是，git commit rule使用起来比较容易一些。
 
 
 
@@ -205,10 +332,36 @@ https://www.conventionalcommits.org/
 
 https://www.conventionalcommits.org/zh-hans/v1.0.0/
 
+1. https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines
+2. https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue
+3. https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit#heading=h.8sw072iehlhg
+4. https://github.com/commitizen/cz-cli
+5. https://github.com/streamich/git-cz
+6. https://github.com/leoforfree/cz-customizable
+7. https://github.com/leoforfree/cz-customizable/blob/master/cz-config-EXAMPLE.js
+8. https://github.com/commitizen/conventional-commit-types/blob/master/index.json
+9. https://github.com/qiqihaobenben/commitizen-git/blob/master/.cz-config.js
+10. https://github.com/conventional-changelog/commitlint
+11. https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional !--@commitlint/config-conventional--
+12. https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional !--@commitlint/config-conventional--
+13. https://github.com/leoforfree/cz-customizable/blob/master/cz-config-EXAMPLE.js
+14. https://github.com/whizark/commitlint-config-cz
+15. https://github.com/conventional-changelog/standard-version
+16. https://semver.org/lang/zh-CN/
+17. https://github.com/conventional-commits
+18. https://github.com/qiqihaobenben/commitizen-git
+19. https://github.com/leoforfree/cz-customizable
+20. https://github.com/commitizen/cz-conventional-changelog
+21. https://github.com/leoforfree/cz-customizable
+22. https://docs.google.com/document/d/1QrDFcIiPjSLDn3EL15IJygNPiHORgU1_OOAqWjiDU5Y/edit
+23. https://www.conventionalcommits.org/en/v1.0.0/
+24. http://www.ruanyifeng.com/blog/2016/01/commit_message_change_log.html
+25. https://365git.tumblr.com/post/3308646748/writing-git-commit-messages
+26. https://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+27. https://ruby-china.org/topics/939
+28. https://git-scm.com/docs/pretty-formats
 
 
-![image-20240916125222384](images/image-20240916125222384.png)
 
 
 
-![image-20240916125216172](images/image-20240916125216172.png)
