@@ -15,7 +15,7 @@ MASTER:supperthomas
     10_lvgl/lvgl_app.md
     11_cppcheck/cppcheck.md    
     12_gitflow/gitflow.md    
+    12_gitflow/gitcommit.md
     13_action/readme.md
-    13_action/labeler.md
     14_github/github_coderowner.md   
     15_zephyr/index.md   
