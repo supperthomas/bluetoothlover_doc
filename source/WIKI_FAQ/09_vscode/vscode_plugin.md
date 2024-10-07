@@ -2,6 +2,9 @@
 
 更全面的信息可以参考官方 [调试手册](https://code.visualstudio.com/docs/editor/debugging#_launch-configurations) ，
 
+让你工作效率翻倍的 20 个 VSCode 插件！
+https://mp.weixin.qq.com/s/l4BARfP34sB5kdZaGcq30w
+
 ## 快捷键
 
 - ctrl + shift + p  显示命令
