@@ -1,24 +1,6 @@
 # HFP 1.9
 [TOC]
 
-
-| 章节                           | 大概内容            | 备注   |
-| ------------------------------ | ------------------- | ------ |
-| 1  Introduce                   | 介绍                |        |
-| 2 Porfile overview             | Profile 大概内容    |        |
-| 3 application layer            | AG和HF需要的feature |        |
-| 4 Hands-Free Control           | AT 命令交互         |        |
-| 5 AT Command and Results Codes | AT cmd和结果        |        |
-| 6 RFCOMM                       |                     |        |
-| 7 GAP                          | GAP中的需要内容     |        |
-| 8-9                            | 参考和专业名词      | 不用看 |
-| 10 mSBC技术                    |                     |        |
-| 11 code ID                     |                     |        |
-| 12 PLC 的实现                  |                     |        |
-| 13 质量指标                    | 音质质量指标        |        |
-| 14 LC3-SWB 技术                | LC3-SWB 技术指标    |        |
-
-
 ## 简介
 
 这里主要是翻译HFP1.9的内容
