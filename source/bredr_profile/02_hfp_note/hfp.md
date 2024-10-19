@@ -129,7 +129,186 @@ AT命令基本沿用了3GPP中定义的AT cmd的部分内容, 同时蓝牙有自
 
 需要看详细内容,就可以看[27007-680_at_cmd.doc](ref\27007-680_at_cmd.doc) 
 
+AT命令中有个特点，如果第一个字母是B的话，基本上都是bluetooth的扩充的。
 
+可以参考章节5.3， 有对BLUETOOTH扩充的AT命令说明
+
+AT命令格式：
+
+HF-> AG:
+
+<AT command> <cr>
+
+AG-> HF:
+
+<cr><lf>OK<cr><lf>
+
+<cr><lf>ERROR<cr><lf>
+
+<cr><lf><result code><cr><lf>
+
+5.2 章节讲了哪些3GPP规定的AT命令是沿用的
+
+### AT命令 详解
+
+AT命令可以看几个特殊的命令讲解，其他的命令根据文档可以自行查看
+
+#### AT 通用命令
+
+通用的AT命令都是基于GSM的。
+
+- ATA
+- AT+CIND
+
+标准指标更新 AT 命令。只读取命令 AT+CIND？和测试命令 AT+CIND=？在本规范中是必需的。
+
+![image-20241019100727038](hfp/image-20241019100727038.png)
+
+![image-20241019100741689](hfp/image-20241019100741689.png)
+
+这几个值可能比较重要
+
+call status ：
+
+call Setup profile中4.33章节有介绍：
+
+call held indicator
+
+Service availability
+
+signal ：应该就是信号强度： 0-5数值
+
+roam： 应该就是漫游的状态：0 代表没有漫游， 1代表在漫游
+
+battchg：是电池的状态：0-5数值型。应该就是通常耳机端电池电量的意思
+
+![image-20241019100836492](hfp/image-20241019100836492.png)
+
+#### AT 蓝牙 命令
+
+- AT+BRSF
+
+查看bluetooth 支持的特性
+
+这个特性又检查了一遍，部分和SDP的类似
+
+下面的图是HF的支持feature
+
+![image-20241019100901438](hfp/image-20241019100901438.png)
+
+这里没有SWBS的支持，多了通话和指示器的支持以及S4的支持。
+
+这里是个32bit的数值
+
+AG的feature
+
+![image-20241019100928574](hfp/image-20241019100928574.png)
+
+边也是的和SDP差别在途中标红的地方
+
+- AT+BIA(Bluetooth Indicators Activation)
+
+蓝牙指示灯激活
+
+- AT+BINP(Bluetooth INPut)
+- AT+BLDN (Bluetooth Last Dialed Number)
+
+蓝牙拨打上一通电话
+
+- AT+BVRA(Bluetooth Voice Recognition Activation)
+
+语音识别唤醒
+
+- +BVRA (Bluetooth Voice Recognition Activation)
+- AT+NREC (Noise Reduction and Echo Canceling)
+
+回音消除和降噪
+
+- AT+VGM (Gain of Microphone)
+
+麦克风音量
+
+- AT+VGS (Gain of Speaker)
+
+音箱音量大小
+
+- +BSIR (Bluetooth Setting of In-band Ring tone)
+
+带内响铃
+
+- AT+BTRH (Bluetooth Response and Hold Feature)
+
+- +BTRH (Bluetooth Response and Hold Feature)
+
+- AT+BCC (Bluetooth Codec Connection)
+
+- AT+BCS (Bluetooth Codec Selection)
+
+  1是cvsd 2 是msbc
+
+![image-20241019100956884](hfp/image-20241019100956884.png)
+
+- +BCS (Bluetooth Codec Selection)
+
+- AT+BAC (Bluetooth Available Codecs)
+
+- AT+BIND (Bluetooth HF Indicators Feature)
+
+  只有HF和AG端都定义HF indicator 则该命令有用，值如下， 一般用于指示电量
+
+  ![image-20241019101012930](hfp/image-20241019101012930.png)
+
+  - +BIND (Bluetooth HF Indicators Feature)
+  - AT+BIEV (Bluetooth HF Indicators Feature)
+
+  ## 流程
+
+![image-20241019101048132](hfp/image-20241019101048132.png)
+
+流程主要讲述如何发送AT命令。
+
+很多feature都是需要看流程来展示的
+
+![image-20241019101111826](hfp/image-20241019101111826.png)
+
+这边选择一个codec选择的 例子，基本上讲的是AG端发送了+BCS 后面跟着codec的值
+
+然后HF端返回AT+BCS 
+
+![image-20241019101135369](hfp/image-20241019101135369.png)
+
+![image-20241019101150966](hfp/image-20241019101150966.png)
+
+## 6 CODEC
+
+HFP的编码方式：
+
+编码方式一共有3种：CVSD mSBC LC3-SWB
+
+空气中传输方式有： sco 和esco
+
+HFP 中总结一下集中传输格式
+
+![image-20241019101253876](hfp/image-20241019101253876.png)
+
+![image-20241019101305446](hfp/image-20241019101305446.png)
+
+![image-20241019101315564](hfp/image-20241019101315564.png)
+
+附：两种audio的codec
+CVSD: pcm: 8kHz, 16 bits, 1 channel.
+     compression ratio: 16 (controller encoding)
+     insert ratio: 8
+       pcm data rate= 16kB/s =8K*16/8
+     CVSD data rate=8kB/s =16kB/s* 8/16
+      air data: CVSD
+mSBC: pcm 16kHz, 16 bits, 1 channel.
+     compression ratio: 4 (host encoding: 240->60)
+       pcm data rate= 32kB/s
+       mSBC data rate=8kB/s = 32kB/s / 4
+      air data: transparent data (mSBC)
+
+![image-20241019101331221](hfp/image-20241019101331221.png)
 
 
 

@@ -6,3 +6,4 @@ BREDR PROFILE篇
     :numbered: 2
 
     01_hfp/HFP.md
+    02_hfp_note/hfp.md
