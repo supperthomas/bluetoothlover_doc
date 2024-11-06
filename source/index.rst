@@ -36,6 +36,7 @@ Welcome to BLUETOOTHLOVER_wiki's documentation!
    13_xiangxistu/index
    14_bobwenstudy/index
    16_ColeStudy/index
+   17_hydevcode/index
 
 Indices and tables
 ==================
