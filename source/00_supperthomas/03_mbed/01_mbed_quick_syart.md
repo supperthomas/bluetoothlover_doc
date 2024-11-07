@@ -5,7 +5,7 @@
 首先先要搞清楚mbed OS有哪些依赖：
 
 build依赖：
-
+   
 - python2或者3
 - Mercurial 这个是依赖包，如果需要执行mbed deploy则需要这个软件来处理依赖
 - pip3
