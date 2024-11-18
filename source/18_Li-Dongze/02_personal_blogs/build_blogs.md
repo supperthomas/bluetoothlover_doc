@@ -1,11 +1,4 @@
----
-title: 个人博客搭建教程
-date: 2024-11-17
-summary: 如何搭建一个像我这样的博客网站
-category: 关于本站
-tags: [博客, 工具]
-comments: 1
----
+# 个人博客搭建教程
 
 ## [Astro](https://docs.astro.build/zh-cn/getting-started/)介绍
 
