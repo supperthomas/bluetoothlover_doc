@@ -1,4 +1,4 @@
-# 使用Astro搭建个人博客
+# 个人博客搭建教程
 
 ## [Astro](https://docs.astro.build/zh-cn/getting-started/)介绍
 
