@@ -13,6 +13,7 @@ Welcome to BLUETOOTHLOVER_wiki's documentation!
 
    ble/index
    ble_profile/index
+   LE_AUDIO/index
    bredr_profile/index
    nordic/index
    WB55/index
