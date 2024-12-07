@@ -225,7 +225,11 @@ GATT 服务发现阶段，可以看出手机和耳机各有哪些服务。
 
  [BT_HCI_2024_1108_134415.cfa](ref\BT_HCI_2024_1108_134415.cfa) 
 
+#### 耳机端重要的 characteristic
+
 首先是手机搜寻耳机的ATT服务，根据这些数据可以整理出耳机的service如下：
+
+
 
 ![image-20241207183414668](figure/LE_AUDIO/image-20241207183414668.png)
 
@@ -268,6 +272,84 @@ VOSS: 是音量偏移控制
 PACS: 这个代表该音响有哪些能力
 
 ASCS: 这个是音响或者耳机的主要的音频流控制接口，开启音频流主要用该服务.
+
+
+
+#### 手机端重要的characteristic
+
+耳机也要搜索手机的服务，手机的服务主要有以下所示，重要的有MCS和TBS.
+
+![image-20241113150311429](figure/LE_AUDIO/image-20241113150311429.png)
+
+#### MCP- MCS
+
+Media State和Media Control Point， 这两个是主要的
+
+![image-20241113150422141](figure/LE_AUDIO/image-20241113150422141.png)
+
+播放音乐之前，会发个playing的notification过来。
+
+![image-20241113150557544](figure/LE_AUDIO/image-20241113150557544.png)
+
+![image-20241113151318174](figure/LE_AUDIO/image-20241113151318174.png)
+
+Media Control Point 是由耳机来控制的，主要在MCS中有介绍
+
+![image-20241113151423586](figure/LE_AUDIO/image-20241113151423586.png)
+
+status和opcode组队还有如下图的状态机。
+
+![image-20241113151602403](figure/LE_AUDIO/image-20241113151602403.png)
+
+#### CCP-TBS
+
+同样的GTBS中两个重要的属性，Call State和Call control Point。
+
+![image-20241113152739254](figure/LE_AUDIO/image-20241113152739254.png)
+
+ TBS中有定义：
+
+![image-20241113153116765](figure/LE_AUDIO/image-20241113153116765.png)
+
+
+
+![image-20241113152947619](figure/LE_AUDIO/image-20241113152947619.png)
+
+![image-20241113153109466](figure/LE_AUDIO/image-20241113153109466.png)
+
+![image-20241113153139841](figure/LE_AUDIO/image-20241113153139841.png)
+
+Call control Point
+
+![image-20241113153207068](figure/LE_AUDIO/image-20241113153207068.png)
+
+## 手机和耳机服务和角色
+
+根据每个profile中的角色：
+
+BAP:
+
+![image-20241113161213302](figure/LE_AUDIO/image-20241113161213302.png)
+
+MCP:
+
+![image-20241113161232942](figure/LE_AUDIO/image-20241113161232942.png)
+
+VCP:
+
+![image-20241113161255324](figure/LE_AUDIO/image-20241113161255324.png)
+
+![image-20241113161316385](figure/LE_AUDIO/image-20241113161316385.png)
+
+![image-20241113161338800](figure/LE_AUDIO/image-20241113161338800.png)
+
+![image-20241113161401982](figure/LE_AUDIO/image-20241113161401982.png)
+
+![image-20241113161501967](figure/LE_AUDIO/image-20241113161501967.png)
+
+![image-20241113161110962](figure/LE_AUDIO/image-20241113161110962.png)
+
+
 
 ## 流程分析
 
