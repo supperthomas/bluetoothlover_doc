@@ -9,10 +9,16 @@ on:
   push:
     branches:
       - master
-
+  workflow_dispatch:
+  
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     name: release html
     steps:
       - uses: actions/checkout@v3
@@ -37,23 +43,21 @@ jobs:
         shell: bash
         run: |
           make html
-          zip -r -q -o readthedoc.zip build/
-          ls -la
-      - name: Create Github release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ls -la build/
+      - name: Upload static files as artifact
+        id: deployment
+        uses: actions/upload-pages-artifact@main
         with:
-          tag_name: ${{ github.run_number}}
-          release_name: Release ${{github.run_number}}
-      - name: Upload release asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN}}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./readthedoc.zip
-          asset_name: readthedoc.zip
-          asset_content_type: application/zip
+          path: build/
+  # Deployment job
+  deploy:
+    if: github.event_name == 'push'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
