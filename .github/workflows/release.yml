@@ -48,7 +48,7 @@ jobs:
         id: deployment
         uses: actions/upload-pages-artifact@main
         with:
-          path: build/
+          path: build/html/
   # Deployment job
   deploy:
     if: github.event_name == 'push'
