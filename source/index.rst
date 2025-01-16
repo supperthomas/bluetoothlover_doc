@@ -11,6 +11,7 @@ Welcome to BLUETOOTHLOVER_wiki's documentation!
    :caption: BLE knowledge:
    :glob:
 
+   mustsee_start/index
    ble/index
    ble_profile/index
    LE_AUDIO/index
