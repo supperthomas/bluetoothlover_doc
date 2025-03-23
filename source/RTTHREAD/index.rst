@@ -22,6 +22,7 @@ RTTHRED: RT-Thread
     06_simular/01_keil_simulator.md
     07_onchip/01_on_chip_file.md
     08_action/01_github_action.md
+	08_action/02_github_action_artifacts.md
     09_package/01_package.md
 	12_yml/01_yml_bsp.md
     13_workspace/01_workspace.md
