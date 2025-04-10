@@ -13,7 +13,9 @@ Blog: [小彦同学的摸鱼空间 | 我的博客](https://blog.alicization.site
 | c              | 熟悉     |
 | c++            | 熟悉     |
 | python         | 熟悉     |
-
+| Java         | 入门     |
+| Bash         | 入门     |
+| 微信小程序         | 入门     |
 
 ### IOT 技能
 
@@ -26,7 +28,7 @@ Blog: [小彦同学的摸鱼空间 | 我的博客](https://blog.alicization.site
 
 | os skill | 熟练程度 |
 | -------- | -------- |
-| RTThread | 入门     |
+| RTThread | 熟练     |
 | Linux    | 入门     |
 
 
