@@ -30,7 +30,7 @@
 - none： 通常指特别指明没有特定厂商， 通用的编译器
 - unknown: 这里表示目标平台的 **操作系统未知** 或 **没有特定的操作系统** 这个是代码中的默认指，应该是即可能指没有os，也可能指没有厂商（很多可能自己编译，没有设置特定的值，就是该值）
 
-`arm-linux-gnueabi-gcc` 
+例如：`arm-linux-gnueabi-gcc` 
 
 看这个参数就带了linux的参数代表基于linux平台的编译器，通常用来编译liunx操作系统相关的bin。
 
@@ -140,6 +140,8 @@ compilation terminated.
 
 https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
 
+源码： https://git.gitlab.arm.com/tooling/gnu-devtools-for-arm.git
+
 这里的toolchain 超级多，会不会有选择困难？理解下面几个概念
 
 架构
@@ -147,9 +149,11 @@ https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
 - **AArch32**：
   - 是 32 位的 ARM 架构，适用于 ARMv7 及更早版本。
   - 主要用于低功耗、资源受限的嵌入式设备。
+  - 一般就是类似于STM32F4,F1等系列的单片机
 - **AArch64**：
   - 是 64 位的 ARM 架构，属于 ARMv8 及更高版本。
   - 提供更大的寻址空间和更高效的指令集。
+  - 一般就是类似于RK3588的ARM的64bit的SOC
 
 可执行文件
 
@@ -157,7 +161,7 @@ https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
   - 是一种通用的文件格式，用于可执行文件、目标文件和共享库。
   - 适用于多种架构，包括 32 位和 64 位。
 - **EABI (Embedded Application Binary Interface)**：
-  - 是针对嵌入式系统的二进制接口规范。
+  - 是针对嵌入式系统的二进制接口规范。这个体积会更小
   - 定义了数据类型、寄存器使用、堆栈组织等标准。
   - 主要用于 32 位 ARM 架构。
 
@@ -172,7 +176,7 @@ eabi搭配aarch32 则针对嵌入式的小型的32bit的系统寻址，eabi的�
 
 ### host主机
 
-host主机就是你当前希望编译器在哪颗CPU上运行，就是你电脑的架构
+host主机就是你当前希望编译器在哪颗CPU上运行，就是你当前用的电脑的架构
 
 host主机分为以下几种：
 
@@ -183,7 +187,7 @@ host主机分为以下几种：
 
 所以常用的，就选择windows，ubuntu就选linux
 
-> note 这里我们没有看到unknown字样，实际上我觉得这样理解：出现unknown基本都是山寨的，不是官方或者正常发布toolchain机构发布的
+> note 这里我们没有看到unknown字样，实际上我觉得这样理解：出现unknown基本都是编译的时候缺省值，不是官方或者正常发布toolchain机构发布的
 
 接下来我们就知道当前如果是windows的话，想编译STM32等裸机的话，大概率用下面的编译器
 
@@ -204,9 +208,9 @@ macos也分为`darwin-x86_64` (intel CPU) 和`darwin-arm64` (arm CPU m1)
 另外对于linux平台还有下面的专业术语解释以下：
 
 arm-none-linux-gnueabihf：
-使用 硬件浮点（Hard Float），默认浮点运算使用浮点寄存器（-mfloat-abi=hard），性能更好。
+使用 硬件浮点（Hard Float），默认浮点运算使用浮点寄存器（-mfloat-abi=hard），性能更好。就是编译的时候，遇到浮点运算会帮你转成使用CPU中的浮点寄存器的汇编。
 aarch64-none-linux-gnu：
-默认也支持硬件浮点，但通常不需要显式指定浮点 ABI，因为 AArch64 架构本身支持浮点运算。
+默认也支持硬件浮点，但通常不需要显式指定浮点 ABI，因为 AArch64 架构本身都支持浮点运算。
 
 gnu种eabihf代表支持硬件浮点，一般FPU,通常linuxarm 32位的话，默认支持硬件浮点寄存器。
 
@@ -214,7 +218,7 @@ GNU什么含义：
 
 GNU 全称：GNU's Not Unix， GNU 提供了一系列用于开发和编译软件的工具，包括 GCC（GNU 编译器集合）、GDB（GNU 调试器）、Binutils（二进制工具集）等，
 
-通常linux后面都跟着gnu， linux-gnu
+通常linux后面都跟着gnu， linux-gnu，估计用到LInux了，就支持更全的GNU
 
 可以看到下面的toolchain，开头也有gnu字样，代表工具链里面的gcc，gdb等集成工具。
 
@@ -226,7 +230,149 @@ EABI（Embedded Application Binary Interface，嵌入式应用二进制接口）
 
 ##  RISCV
 
+RISCV的比较官方的toolchain如下：
 
+https://github.com/riscv-collab/riscv-gnu-toolchain
+
+从仓库中可以看到，
+
+有以下几个子仓库：
+
+binutils
+
+https://sourceware.org/git/binutils-gdb.git
+
+GCC:
+
+https://gcc.gnu.org/git/gcc.git
+
+glibc:
+
+https://sourceware.org/git/glibc.git
+
+gdb:
+
+https://sourceware.org/git/binutils-gdb.git
+
+从网站https://toolchains.bootlin.com/
+
+大概了解到，组成一个toolchain大概需要以下几个方面的内容：
+
+```
+binutils	2.41
+gcc	13.3.0
+gdb	14.2
+glibc	2.39-74-g198632...
+linux-headers	4.19.315
+```
+
+下面讲下这几部分基本的内容
+
+- binutils：像平时用的除了gcc之外的addr2line， ar， objdump，objcopy，都是用这个仓库生成的bin。
+
+```
+* addr2line: (binutils)addr2line. Convert addresses to file and line.
+* ar: (binutils)ar.               Create, modify, and extract from archives.
+* c++filt: (binutils)c++filt.	  Filter to demangle encoded C++ symbols.
+* cxxfilt: (binutils)c++filt.     MS-DOS name for c++filt.
+* dlltool: (binutils)dlltool.	  Create files needed to build and use DLLs.
+* nm: (binutils)nm.               List symbols from object files.
+* objcopy: (binutils)objcopy.	  Copy and translate object files.
+* objdump: (binutils)objdump.     Display information from object files.
+* ranlib: (binutils)ranlib.       Generate index to archive contents.
+* readelf: (binutils)readelf.	  Display the contents of ELF format files.
+* size: (binutils)size.           List section sizes and total size.
+* strings: (binutils)strings.     List printable strings from files.
+* strip: (binutils)strip.         Discard symbols.
+* elfedit: (binutils)elfedit.     Update ELF header and property of ELF files.
+* windmc: (binutils)windmc.	  Generator for Windows message resources.
+* windres: (binutils)windres.	  Manipulate Windows resources.
+```
+
+- gdb:gdb 其实也是binutils中的内容，只是gdb是和其他工具并列的，单独文件夹
+
+- gcc: 这个之前讲了，其实就是生成bin中的gcc.exe的源码文件，用来编译出.o之类的,除了GCC还有个llvm
+
+- glibc: 这个是libc部分， 对于linux，基本都是用glibc作为libc的内容。比较大的就是glibc，主要内容包含
+
+  ​	libc的内容参考： https://www.rt-thread.org/document/site/#/rt-thread-version/rt-thread-standard/programming-manual/libc/introduction
+
+  ​    大致就是我们平时用的一些类似于memcpy，strcpy等库函数的头文件和实现，头文件基本是相似的，实现很多不同有以下几种主流的：
+
+     - Newlib:https://sourceware.org/git/newlib-cygwin.git 这个是ARM官方嵌入式32方面的默认libc
+     - picolibc: https://github.com/picolibc/picolibc  这个也是一款适合嵌入式STM32的小型的libc，zephyr在推广和使用
+     - glibc: https://sourceware.org/git/glibc.git   这个是linux官方所用的GNU的libc，大而全，出现在linux平台上
+     - uclibc: https://github.com/wbx-github/uclibc-ng.git 与 glibc 兼容性较好 支持多种架构， LGPLv2.1
+     - musl： https://git.musl-libc.org/cgit/musl ， 标准化程度高轻量级和高效 许可证友好 ：采用 MIT 许可证
+
+- linux-headers 这个就不介绍了，根据linux系统的版本来，通常是一些linux系统的头文件。
+
+从下面的途中看出，elf用的是newlib， glibc就是glibc，musl就是musl libc
+
+![image-20250418225839693](toolchain/image-20250418225839693.png)
+
+## LLVM
+
+LLVM是和GCC并列的东西，你可以认为GCC的竞品，源码如下：
+
+https://github.com/llvm/llvm-project/tree/main
+
+LLVM已经被Apple、Microsoft、Google、Facebook等各大公司采用。
+
+LLVM是构架编译器(compiler)的框架系统，以C++编写而成，用于优化以任意程序语言编写的程序的编译时间(compile-time)、链接时间(link-time)、运行时间(run-time)以及空闲时间(idle-time)，对开发者保持开放，并兼容已有脚本。
+
+![image-20250418230344383](toolchain/image-20250418230344383.png)
+
+LLVM的编译主要用`clang ` 不是gcc了
+
+它的编译汇编都是用的clang，前缀是"llvm-"
+
+    PREFIX = 'llvm-'
+    CC = 'clang'
+    AS = 'clang'
+    AR = PREFIX + 'ar'
+    CXX = 'clang++'
+    LINK = 'clang'
+llvm是用来替代gcc的。
+
+## LIBC 
+
+下面列出一些常见的libc的使用场景和特点。
+
+### glibc
+
+- **特点** ：功能全面，包含大量标准和扩展功能；兼容性好，遵循 POSIX、ISO C 等标准；支持多种硬件架构和操作系统；性能优化较好，适用于通用计算场景。
+- **使用场景** ：广泛应用于各种主流 Linux 发行版，如桌面、服务器等，当需要使用丰富的标准库函数和良好的兼容性时，glibc 是常见选择。
+
+### musl
+
+- **特点** ：轻量级，代码量小、资源占用少；严格遵循 POSIX 和 ISO C 标准，注重代码正确性和简洁性；许可证友好，采用 MIT 许可证，适合商业应用。
+- **使用场景** ：适用于对标准化要求高、资源受限的嵌入式系统，如物联网设备、小型嵌入式设备等，也适用于追求代码简洁高效、对启动速度和执行效率有严格要求的场景。
+
+### uClibc-ng
+
+- **特点** ：可移植性强，支持多种架构包括无内存管理单元的处理器；可配置性高，可根据需求裁剪功能模块；与 glibc 兼容性较好，大多数支持 glibc 的应用只需重新编译即可在 uClibc-ng 上运行。
+- **使用场景** ：常用于资源受限的嵌入式 Linux 系统，如物联网设备、路由器、智能家电等，能有效减少系统占用空间，优化启动时间和功耗。
+
+### dietlibc
+
+- **特点** ：体积非常小，静态链接的最小程序体积可达到极低水平；注重性能优化，在某些操作上具有较高的效率；主要关注基本的 C 库功能，较少支持复杂的扩展功能。
+- **使用场景** ：适用于对程序体积要求极小的嵌入式系统或特定的优化场景，如小型嵌入式设备、对启动速度和程序体积有极致要求的应用。
+
+### newlib
+
+- **特点** ：功能较为全面，包含一些适合嵌入式系统的功能，如网络协议栈支持；可移植性好，支持多种嵌入式架构；具有良好的稳定性和可靠性。
+- **使用场景** ：常用于开发嵌入式系统，如小型路由器、工业控制设备等，也常用于需要网络功能的嵌入式应用中。
+
+### Picolibc
+
+- **特点** ：专为小型嵌入式系统设计，轻量级且高效；基于 Newlib 和 AVR Libc 开发，继承了其优点并进行了优化；支持多种架构，包括 ARM、RISC-V、MIPS 等。
+- **使用场景** ：适用于资源有限的嵌入式设备，如物联网设备、智能家居产品、传感器节点、微控制器应用等。
+
+### Cosmopolitan Libc
+
+- **特点** ：轻量级、高度可配置；通过模块化和层次化设计，实现跨平台兼容性，可在不同操作系统和硬件平台上无缝切换。
+- **使用场景** ：适用于需要跨平台部署的 C 语言应用，如嵌入式系统开发、云计算和分布式系统等
 
 ## 制作和发布toolchain的公司
 
@@ -234,11 +380,18 @@ EABI（Embedded Application Binary Interface，嵌入式应用二进制接口）
 
 https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
 
-http://www.codesourcery.com/  这个已经不存在了，
+- sourcery: 西门子http://www.codesourcery.com/  这个已经不存在了，
 
-
+- linaro: 已经不更新 https://releases.linaro.org/components/toolchain/binaries/
 
 参考：
 
 [riscv 各种版本GCC](https://www.cnblogs.com/ppqppl/articles/18077030)
 
+
+
+# 总结
+
+本文基本把toolchain的一些基本参数都讲到了，肯定有一些不足支持，如果大家有各种补充也可以提建议，
+
+不知道对于toolchain大家还有哪些疑问？可以提出来，我可以一一解答。
