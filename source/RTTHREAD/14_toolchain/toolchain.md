@@ -388,9 +388,7 @@ https://developer.arm.com/downloads/-/arm-gnu-toolchain-downloads
 
 [riscv 各种版本GCC](https://www.cnblogs.com/ppqppl/articles/18077030)
 
-
-
-# 总结
+## 总结
 
 本文基本把toolchain的一些基本参数都讲到了，肯定有一些不足支持，如果大家有各种补充也可以提建议，
 
