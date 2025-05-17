@@ -18,4 +18,6 @@ MASTER:supperthomas
     12_gitflow/gitcommit.md
     13_action/readme.md
     14_github/github_coderowner.md   
-    15_zephyr/index.md   
+    15_zephyr/index.md  
+    16_core_spec/01_core spec.md
+	17_RISCV/rv_backtrace.md
