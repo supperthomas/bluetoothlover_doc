@@ -288,5 +288,15 @@ Hotfix 分支，Bug-fix，完成后删除
 
    [Git及GitHub教程](https://www.githubs.cn/post/git-tutorial)
 
-  
+### GIT 如何删除remote中所有tag
+
+
+```
+ git show-ref --tag | awk '{print ":" $2}' | xargs git push mist-modules
+```
+删除本地所有tag
+```
+git tag -l | xargs git tag -d
+```
+
 
